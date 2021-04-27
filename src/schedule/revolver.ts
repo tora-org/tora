@@ -49,14 +49,15 @@ export class Revolver {
         let bullet = this._clip
         while (bullet && bullet?.id !== id) {
         }
-        if (bullet) {
-            this.hang(bullet)
-            try {
-                await bullet.handler()
-                this.push(bullet)
-            } catch (err) {
-                console.log('on error', err)
-            }
+        if (!bullet) {
+            throw new Error(`No hang task found by ID: [${id}]`)
+        }
+        this.hang(bullet)
+        try {
+            await bullet.handler()
+            this.push(bullet)
+        } catch (err) {
+            console.log('on error', err)
         }
     }
 
@@ -72,6 +73,7 @@ export class Revolver {
             } catch (err) {
                 console.log('on error', err)
             }
+        } else {
             this.push(bullet)
         }
     }
