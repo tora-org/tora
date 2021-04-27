@@ -10,12 +10,15 @@ import { TaskDescriptor } from '../types'
 import { Schedule } from './schedule'
 
 export class Bullet {
+
     constructor(
+        public id: string,
         public crontab: Schedule,
         public handler: Function,
         public execution: Dayjs,
         public next_bullet: Bullet | null,
         public desc: TaskDescriptor,
     ) {
+
     }
 }

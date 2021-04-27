@@ -125,6 +125,7 @@ export class Platform {
         this.root_injector.set_provider(TaskLifeCycle, new ValueProvider('TaskLifeCycle', null))
         this.root_injector.set_provider(TaskLock, new ValueProvider('TaskLock', null))
         this.root_injector.set_provider(Platform, new ValueProvider('Platform', this))
+        this.root_injector.set_provider(Revolver, new ValueProvider('Revolver', this._revolver))
         this.root_injector.set_provider(UUID, new ClassProvider(UUID, this.root_injector))
         this.root_injector.set_provider(Timestamp, new ClassProvider(Timestamp, this.root_injector, true))
     }

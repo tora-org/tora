@@ -39,7 +39,7 @@ export {
     Judgement, Reference, Path, PathValue, ValueType
 } from './builtin'
 
-export { Schedule } from './schedule'
+export { Schedule, Revolver, ScheduleOptions } from './schedule'
 export { Platform } from './platform'
 export { PURE_PARAMS, ToraError } from './platform-utils'
 
