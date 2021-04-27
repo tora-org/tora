@@ -20,17 +20,17 @@ export interface TaskDesc {
 
 export class Revolver {
 
+    private static id_cursor = 1
     private _clip?: Bullet | null
     private _hang_task: { [id: string]: Bullet } = {}
 
-    private static id_cursor = 1
+    constructor() {
+    }
+
     static get_id(): string {
         const id = Revolver.id_cursor
         Revolver.id_cursor++
         return `bullet-${id}`
-    }
-
-    constructor() {
     }
 
     fill(crontab: Schedule, handler: Function, desc: TaskDescriptor) {
@@ -45,13 +45,13 @@ export class Revolver {
         }
     }
 
-    reload_task(id: string, run_first?: boolean) {
+    async reload_task(id: string, run_first?: boolean) {
         const bullet = this._hang_task[id]
         if (!bullet) {
-            return new Error(`No hang task found by ID: [${id}]`)
+            throw new Error(`No hang task found by ID: [${id}]`)
         }
         if (run_first) {
-            bullet.handler(bullet.execution).then(() => {
+            await bullet.handler(bullet.execution).then(() => {
                 delete this._hang_task[id]
                 this.push(bullet)
             }).catch((err: any) => {
