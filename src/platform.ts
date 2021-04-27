@@ -114,7 +114,7 @@ export class Platform {
      */
     constructor() {
         setInterval(() => {
-            this._revolver?.shoot(new Date().getTime())
+            this._revolver?._shoot(new Date().getTime())
         }, 100)
         this.started_at = new Date().getTime()
         // 设置默认的内置 Provider，如果没有另外设置 Provider 时，查找结果为 null，而不会查找到 NullInjector。
@@ -399,7 +399,7 @@ export class Platform {
                 }
                 const provider_list = this._get_providers(desc, injector)
                 provider_list.forEach(p => p.create?.())
-                this._revolver.fill(desc.schedule, PlatformUtils.makeTask(injector, desc, provider_list), desc)
+                this._revolver._fill(desc.schedule, PlatformUtils.makeTask(injector, desc, provider_list), desc)
             }
         })
         router_provider_tree?.children.filter(def => !_find_usage(def))
