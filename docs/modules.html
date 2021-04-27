@@ -158,6 +158,7 @@
 								<li class="tsd-kind-class tsd-has-type-parameter tsd-is-private"><a href="classes/judgement.html" class="tsd-kind-icon">Judgement</a></li>
 								<li class="tsd-kind-class tsd-has-type-parameter tsd-is-private"><a href="classes/reference.html" class="tsd-kind-icon">Reference</a></li>
 								<li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/toraerror.html" class="tsd-kind-icon">Tora<wbr>Error</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/scheduleoptions.html" class="tsd-kind-icon">Schedule<wbr>Options</a></li>
 								<li class="tsd-kind-type-alias tsd-has-type-parameter tsd-is-private"><a href="modules.html#path" class="tsd-kind-icon">Path</a></li>
 								<li class="tsd-kind-type-alias tsd-has-type-parameter tsd-is-private"><a href="modules.html#pathvalue" class="tsd-kind-icon">Path<wbr>Value</a></li>
 								<li class="tsd-kind-type-alias"><a href="modules.html#valuetype" class="tsd-kind-icon">Value<wbr>Type</a></li>
@@ -166,6 +167,7 @@
 						<section class="tsd-index-section">
 							<h3>Schedule</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-class"><a href="classes/revolver.html" class="tsd-kind-icon">Revolver</a></li>
 								<li class="tsd-kind-class"><a href="classes/schedule.html" class="tsd-kind-icon">Schedule</a></li>
 							</ul>
 						</section>
@@ -180,7 +182,7 @@
 					<div class="tsd-signature tsd-kind-icon">PURE_<wbr>PARAMS<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;PURE_PARAMS&quot;</span><span class="tsd-signature-symbol"> = &#x27;PURE_PARAMS&#x27;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/isatiso/tora/blob/51b54d0/src/platform-utils.ts#L16">src/platform-utils.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/platform-utils.ts#L22">src/platform-utils.ts:22</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -197,9 +199,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/isatiso/tora/blob/51b54d0/src/error.ts#L77">src/error.ts:77</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/error.ts#L80">src/error.ts:80</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>未知异常，直接抛出异常，提供可选的调试信息。</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -220,9 +227,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/isatiso/tora/blob/51b54d0/src/error.ts#L63">src/error.ts:63</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/error.ts#L64">src/error.ts:64</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>返回一个受控异常，包含预先定义的状态码和错误信息。</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -243,15 +255,20 @@
 					<a name="response" class="tsd-anchor"></a>
 					<h3>response</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">response&lt;C&gt;<span class="tsd-signature-symbol">(</span>ctx<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">C</span>, data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">never</span></li>
+						<li class="tsd-signature tsd-kind-icon">response&lt;C&gt;<span class="tsd-signature-symbol">(</span>koa_context<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">C</span>, data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">never</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/isatiso/tora/blob/51b54d0/src/error.ts#L84">src/error.ts:84</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/error.ts#L91">src/error.ts:91</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>跳出执行过程，直接返回响应结果。</p>
+								</div>
+							</div>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
@@ -261,10 +278,13 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>ctx: <span class="tsd-signature-type">C</span></h5>
+									<h5>koa_context: <span class="tsd-signature-type">C</span></h5>
 								</li>
 								<li>
 									<h5>data: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>响应结果。</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">never</span></h4>
@@ -281,9 +301,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/isatiso/tora/blob/51b54d0/src/error.ts#L70">src/error.ts:70</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/error.ts#L72">src/error.ts:72</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>直接抛出一个受控异常，跳出执行过程，返回预先定义的状态码和错误信息。</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -414,7 +439,7 @@
 					<div class="tsd-signature tsd-kind-icon">Path&lt;T, Key&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Key</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-type">Exclude</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">Key</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-symbol">`</span><span class="tsd-signature-symbol">${</span><span class="tsd-signature-type">Key</span><span class="tsd-signature-symbol">}</span><span class="tsd-signature-type">.</span><span class="tsd-signature-symbol">${</span><a href="modules.html#path" class="tsd-signature-type" data-tsd-kind="Type alias">Path</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Exclude</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">Key</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Exclude</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">Exclude</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">Key</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">`</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Key</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">Exclude</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">Key</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-symbol">`</span><span class="tsd-signature-symbol">${</span><span class="tsd-signature-type">Key</span><span class="tsd-signature-symbol">}</span><span class="tsd-signature-type">.</span><span class="tsd-signature-symbol">${</span><a href="modules.html#path" class="tsd-signature-type" data-tsd-kind="Type alias">Path</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Exclude</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">Key</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">`</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Key</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">Key</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">never</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/isatiso/tora/blob/51b54d0/src/builtin/judgement.ts#L30">src/builtin/judgement.ts:30</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/builtin/judgement.ts#L30">src/builtin/judgement.ts:30</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -433,7 +458,7 @@
 					<div class="tsd-signature tsd-kind-icon">Path<wbr>Value&lt;T, P&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">P</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-symbol">`</span><span class="tsd-signature-symbol">${</span><span class="tsd-signature-symbol">infer </span> Key<span class="tsd-signature-symbol">}</span><span class="tsd-signature-type">.</span><span class="tsd-signature-symbol">${</span><span class="tsd-signature-symbol">infer </span> Rest<span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">`</span><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-type">Key</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-type">Rest</span><span class="tsd-signature-symbol"> extends </span><a href="modules.html#path" class="tsd-signature-type" data-tsd-kind="Type alias">Path</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Exclude</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">Key</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> ? </span><a href="modules.html#pathvalue" class="tsd-signature-type" data-tsd-kind="Type alias">PathValue</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Exclude</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">Key</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Rest</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">never</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">never</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">never</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/isatiso/tora/blob/51b54d0/src/builtin/judgement.ts#L49">src/builtin/judgement.ts:49</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/builtin/judgement.ts#L49">src/builtin/judgement.ts:49</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -452,7 +477,7 @@
 					<div class="tsd-signature tsd-kind-icon">Value<wbr>Type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;exist&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;function&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;object&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;array&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;nonEmptyArray&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;null&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;nonNull&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;string&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;nonEmptyString&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;number&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;nonZeroNumber&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;boolean&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;true&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;false&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/isatiso/tora/blob/51b54d0/src/builtin/judgement.ts#L8">src/builtin/judgement.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/builtin/judgement.ts#L8">src/builtin/judgement.ts:8</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -589,6 +614,9 @@
 						<a href="classes/resultwrapper.html" class="tsd-kind-icon">Result<wbr>Wrapper</a>
 					</li>
 					<li class=" tsd-kind-class">
+						<a href="classes/revolver.html" class="tsd-kind-icon">Revolver</a>
+					</li>
+					<li class=" tsd-kind-class">
 						<a href="classes/schedule.html" class="tsd-kind-icon">Schedule</a>
 					</li>
 					<li class=" tsd-kind-class">
@@ -611,6 +639,9 @@
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-private">
 						<a href="classes/valueprovider.html" class="tsd-kind-icon">Value<wbr>Provider</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/scheduleoptions.html" class="tsd-kind-icon">Schedule<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter tsd-is-private">
 						<a href="modules.html#path" class="tsd-kind-icon">Path</a>
@@ -649,6 +680,7 @@
 				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
 				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
@@ -661,6 +693,9 @@
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>

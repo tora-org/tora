@@ -103,8 +103,10 @@
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="taskcontext.html#_execution" class="tsd-kind-icon">_execution</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="taskcontext.html#_lock_expires" class="tsd-kind-icon">_lock_<wbr>expires</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="taskcontext.html#_lock_key" class="tsd-kind-icon">_lock_<wbr>key</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="taskcontext.html#_name" class="tsd-kind-icon">_name</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="taskcontext.html#_pos" class="tsd-kind-icon">_pos</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="taskcontext.html#_property_key" class="tsd-kind-icon">_property_<wbr>key</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="taskcontext.html#_temp_exec" class="tsd-kind-icon">_temp_<wbr>exec</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -114,8 +116,10 @@
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="taskcontext.html#execution" class="tsd-kind-icon">execution</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="taskcontext.html#lock_expires" class="tsd-kind-icon">lock_<wbr>expires</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="taskcontext.html#lock_key" class="tsd-kind-icon">lock_<wbr>key</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="taskcontext.html#name" class="tsd-kind-icon">name</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="taskcontext.html#pos" class="tsd-kind-icon">pos</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="taskcontext.html#property_key" class="tsd-kind-icon">property_<wbr>key</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="taskcontext.html#temp_exec" class="tsd-kind-icon">temp_<wbr>exec</a></li>
 							</ul>
 						</section>
 					</div>
@@ -127,19 +131,19 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Task<wbr>Context<span class="tsd-signature-symbol">(</span>desc<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>crontab<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>execution<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Dayjs</span><span class="tsd-signature-symbol">; </span>lock<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>expires<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">; </span>pos<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>property_key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="taskcontext.html" class="tsd-signature-type" data-tsd-kind="Class">TaskContext</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Task<wbr>Context<span class="tsd-signature-symbol">(</span>desc<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>crontab<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>execution<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Dayjs</span><span class="tsd-signature-symbol">; </span>lock<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>expires<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">; </span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>pos<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>property_key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>temp_exec<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="taskcontext.html" class="tsd-signature-type" data-tsd-kind="Class">TaskContext</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/isatiso/tora/blob/51b54d0/src/builtin/task-context.ts#L22">src/builtin/task-context.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/builtin/task-context.ts#L24">src/builtin/task-context.ts:24</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>desc: <span class="tsd-signature-symbol">{ </span>crontab<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>execution<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Dayjs</span><span class="tsd-signature-symbol">; </span>lock<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>expires<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">; </span>pos<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>property_key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span></h5>
+									<h5>desc: <span class="tsd-signature-symbol">{ </span>crontab<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>execution<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Dayjs</span><span class="tsd-signature-symbol">; </span>lock<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">{ </span>expires<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">; </span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>pos<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>property_key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>temp_exec<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> }</span></h5>
 									<ul class="tsd-parameters">
 										<li class="tsd-parameter">
 											<h5>crontab<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
@@ -159,10 +163,16 @@
 											</ul>
 										</li>
 										<li class="tsd-parameter">
+											<h5>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+										</li>
+										<li class="tsd-parameter">
 											<h5>pos<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
 										</li>
 										<li class="tsd-parameter">
 											<h5>property_<wbr>key<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
+										</li>
+										<li class="tsd-parameter">
+											<h5><span class="tsd-flag ts-flagOptional">Optional</span> temp_<wbr>exec<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span></h5>
 										</li>
 									</ul>
 								</li>
@@ -180,7 +190,7 @@
 					<div class="tsd-signature tsd-kind-icon">_crontab<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/isatiso/tora/blob/51b54d0/src/builtin/task-context.ts#L19">src/builtin/task-context.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/builtin/task-context.ts#L20">src/builtin/task-context.ts:20</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -190,7 +200,7 @@
 					<div class="tsd-signature tsd-kind-icon">_execution<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Dayjs</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/isatiso/tora/blob/51b54d0/src/builtin/task-context.ts#L22">src/builtin/task-context.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/builtin/task-context.ts#L23">src/builtin/task-context.ts:23</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -200,7 +210,7 @@
 					<div class="tsd-signature tsd-kind-icon">_lock_<wbr>expires<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/isatiso/tora/blob/51b54d0/src/builtin/task-context.ts#L18">src/builtin/task-context.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/builtin/task-context.ts#L19">src/builtin/task-context.ts:19</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -210,7 +220,17 @@
 					<div class="tsd-signature tsd-kind-icon">_lock_<wbr>key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/isatiso/tora/blob/51b54d0/src/builtin/task-context.ts#L17">src/builtin/task-context.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/builtin/task-context.ts#L18">src/builtin/task-context.ts:18</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="_name" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagOptional">Optional</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> _name</h3>
+					<div class="tsd-signature tsd-kind-icon">_name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/builtin/task-context.ts#L17">src/builtin/task-context.ts:17</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -220,7 +240,7 @@
 					<div class="tsd-signature tsd-kind-icon">_pos<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/isatiso/tora/blob/51b54d0/src/builtin/task-context.ts#L20">src/builtin/task-context.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/builtin/task-context.ts#L21">src/builtin/task-context.ts:21</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -230,7 +250,17 @@
 					<div class="tsd-signature tsd-kind-icon">_property_<wbr>key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/isatiso/tora/blob/51b54d0/src/builtin/task-context.ts#L21">src/builtin/task-context.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/builtin/task-context.ts#L22">src/builtin/task-context.ts:22</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="_temp_exec" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> _temp_<wbr>exec</h3>
+					<div class="tsd-signature tsd-kind-icon">_temp_<wbr>exec<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/builtin/task-context.ts#L24">src/builtin/task-context.ts:24</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -247,7 +277,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/isatiso/tora/blob/51b54d0/src/builtin/task-context.ts#L52">src/builtin/task-context.ts:52</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/builtin/task-context.ts#L66">src/builtin/task-context.ts:66</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -264,7 +294,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/isatiso/tora/blob/51b54d0/src/builtin/task-context.ts#L64">src/builtin/task-context.ts:64</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/builtin/task-context.ts#L78">src/builtin/task-context.ts:78</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Dayjs</span></h4>
@@ -281,7 +311,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/isatiso/tora/blob/51b54d0/src/builtin/task-context.ts#L48">src/builtin/task-context.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/builtin/task-context.ts#L62">src/builtin/task-context.ts:62</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h4>
@@ -298,7 +328,24 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/isatiso/tora/blob/51b54d0/src/builtin/task-context.ts#L44">src/builtin/task-context.ts:44</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/builtin/task-context.ts#L58">src/builtin/task-context.ts:58</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="name" class="tsd-anchor"></a>
+					<h3>name</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> name<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/builtin/task-context.ts#L54">src/builtin/task-context.ts:54</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h4>
@@ -315,7 +362,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/isatiso/tora/blob/51b54d0/src/builtin/task-context.ts#L56">src/builtin/task-context.ts:56</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/builtin/task-context.ts#L70">src/builtin/task-context.ts:70</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -332,10 +379,27 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/isatiso/tora/blob/51b54d0/src/builtin/task-context.ts#L60">src/builtin/task-context.ts:60</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/builtin/task-context.ts#L74">src/builtin/task-context.ts:74</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="temp_exec" class="tsd-anchor"></a>
+					<h3>temp_<wbr>exec</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> temp_exec<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/edef225/src/builtin/task-context.ts#L50">src/builtin/task-context.ts:50</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -372,10 +436,16 @@
 								<a href="taskcontext.html#_lock_key" class="tsd-kind-icon">_lock_<wbr>key</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="taskcontext.html#_name" class="tsd-kind-icon">_name</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="taskcontext.html#_pos" class="tsd-kind-icon">_pos</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="taskcontext.html#_property_key" class="tsd-kind-icon">_property_<wbr>key</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="taskcontext.html#_temp_exec" class="tsd-kind-icon">_temp_<wbr>exec</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="taskcontext.html#crontab" class="tsd-kind-icon">crontab</a>
@@ -390,10 +460,16 @@
 								<a href="taskcontext.html#lock_key" class="tsd-kind-icon">lock_<wbr>key</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="taskcontext.html#name" class="tsd-kind-icon">name</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="taskcontext.html#pos" class="tsd-kind-icon">pos</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="taskcontext.html#property_key" class="tsd-kind-icon">property_<wbr>key</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="taskcontext.html#temp_exec" class="tsd-kind-icon">temp_<wbr>exec</a>
 							</li>
 						</ul>
 					</li>
@@ -412,6 +488,7 @@
 				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
 				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
@@ -424,6 +501,9 @@
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
