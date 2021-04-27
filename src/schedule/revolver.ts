@@ -45,20 +45,33 @@ export class Revolver {
         }
     }
 
+    async temp_exec(id: string) {
+        let bullet = this._clip
+        while (bullet && bullet?.id !== id) {
+        }
+        if (bullet) {
+            this.hang(bullet)
+            try {
+                await bullet.handler()
+                this.push(bullet)
+            } catch (err) {
+                console.log('on error', err)
+            }
+        }
+    }
+
     async reload_task(id: string, run_first?: boolean) {
         const bullet = this._hang_task[id]
         if (!bullet) {
             throw new Error(`No hang task found by ID: [${id}]`)
         }
         if (run_first) {
-            await bullet.handler(bullet.execution).then(() => {
-                delete this._hang_task[id]
+            try {
+                await bullet.handler(bullet.execution)
                 this.push(bullet)
-            }).catch((err: any) => {
+            } catch (err) {
                 console.log('on error', err)
-            })
-        } else {
-            delete this._hang_task[id]
+            }
             this.push(bullet)
         }
     }
@@ -103,6 +116,7 @@ export class Revolver {
     }
 
     private push(bullet: Bullet) {
+        delete this._hang_task[bullet.id]
         const now = new Date().getTime()
         while (bullet.execution.valueOf() < now) {
             bullet.execution = bullet.crontab.next()
@@ -117,6 +131,18 @@ export class Revolver {
         }
     }
 
+    private hang(clip: Bullet) {
+        if (!this._clip) {
+            return
+        } else if (this._clip === clip) {
+            this._clip = clip.next_bullet
+            this._hang_task[clip.id] = clip
+        } else {
+            this.remove(this._clip, clip)
+            this._hang_task[clip.id] = clip
+        }
+    }
+
     private execute() {
         if (!this._clip) {
             return
@@ -126,15 +152,7 @@ export class Revolver {
         const clip = this._clip
         this._clip.handler(execution).catch((err: any) => {
             console.log('on error', err)
-            if (!this._clip) {
-                return
-            } else if (this._clip === clip) {
-                this._clip = clip.next_bullet
-                this._hang_task[clip.id] = clip
-            } else {
-                this.remove(this._clip, clip)
-                this._hang_task[clip.id] = clip
-            }
+            this.hang(clip)
         })
         if (this._clip.next_bullet && this._clip.next_bullet.execution.isBefore(this._clip.execution)) {
             const bullet = this._clip

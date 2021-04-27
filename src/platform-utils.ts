@@ -1,4 +1,7 @@
-import { Dayjs } from 'dayjs'
+import { exec } from 'child_process'
+import dayjs, { Dayjs } from 'dayjs'
+import timezone from 'dayjs/plugin/timezone'
+import utc from 'dayjs/plugin/utc'
 import { ApiParams, SessionContext, TaskContext } from './builtin'
 import { InnerFinish, OuterFinish, reasonable, ReasonableError } from './error'
 import { Injector } from './injector'
@@ -9,6 +12,9 @@ import { ResultWrapper } from './service/result-wrapper'
 import { TaskLifeCycle } from './service/task-life-cycle'
 import { TaskLock } from './service/task-lock'
 import { HandlerDescriptor, KoaResponseType, LiteContext, Provider, TaskDescriptor } from './types'
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 /**
  * @category Platform
@@ -90,7 +96,7 @@ export namespace PlatformUtils {
     }
 
     export function makeTask(injector: Injector, desc: TaskDescriptor, provider_list: Provider<any>[]) {
-        return async function(execution: Dayjs) {
+        return async function(execution?: Dayjs) {
             const hooks: TaskLifeCycle | undefined = injector.get(TaskLifeCycle)?.create()
             const task_lock: TaskLock | undefined = injector.get(TaskLock)?.create()
             if (desc.lock && !task_lock) {
@@ -99,10 +105,11 @@ export namespace PlatformUtils {
 
             const context = new TaskContext({
                 name: desc.name ?? desc.pos ?? '',
-                execution,
+                execution: execution ?? dayjs(),
                 pos: desc.pos!,
                 property_key: desc.property_key!,
                 crontab: desc.crontab!,
+                temp_exec: !!execution,
                 lock: desc.lock,
             })
 
