@@ -48,6 +48,7 @@ export class Revolver {
     async temp_exec(id: string) {
         let bullet = this._clip
         while (bullet && bullet?.id !== id) {
+            bullet = bullet.next_bullet
         }
         if (!bullet) {
             throw new Error(`No hang task found by ID: [${id}]`)
