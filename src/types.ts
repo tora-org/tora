@@ -33,14 +33,6 @@ export interface ToraAuthInfo {
 
 }
 
-declare global {
-    interface ToraConfigSchema {
-        tora?: {
-            a?: number
-        }
-    }
-}
-
 /**
  * Koa 支持的响应体类型。
  *
