@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Dayjs } from 'dayjs'
 import { TaskDescriptor } from '../types'
+import { Dayjs } from './cron/dayjs-snipper'
 import { Schedule } from './schedule'
 
 export class Bullet {
@@ -19,6 +19,5 @@ export class Bullet {
         public next_bullet: Bullet | null,
         public desc: TaskDescriptor,
     ) {
-
     }
 }

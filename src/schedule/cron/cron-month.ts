@@ -5,12 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import dayjs, { Dayjs } from 'dayjs'
-import timezone from 'dayjs/plugin/timezone'
-import utc from 'dayjs/plugin/utc'
-
-dayjs.extend(utc)
-dayjs.extend(timezone)
+import { dayjs, Dayjs } from './dayjs-snipper'
 
 export class CronMonth {
 

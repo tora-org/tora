@@ -5,15 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import dayjs, { Dayjs } from 'dayjs'
-import timezone from 'dayjs/plugin/timezone'
-import utc from 'dayjs/plugin/utc'
+import { dayjs, Dayjs } from './cron/dayjs-snipper'
 import { FieldType, parse_field } from './cron/cron-item-parser'
 import { CronMonth } from './cron/cron-month'
 import { ParsedFields } from './cron/parsed-fields'
-
-dayjs.extend(utc)
-dayjs.extend(timezone)
 
 export interface ScheduleOptions {
     utc?: boolean

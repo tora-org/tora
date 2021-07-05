@@ -1,10 +1,7 @@
-import { exec } from 'child_process'
-import dayjs, { Dayjs } from 'dayjs'
-import timezone from 'dayjs/plugin/timezone'
-import utc from 'dayjs/plugin/utc'
 import { ApiParams, SessionContext, TaskContext } from './builtin'
 import { InnerFinish, OuterFinish, reasonable, ReasonableError } from './error'
 import { Injector } from './injector'
+import { dayjs, Dayjs } from './schedule/cron/dayjs-snipper'
 import { Authenticator } from './service/authenticator'
 import { CacheProxy } from './service/cache-proxy'
 import { LifeCycle } from './service/life-cycle'
@@ -12,9 +9,6 @@ import { ResultWrapper } from './service/result-wrapper'
 import { TaskLifeCycle } from './service/task-life-cycle'
 import { TaskLock } from './service/task-lock'
 import { HandlerDescriptor, KoaResponseType, LiteContext, Provider, TaskDescriptor } from './types'
-
-dayjs.extend(utc)
-dayjs.extend(timezone)
 
 /**
  * @category Platform
