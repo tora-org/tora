@@ -7,7 +7,7 @@
 
 import { InnerFinish, OuterFinish } from '../error'
 import { CacheProxy } from '../service/cache-proxy'
-import { LiteContext } from '../types'
+import { LiteContext, ToraAuthInfo, ToraSession } from '../types'
 
 /**
  * 请求上下文对象。

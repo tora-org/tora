@@ -9,6 +9,7 @@
 
 export { response, crash, throw_reasonable, reasonable } from './error'
 
+export { ToraConfigSchema, ToraAuthInfo, ToraSession } from './types'
 export * as ToraTypes from './types'
 export * as Tora from './core'
 

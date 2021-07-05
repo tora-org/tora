@@ -3,7 +3,7 @@
 
 import { ConfigData } from './config-data'
 
-declare global {
+declare module 'tora' {
     interface ToraConfigSchema {
         sample: {
             sample_property1: 255

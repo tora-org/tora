@@ -22,7 +22,7 @@ import { TaskLock } from './service/task-lock'
 import { TokenUtils } from './token'
 import { ToraKoa } from './tora-koa'
 import { ToraServer } from './tora-server'
-import { ApiMethod, ApiPath, HandlerDescriptor, HandlerReturnType, KoaResponseType, LiteContext, Provider, ProviderDef, ProviderTreeNode, TaskDescriptor, Type } from './types'
+import { ApiMethod, ApiPath, HandlerDescriptor, HandlerReturnType, KoaResponseType, LiteContext, Provider, ProviderDef, ProviderTreeNode, TaskDescriptor, ToraConfigSchema, Type } from './types'
 
 function _join_path(front: string, rear: string) {
     return [front, rear].filter(i => i).join('/')

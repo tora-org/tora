@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { ToraConfigSchema } from '../types'
 import { Path, PathValue, Reference } from './judgement'
 
 /**

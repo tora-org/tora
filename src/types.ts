@@ -12,27 +12,32 @@ import { ExtendableContext } from 'koa'
 import { Stream } from 'stream'
 import { Schedule } from './schedule'
 
-declare global {
+/**
+ * 通过全局声明合并扩展 ToraConfigSchema。
+ *
+ * [[include:builtin/config-data.md]]
+ *
+ * @category ConfigSchema
+ */
+export interface ToraConfigSchema {
+    tora?: {
+        port?: number
+    }
+}
 
-    /**
-     * 通过全局声明合并扩展 ToraConfigSchema。
-     *
-     * [[include:builtin/config-data.md]]
-     *
-     * @category ConfigSchema
-     */
+export interface ToraSession {
+
+}
+
+export interface ToraAuthInfo {
+
+}
+
+declare global {
     interface ToraConfigSchema {
         tora?: {
-            port?: number
+            a?: number
         }
-    }
-
-    interface ToraSession {
-
-    }
-
-    interface ToraAuthInfo {
-
     }
 }
 
