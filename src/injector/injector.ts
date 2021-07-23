@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Provider } from '../types'
+import { AbstractType, Provider } from '../types'
 import { _NullInjector, NullInjector } from './null-injector'
 import { InjectorProvider } from './provider'
 
@@ -57,12 +57,12 @@ export class Injector {
      * @param token
      * @param info 一些帮助调试的信息
      */
-    get(token: any, info?: string): Provider<any> {
-        if (token === Injector) {
+    get<T>(token: AbstractType<T>, info?: string): Provider<T> | undefined {
+        if (token as any === Injector) {
             if (!this.provider) {
                 this.provider = new InjectorProvider('injector', this)
             }
-            return this.provider
+            return this.provider as unknown as Provider<T>
         }
         return this.providers.get(token) ?? this.parent.get(token, info)
     }

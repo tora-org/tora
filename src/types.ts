@@ -41,7 +41,13 @@ export interface ToraAuthInfo {
 export type KoaResponseType = string | Buffer | Stream | Object | Array<any> | null
 
 export interface Type<T> extends Function {
-    new(...args: any[]): T;
+    prototype: T
+    new(...args: any[]): T
+}
+
+
+export interface AbstractType<T> extends Function {
+    prototype: T
 }
 
 export type LiteContext = ExtendableContext & {

@@ -91,8 +91,8 @@ export namespace PlatformUtils {
 
     export function makeTask(injector: Injector, desc: TaskDescriptor, provider_list: Provider<any>[]) {
         return async function(execution?: Dayjs) {
-            const hooks: TaskLifeCycle | undefined = injector.get(TaskLifeCycle)?.create()
-            const task_lock: TaskLock | undefined = injector.get(TaskLock)?.create()
+            const hooks = injector.get(TaskLifeCycle)?.create()
+            const task_lock = injector.get(TaskLock)?.create()
             if (desc.lock && !task_lock) {
                 throw new Error(`Decorator "@Lock" is settled on ${desc.pos}, but there's no "TaskLock" implements found.`)
             }
@@ -138,10 +138,10 @@ export namespace PlatformUtils {
 
         return async function(params: any, koa_context: LiteContext) {
 
-            const cache: CacheProxy | undefined = injector.get(CacheProxy)?.create()
-            const result_wrapper: ResultWrapper | undefined = injector.get(ResultWrapper)?.create()
-            const hooks: LifeCycle | undefined = injector.get(LifeCycle)?.create()
-            const authenticator: Authenticator | undefined = injector.get(Authenticator)?.create()
+            const cache = injector.get(CacheProxy)?.create()
+            const result_wrapper = injector.get(ResultWrapper)?.create()
+            const hooks = injector.get(LifeCycle)?.create()
+            const authenticator = injector.get(Authenticator)?.create()
 
             const auth_info = await authenticator?.auth(koa_context)
 

@@ -63,7 +63,7 @@ export function def2Provider(defs: (ProviderDef<any> | Type<any>)[], injector: I
                 throw new Error(`${(def as any).name} is not ToraService.`)
             }
             if (injector.local_has(def)) {
-                return injector.get(def)
+                return injector.get(def as any)
             } else {
                 const provider = new ClassProvider<any>(def as any, injector)
                 injector.set_provider(def, provider)
