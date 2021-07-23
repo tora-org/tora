@@ -351,6 +351,13 @@ export class Platform {
     }
 
     /**
+     * 暴露 root_injector，允许直接调用服务，一般用于测试
+     */
+    call<RES>(executor: (injector: Injector) => RES): RES {
+        return executor(this.root_injector)
+    }
+
+    /**
      * 开始监听请求。
      */
     start() {
