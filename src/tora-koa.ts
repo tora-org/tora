@@ -6,6 +6,7 @@
  */
 
 import CoBody from 'co-body'
+import { Server } from 'http'
 import Koa from 'koa'
 import { ToraServer } from './tora-server'
 import { LiteContext } from './types'
@@ -24,6 +25,7 @@ declare module 'koa' {
 export class ToraKoa {
 
     private _koa = new Koa()
+    private _server?: Server
     private _body_parser = new BodyParser()
 
     constructor(options: {
@@ -64,12 +66,16 @@ export class ToraKoa {
      * @param cb
      */
     listen(port: number, cb: () => void): void {
-        this._koa.on('error', (err, ctx: LiteContext) => {
+        this._server = this._koa.on('error', (err, ctx: LiteContext) => {
             if (err.code !== 'HPE_INVALID_EOF_STATE') {
                 console.log('server error', err, ctx)
                 console.log(ctx.request.rawBody)
             }
         }).listen(port, cb)
+    }
+
+    destroy() {
+        this._server?.close()
     }
 
     private body_parser: Koa.Middleware<any> = async (ctx: Koa.Context, next: Koa.Next) => {

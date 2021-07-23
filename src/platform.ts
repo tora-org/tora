@@ -108,12 +108,14 @@ export class Platform {
      */
     private _revolver = new Revolver()
 
+    private readonly _interval: NodeJS.Timeout
+
     /**
      * @private
      * 定时器。
      */
     constructor() {
-        setInterval(() => {
+        this._interval = setInterval(() => {
             this._revolver?._shoot(new Date().getTime())
         }, 100)
         this.started_at = new Date().getTime()
@@ -371,6 +373,11 @@ export class Platform {
                 const duration = new Date().getTime() - this.started_at
                 console.log(`\ntora server started successfully in ${duration / 1000}s.`)
             })
+    }
+
+    destroy() {
+        clearInterval(this._interval)
+        this._koa.destroy()
     }
 
     private _mount_router(router_module: Type<any>, injector: Injector) {
