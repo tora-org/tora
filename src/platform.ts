@@ -22,7 +22,22 @@ import { TaskLock } from './service/task-lock'
 import { TokenUtils } from './token'
 import { ToraKoa } from './tora-koa'
 import { ToraServer } from './tora-server'
-import { ApiMethod, ApiPath, HandlerDescriptor, HandlerReturnType, KoaResponseType, LiteContext, Provider, ProviderDef, ProviderTreeNode, TaskDescriptor, ToraConfigSchema, Type } from './types'
+import {
+    AbstractType,
+    ApiMethod,
+    ApiPath,
+    ClassMethod,
+    HandlerDescriptor,
+    HandlerReturnType,
+    KoaResponseType,
+    LiteContext,
+    Provider,
+    ProviderDef,
+    ProviderTreeNode,
+    TaskDescriptor,
+    ToraConfigSchema,
+    Type
+} from './types'
 
 function _join_path(front: string, rear: string) {
     return [front, rear].filter(i => i).join('/')
@@ -357,6 +372,21 @@ export class Platform {
      */
     call<RES>(executor: (injector: Injector) => RES): RES {
         return executor(this.root_injector)
+    }
+
+    /**
+     * 向外暴露指定 ToraService 的一个 method，一般用于测试
+     */
+    expose_service_method<T, P extends ClassMethod<T>>(target: AbstractType<T>, prop: P): { (...args: Parameters<T[P]>): ReturnType<T[P]> } {
+        const executor = this.root_injector.get(target)?.create()
+        if (!executor) {
+            return undefined as any
+        }
+        const method = executor[prop] as Function
+        if (typeof method !== 'function') {
+            return undefined as any
+        }
+        return method?.bind(executor)
     }
 
     /**

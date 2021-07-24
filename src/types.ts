@@ -42,13 +42,19 @@ export type KoaResponseType = string | Buffer | Stream | Object | Array<any> | n
 
 export interface Type<T> extends Function {
     prototype: T
+
     new(...args: any[]): T
 }
-
 
 export interface AbstractType<T> extends Function {
     prototype: T
 }
+
+export type KeyOfFilterType<T, U> = {
+    [K in keyof T]: Exclude<T[K], undefined> extends U ? K : never
+}[keyof T]
+
+export type ClassMethod<T> = KeyOfFilterType<T, Function>
 
 export type LiteContext = ExtendableContext & {
     process_start?: number
