@@ -375,6 +375,13 @@ export class Platform {
     }
 
     /**
+     * 向外暴露指定 ToraService，一般用于测试
+     */
+    expose_service<T>(target: AbstractType<T>): T | undefined {
+        return this.root_injector.get(target)?.create()
+    }
+
+    /**
      * 向外暴露指定 ToraService 的一个 method，一般用于测试
      */
     expose_service_method<T, P extends ClassMethod<T>>(target: AbstractType<T>, prop: P): { (...args: Parameters<T[P]>): ReturnType<T[P]> } {
