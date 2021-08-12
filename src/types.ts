@@ -33,6 +33,9 @@ export interface ToraAuthInfo {
 
 }
 
+export type ToraEvent =
+    | 'tora-destroy'
+
 /**
  * Koa 支持的响应体类型。
  *
@@ -117,6 +120,7 @@ export interface FactoryProviderDef {
 
 export interface Provider<T> {
     name: string
+    used: boolean
 
     set_used(parents?: any[]): void
 
@@ -154,8 +158,8 @@ export interface ToraServiceOptions {
  */
 export interface ProviderTreeNode {
     name: string
-    providers: any[]
-    children: ProviderTreeNode[]
+    providers: (Provider<any> | undefined)[]
+    children: (ProviderTreeNode | undefined)[]
 }
 
 /**

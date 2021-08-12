@@ -67,9 +67,9 @@ function _try_read_json(file: string) {
  * @param tree_node
  * @param indent
  */
-export function _find_usage(tree_node: ProviderTreeNode, indent: number = 0): boolean {
-    return tree_node?.providers?.find(p => p.used)
-        || tree_node?.children?.find(t => _find_usage(t, indent + 1))
+export function _find_usage(tree_node: ProviderTreeNode | undefined, indent: number = 0): boolean {
+    return Boolean(tree_node?.providers?.find(p => p?.used)
+        || tree_node?.children?.find(t => _find_usage(t, indent + 1)))
 }
 
 /**
@@ -413,6 +413,7 @@ export class Platform {
     }
 
     destroy() {
+        this.root_injector.emit('tora-destroy')
         clearInterval(this._interval)
         this._koa.destroy()
     }

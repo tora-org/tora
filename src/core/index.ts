@@ -15,6 +15,7 @@ export {
     ToraRoot, ToraModule, ToraService, ToraRouter, ToraTrigger,
     Get, Post, Put, Delete,
     Auth, Task, Lock, Inject, Meta, Disabled, EchoDependencies, NoWrap, CacheWith,
+    OnDestroy
 } from './annotation'
 
 export { Gunslinger, IGunslinger } from './gunslinger'

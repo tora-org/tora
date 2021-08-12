@@ -5,7 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { AbstractType, Provider } from '../types'
+import EventEmitter from 'events'
+import { AbstractType, Provider, ToraEvent } from '../types'
 import { _NullInjector, NullInjector } from './null-injector'
 import { InjectorProvider } from './provider'
 
@@ -23,7 +24,8 @@ export class Injector {
 
     constructor(
         public parent: Injector | _NullInjector,
-        public providers: Map<any, any> = new Map()
+        public providers: Map<any, any> = new Map(),
+        public readonly emitter: EventEmitter,
     ) {
     }
 
@@ -35,8 +37,8 @@ export class Injector {
      */
     static create(parent?: Injector | null, providers?: Map<any, any>): Injector {
         providers = providers || new Map()
-        const real_parent = parent ?? NullInjector
-        const new_instance = new Injector(real_parent, providers)
+        const real_parent: Injector = parent ?? NullInjector as any
+        const new_instance = new Injector(real_parent, providers, real_parent?.emitter ?? new EventEmitter())
         real_parent.children.push(new_instance)
         return new_instance
     }
@@ -89,5 +91,24 @@ export class Injector {
             return true
         }
         return this.providers.has(token) || this.parent.has(token)
+    }
+
+    /**
+     * 触发一个事件。
+     *
+     * @param event
+     */
+    emit(event: ToraEvent) {
+        this.emitter.emit(event)
+    }
+
+    /**
+     * 监听 tora 事件。
+     *
+     * @param event
+     * @param callback
+     */
+    on(event: ToraEvent, callback: () => void) {
+        this.emitter.on(event, callback)
     }
 }

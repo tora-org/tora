@@ -17,7 +17,7 @@ import { Injector } from './injector'
  * @param defs
  * @param injector
  */
-export function def2Provider(defs: (ProviderDef<any> | Type<any>)[], injector: Injector) {
+export function def2Provider(defs: (ProviderDef<any> | Type<any>)[], injector: Injector): (Provider<unknown> | undefined)[] | undefined {
     return defs?.map(def => {
         if ((def as any).useValue) {
 
@@ -156,11 +156,17 @@ export class ClassProvider<M> implements Provider<M> {
     }
 
     private get_param_instance(parents?: any[]) {
+        const service_property = TokenUtils.ToraServiceProperty.getset(this.cls.prototype, {})
         const provider_list = this.extract_param_types(parents)
         const param_list = provider_list?.map((provider: any) => {
             return provider?.create(parents)
         }) ?? []
-        return new this.cls(...param_list)
+        const instance = new this.cls(...param_list)
+        if (service_property.destroy_method) {
+            const destroy_method = service_property.destroy_method.bind(instance)
+            this.injector.on('tora-destroy', () => destroy_method())
+        }
+        return instance
     }
 
     private set_param_instance_used(parents?: any[]) {

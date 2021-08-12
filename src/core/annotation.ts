@@ -130,6 +130,18 @@ export function NoWrap() {
 }
 
 /**
+ * 将 Tora.ToraService 中的一个方法标记为清理函数。
+ *
+ * @category Service Modifier
+ */
+export function OnDestroy() {
+    return (target: any, key: string, desc: PropertyDescriptor) => {
+        const service_property = TokenUtils.ToraServiceProperty.getset(target, {})
+        service_property.destroy_method = desc.value
+    }
+}
+
+/**
  * 将 Tora.ToraRouter 中的一个请求处理函数标记为结果需要进行缓存。
  *
  * @category Router Modifier
@@ -272,7 +284,6 @@ export function Meta<T extends object = any>(meta: T) {
         TokenUtils.ClassMeta.set(target, meta)
     }
 }
-
 
 /**
  * 将 Tora.ToraRouter 中的一个方法标记为 GET 请求处理函数。

@@ -7,7 +7,7 @@
 
 import 'reflect-metadata'
 import { Injector } from './injector'
-import { HandlerDescriptor, Provider, TaskDescriptor, ToraRouterOptions, ToraTriggerOptions, Type } from './types'
+import { HandlerDescriptor, ProviderTreeNode, TaskDescriptor, ToraRouterOptions, ToraTriggerOptions, Type } from './types'
 
 /**
  *
@@ -34,6 +34,7 @@ enum DI_TOKEN {
 
     // ToraService
     tora_service_name = 'lazor:tora_service_name',
+    tora_service_property = 'lazor:tora_service_property',
 
     // ToraModule
     tora_module_provider_collector = 'lazor:tora_module_provider_collector',
@@ -276,6 +277,7 @@ export namespace TokenUtils {
      * @category Tora Service Meta
      */
     export const ToraServiceName = new MetaTool<string>(DI_TOKEN.tora_service_name)
+    export const ToraServiceProperty = new MetaTool<{ destroy_method?: Function }>(DI_TOKEN.tora_service_property)
 
     // ToraModule
 
@@ -283,7 +285,7 @@ export namespace TokenUtils {
      * ToraModule 收集函数。
      * @category Tora Module Meta
      */
-    export const ToraModuleProviderCollector = new MetaTool<(injector: Injector) => { children: any[], name: any, providers: Provider<any>[] }>(DI_TOKEN.tora_module_provider_collector)
+    export const ToraModuleProviderCollector = new MetaTool<(injector: Injector) => ProviderTreeNode>(DI_TOKEN.tora_module_provider_collector)
 
     /**
      * ToraModule 的 routers，对应 ToraModuleOptions 中的 routers。

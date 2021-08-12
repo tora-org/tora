@@ -23,6 +23,7 @@ export {
     NoWrap, CacheWith, EchoDependencies,
     Auth, Task, Lock, Inject, Meta, Disabled,
     Gunslinger,
+    OnDestroy,
     IGunslinger,
 } from './core'
 

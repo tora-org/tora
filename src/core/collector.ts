@@ -8,7 +8,7 @@
 import { ClassProvider, Injector } from '../injector'
 import { def2Provider } from '../injector/provider'
 import { TokenUtils } from '../token'
-import { HandlerDescriptor, ImportsAndProviders, Provider, ProviderDef, ToraRouterOptions, ToraTriggerOptions, Type } from '../types'
+import { HandlerDescriptor, ImportsAndProviders, Provider, ProviderDef, ProviderTreeNode, ToraRouterOptions, ToraTriggerOptions, Type } from '../types'
 
 /**
  * @private
@@ -18,11 +18,11 @@ import { HandlerDescriptor, ImportsAndProviders, Provider, ProviderDef, ToraRout
  * @param target
  * @param options
  */
-export function makeProviderCollector(target: any, options?: ImportsAndProviders) {
+export function makeProviderCollector(target: any, options?: ImportsAndProviders): (injector: Injector) => ProviderTreeNode {
     return function(injector: Injector) {
         const children = options?.imports?.map(md => TokenUtils.ToraModuleProviderCollector.get(md)?.(injector)) ?? []
 
-        const providers: Provider<any>[] = [
+        const providers: (Provider<any> | undefined)[] = [
             ...def2Provider([...options?.providers ?? []] as (ProviderDef<any> | Type<any>)[], injector) ?? []
         ]
 
