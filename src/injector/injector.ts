@@ -38,7 +38,14 @@ export class Injector {
     static create(parent?: Injector | null, providers?: Map<any, any>): Injector {
         providers = providers || new Map()
         const real_parent: Injector = parent ?? NullInjector as any
-        const new_instance = new Injector(real_parent, providers, real_parent?.emitter ?? new EventEmitter())
+        let parent_emitter: EventEmitter
+        if (!real_parent.emitter) {
+            parent_emitter = new EventEmitter()
+            parent_emitter.setMaxListeners(9999)
+        } else {
+            parent_emitter = real_parent.emitter
+        }
+        const new_instance = new Injector(real_parent, providers, parent_emitter)
         real_parent.children.push(new_instance)
         return new_instance
     }
