@@ -87,6 +87,24 @@ export class Revolver {
     }
 
     /**
+     * 停止（挂起）一个任务。
+     *
+     * 此操作会将任务移出触发队列，但不会停止当前正在执行的任务。
+     *
+     * @param id 任务 ID
+     */
+    async stop(id: string) {
+        let bullet = this._clip
+        while (bullet && bullet?.id !== id) {
+            bullet = bullet.next_bullet
+        }
+        if (!bullet) {
+            throw new Error(`No hang task found by ID: [${id}]`)
+        }
+        this.suspend(bullet)
+    }
+
+    /**
      * 临时触发一个任务队列中的任务。
      *
      * 此操作会先将指定的任务移出队列，执行完毕后如果没有异常会添加回队列中。
