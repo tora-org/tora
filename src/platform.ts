@@ -399,10 +399,10 @@ export class Platform {
     /**
      * 开始监听请求。
      */
-    start() {
-        const port = this._config_data?.get('tora.port') ?? 3000
+    start(port?: number) {
+        port = port ?? this._config_data?.get('tora.port') ?? 3000
 
-        console.log(`tora server starting...`)
+        console.log(`tora server start at ${new Date().toISOString()}`)
         console.log(`    listen at port ${port}...`)
 
         this._koa.handle_by(this._server)
@@ -410,12 +410,14 @@ export class Platform {
                 const duration = new Date().getTime() - this.started_at
                 console.log(`\ntora server started successfully in ${duration / 1000}s.`)
             })
+        return this
     }
 
     destroy() {
         this.root_injector.emit('tora-destroy')
         clearInterval(this._interval)
         this._koa.destroy()
+        return this
     }
 
     private _mount_router(router_module: Type<any>, injector: Injector) {
