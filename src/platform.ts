@@ -202,7 +202,12 @@ export class Platform {
      * @param data
      */
     load_config(data: ToraConfigSchema): this
-    load_config(data?: string | ToraConfigSchema) {
+    /**
+     * 加载配置文件，函数方式。
+     * @param data
+     */
+    load_config(data: () => ToraConfigSchema): this
+    load_config(data?: string | ToraConfigSchema | (() => ToraConfigSchema)) {
         if (!data) {
             if (!fs.existsSync(path.resolve('config/default.json'))) {
                 console.error('No specified configuration file, and "config/default.json" not exist.')
@@ -215,6 +220,8 @@ export class Platform {
                 process.exit(1)
             }
             this._config_data = new ConfigData(_try_read_json(data))
+        } else if (typeof data === 'function') {
+            this._config_data = new ConfigData(data())
         } else {
             this._config_data = new ConfigData(data)
         }
