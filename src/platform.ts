@@ -299,8 +299,6 @@ export class Platform {
      */
     bootstrap(root_module: any) {
 
-        console.log('root_module', root_module)
-
         if (TokenUtils.ComponentType.get(root_module) !== 'ToraRoot') {
             throw new Error(`${root_module.name} is not a ToraRoot.`)
         }
