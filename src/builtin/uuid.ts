@@ -59,7 +59,19 @@ export class UUID {
         return UUID.random_8_pool.slice(UUID.poolPtr, (UUID.poolPtr += 16))
     }
 
-    private static stringify(arr: number[], offset = 0) {
+    private static stringify_long(arr: number[], offset = 0) {
+        return (
+            UUID.stringify_short(arr, 0) +
+            UUID.byteToHex[arr[offset + 10]] +
+            UUID.byteToHex[arr[offset + 11]] +
+            UUID.byteToHex[arr[offset + 12]] +
+            UUID.byteToHex[arr[offset + 13]] +
+            UUID.byteToHex[arr[offset + 14]] +
+            UUID.byteToHex[arr[offset + 15]]
+        ).toLowerCase()
+    }
+
+    private static stringify_short(arr: number[], offset = 0) {
         return (
             UUID.byteToHex[arr[offset]] +
             UUID.byteToHex[arr[offset + 1]] +
@@ -70,27 +82,13 @@ export class UUID {
             UUID.byteToHex[arr[offset + 6]] +
             UUID.byteToHex[arr[offset + 7]] +
             UUID.byteToHex[arr[offset + 8]] +
-            UUID.byteToHex[arr[offset + 9]] +
-            UUID.byteToHex[arr[offset + 10]] +
-            UUID.byteToHex[arr[offset + 11]] +
-            UUID.byteToHex[arr[offset + 12]] +
-            UUID.byteToHex[arr[offset + 13]] +
-            UUID.byteToHex[arr[offset + 14]] +
-            UUID.byteToHex[arr[offset + 15]]
+            UUID.byteToHex[arr[offset + 9]]
         ).toLowerCase()
     }
 
-    /**
-     * 创建一个新的 uuid。
-     *
-     * > 返回值没有使用标准格式 `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`。
-     * >
-     * > 因为考虑多数情况会希望ID尽可能短, 所以返回格式直接去掉了所有的 `-`。
-     */
-    create() {
+    private static _create() {
         let i = 0
         const b = new Array(16)
-        let node = UUID.NODE_ID
         let clock_sequence = UUID.CLOCK_SEQ
         let milli_secs = Date.now()
         let nano_secs = UUID._lastNSecs + 1
@@ -131,10 +129,29 @@ export class UUID {
 
         b[i++] = clock_sequence & 0xff
 
-        for (let n = 0; n < 6; ++n) {
-            b[i + n] = node[n]
-        }
+        return b
+    }
 
-        return UUID.stringify(b)
+    /**
+     * 创建一个新的 uuid。
+     *
+     * > 返回值没有使用标准格式 `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`。
+     * >
+     * > 因为考虑多数情况会希望ID尽可能短, 所以返回格式直接去掉了所有的 `-`。
+     *
+     * @param type short 格式会去掉 node_id 部分。
+     */
+    create(type: 'short' | 'long' = 'long') {
+        const b = UUID._create()
+        if (type === 'short') {
+            return UUID.stringify_short(b)
+        } else {
+            let node = UUID.NODE_ID
+            const i = b.length
+            for (let n = 0; n < 6; ++n) {
+                b[i + n] = node[n]
+            }
+            return UUID.stringify_long(b)
+        }
     }
 }

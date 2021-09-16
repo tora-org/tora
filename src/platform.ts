@@ -8,8 +8,7 @@
 import fs from 'fs'
 import path from 'path'
 import { ApiParams, ConfigData, SessionContext, Timestamp, UUID } from './builtin'
-import { Injector } from './injector'
-import { ClassProvider, def2Provider, ValueProvider } from './injector/provider'
+import { ClassProvider, def2Provider, Injector, TokenUtils, ValueProvider } from './core'
 import { PlatformUtils, PURE_PARAMS } from './platform-utils'
 import { Revolver } from './schedule'
 import { TaskDesc } from './schedule/revolver'
@@ -19,7 +18,6 @@ import { LifeCycle } from './service/life-cycle'
 import { ResultWrapper } from './service/result-wrapper'
 import { TaskLifeCycle } from './service/task-life-cycle'
 import { TaskLock } from './service/task-lock'
-import { TokenUtils } from './token'
 import { ToraKoa } from './tora-koa'
 import { ToraServer } from './tora-server'
 import {
@@ -51,7 +49,7 @@ function _try_read_json(file: string) {
             process.exit(1)
         }
         return res
-    } catch (e) {
+    } catch (e: any) {
         console.error(`Parse configuration file failed.`)
         console.error(`    File: ${path.resolve(file)}`)
         console.error(`    Error: ${e.message}`)

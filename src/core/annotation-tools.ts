@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { TokenUtils } from '../token'
+import { TokenUtils } from './token-utils'
 import { HandlerDescriptor } from '../types'
 
 /**

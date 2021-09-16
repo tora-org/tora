@@ -5,6 +5,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export { ClassProvider, ValueProvider, FactoryProvider } from './provider'
-export { AnnotationTools } from './tools'
 export { Injector } from './injector'
+export { InjectorProvider } from './injector-provider'

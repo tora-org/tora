@@ -6,9 +6,9 @@
  */
 
 import EventEmitter from 'events'
-import { AbstractType, Provider, ToraEvent } from '../types'
+import { AbstractType, Provider, ToraEvent } from '../../types'
+import { InjectorProvider } from './injector-provider'
 import { _NullInjector, NullInjector } from './null-injector'
-import { InjectorProvider } from './provider'
 
 /**
  * @private

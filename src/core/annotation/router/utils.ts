@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { TokenUtils } from '../token'
-import { ApiMethod, NoTrailingAndLeadingSlash } from '../types'
+import { TokenUtils } from '../../token-utils'
+import { ApiMethod, NoTrailingAndLeadingSlash } from '../../../types'
 
 /**
  * @private

@@ -1,6 +1,6 @@
 import { ApiParams, SessionContext, TaskContext } from './builtin'
+import { Injector } from './core'
 import { InnerFinish, OuterFinish, reasonable, ReasonableError } from './error'
-import { Injector } from './injector'
 import { dayjs, Dayjs } from './schedule/cron/dayjs-snipper'
 import { Authenticator } from './service/authenticator'
 import { CacheProxy } from './service/cache-proxy'

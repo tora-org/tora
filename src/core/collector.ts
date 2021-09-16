@@ -5,10 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { ClassProvider, Injector } from '../injector'
-import { def2Provider } from '../injector/provider'
-import { TokenUtils } from '../token'
 import { HandlerDescriptor, ImportsAndProviders, Provider, ProviderDef, ProviderTreeNode, ToraRouterOptions, ToraTriggerOptions, Type } from '../types'
+import { Injector } from './injector'
+import { ClassProvider, def2Provider } from './provider'
+import { TokenUtils } from './token-utils'
 
 /**
  * @private

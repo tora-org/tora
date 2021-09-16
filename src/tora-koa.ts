@@ -55,7 +55,7 @@ export class ToraKoa {
      * @param server
      */
     handle_by(server: ToraServer) {
-        this._koa.use(async (ctx: LiteContext, next) => server.handleRequest(ctx, next))
+        this._koa.use(async (ctx: LiteContext, next) => server.handle_request(ctx, next))
         return this
     }
 

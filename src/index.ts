@@ -13,19 +13,7 @@ export { ToraConfigSchema, ToraAuthInfo, ToraSession } from './types'
 export * as ToraTypes from './types'
 export * as Tora from './core'
 
-export {
-    ToraRoot,
-    ToraRouter,
-    ToraTrigger,
-    ToraService,
-    ToraModule,
-    Get, Post, Put, Delete,
-    NoWrap, CacheWith, EchoDependencies,
-    Auth, Task, Lock, Inject, Meta, Disabled,
-    Gunslinger,
-    OnDestroy,
-    IGunslinger,
-} from './core'
+export * from './core'
 
 export { Authenticator } from './service/authenticator'
 export { CacheProxy } from './service/cache-proxy'
@@ -34,7 +22,7 @@ export { ResultWrapper } from './service/result-wrapper'
 export { TaskLifeCycle } from './service/task-life-cycle'
 export { TaskLock } from './service/task-lock'
 
-export { ClassProvider, ValueProvider, FactoryProvider, Injector } from './injector'
+export { ClassProvider, ValueProvider, FactoryProvider } from './core/provider'
 
 export {
     UUID, CurrentTimestamp, Timestamp, ConfigData, ApiParams, SessionContext, TaskContext,
@@ -44,6 +32,3 @@ export {
 export { Schedule, Revolver, ScheduleOptions } from './schedule'
 export { Platform } from './platform'
 export { PURE_PARAMS, ToraError } from './platform-utils'
-
-export { AnnotationTools } from './injector'
-export { TokenUtils } from './token'

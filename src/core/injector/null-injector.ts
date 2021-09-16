@@ -12,7 +12,7 @@ export class _NullInjector {
 
     readonly children: any[] = []
 
-    has(token: any) {
+    has(_: any) {
         return false
     }
 

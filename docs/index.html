@@ -108,11 +108,11 @@
 				</a>
 				<p>Tora 中的核心组件有四种：</p>
 				<ul>
-					<li><a href="modules/tora.html#toraservice">ToraService</a> 用来实现可以注入的服务。</li>
-					<li><a href="modules/tora.html#toramodule">ToraModule</a> 用于提供 ToraService，加载其他 ToraModule，是连接服务的中枢。</li>
-					<li><a href="modules/tora.html#toraroot">ToraRoot</a> 特殊 ToraModule，可以携带 routers 和 tasks，作为 Platform 的启动入口。</li>
-					<li><a href="modules/tora.html#torarouter">ToraRouter</a> 特殊 ToraModule，用于实现 API，提供服务，加载模块。</li>
-					<li><a href="modules/tora.html#toratrigger">ToraTrigger</a> 特殊 ToraModule，用于实现定时任务。</li>
+					<li><a href="modules/Tora.html#ToraService">ToraService</a> 用来实现可以注入的服务。</li>
+					<li><a href="modules/Tora.html#ToraModule">ToraModule</a> 用于提供 ToraService，加载其他 ToraModule，是连接服务的中枢。</li>
+					<li><a href="modules/Tora.html#ToraRoot">ToraRoot</a> 特殊 ToraModule，可以携带 routers 和 tasks，作为 Platform 的启动入口。</li>
+					<li><a href="modules/Tora.html#ToraRouter">ToraRouter</a> 特殊 ToraModule，用于实现 API，提供服务，加载模块。</li>
+					<li><a href="modules/Tora.html#ToraTrigger">ToraTrigger</a> 特殊 ToraModule，用于实现定时任务。</li>
 				</ul>
 				<p>先实现一个最基础的 Service，以一定格式把两个字符串拼起来。</p>
 				<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">ToraService</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;tora&#039;</span>
@@ -196,7 +196,7 @@
 <span style="color: #008000">// tora server started successfully in 0.004s.</span>
 
 </code></pre>
-				<p>大多数情况我们的一个服务不止是启动一个接口，而是一批接口以及若干定时任务。 这时我们可以使用 <a href="modules/tora.html#toraroot">ToraRoot</a></p>
+				<p>大多数情况我们的一个服务不止是启动一个接口，而是一批接口以及若干定时任务。 这时我们可以使用 <a href="modules/Tora.html#ToraRoot">ToraRoot</a></p>
 				<pre><code class="language-typescript"><span style="color: #000000">@</span><span style="color: #795E26">ToraRoot</span><span style="color: #000000">({</span>
 <span style="color: #000000">    </span><span style="color: #001080">imports:</span><span style="color: #000000"> [</span><span style="color: #001080">SampleModule1</span><span style="color: #000000">, </span><span style="color: #001080">SampleModule2</span><span style="color: #000000">, </span><span style="color: #008000">/* ... */</span><span style="color: #000000">],</span>
 <span style="color: #000000">    </span><span style="color: #001080">providers:</span><span style="color: #000000"> [</span><span style="color: #001080">SampleService1</span><span style="color: #000000">, </span><span style="color: #001080">SampleService2</span><span style="color: #000000">, </span><span style="color: #008000">/* ... */</span><span style="color: #000000">],</span>
@@ -220,164 +220,185 @@
 						<a href="modules.html">Exports</a>
 					</li>
 					<li class=" tsd-kind-namespace">
-						<a href="modules/annotationtools.html">Annotation<wbr>Tools</a>
+						<a href="modules/Tora.html">Tora</a>
+					</li>
+					<li class=" tsd-kind-namespace tsd-parent-kind-namespace">
+						<a href="modules/Tora.AnnotationTools.html">Tora.<wbr>Annotation<wbr>Tools</a>
+					</li>
+					<li class=" tsd-kind-namespace tsd-parent-kind-namespace">
+						<a href="modules/Tora.TokenUtils.html">Tora.<wbr>Token<wbr>Utils</a>
 					</li>
 					<li class=" tsd-kind-namespace">
-						<a href="modules/tokenutils.html">Token<wbr>Utils</a>
-					</li>
-					<li class=" tsd-kind-namespace">
-						<a href="modules/tora.html">Tora</a>
-					</li>
-					<li class=" tsd-kind-namespace">
-						<a href="modules/toratypes.html">Tora<wbr>Types</a>
+						<a href="modules/ToraTypes.html">Tora<wbr>Types</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-reference">
-						<a href="modules.html#auth" class="tsd-kind-icon">Auth</a>
+						<a href="modules.html#AnnotationTools" class="tsd-kind-icon">Annotation<wbr>Tools</a>
 					</li>
 					<li class=" tsd-kind-reference">
-						<a href="modules.html#cachewith" class="tsd-kind-icon">Cache<wbr>With</a>
+						<a href="modules.html#Auth" class="tsd-kind-icon">Auth</a>
 					</li>
 					<li class=" tsd-kind-reference">
-						<a href="modules.html#delete" class="tsd-kind-icon">Delete</a>
+						<a href="modules.html#CacheWith" class="tsd-kind-icon">Cache<wbr>With</a>
 					</li>
 					<li class=" tsd-kind-reference">
-						<a href="modules.html#disabled" class="tsd-kind-icon">Disabled</a>
+						<a href="modules.html#ClassProvider" class="tsd-kind-icon">Class<wbr>Provider</a>
 					</li>
 					<li class=" tsd-kind-reference">
-						<a href="modules.html#echodependencies" class="tsd-kind-icon">Echo<wbr>Dependencies</a>
+						<a href="modules.html#Delete" class="tsd-kind-icon">Delete</a>
 					</li>
 					<li class=" tsd-kind-reference">
-						<a href="modules.html#get" class="tsd-kind-icon">Get</a>
+						<a href="modules.html#Disabled" class="tsd-kind-icon">Disabled</a>
 					</li>
 					<li class=" tsd-kind-reference">
-						<a href="modules.html#gunslinger" class="tsd-kind-icon">Gunslinger</a>
+						<a href="modules.html#EchoDependencies" class="tsd-kind-icon">Echo<wbr>Dependencies</a>
 					</li>
 					<li class=" tsd-kind-reference">
-						<a href="modules.html#igunslinger" class="tsd-kind-icon">IGunslinger</a>
+						<a href="modules.html#FactoryProvider" class="tsd-kind-icon">Factory<wbr>Provider</a>
 					</li>
 					<li class=" tsd-kind-reference">
-						<a href="modules.html#inject" class="tsd-kind-icon">Inject</a>
+						<a href="modules.html#Get" class="tsd-kind-icon">Get</a>
 					</li>
 					<li class=" tsd-kind-reference">
-						<a href="modules.html#lock" class="tsd-kind-icon">Lock</a>
+						<a href="modules.html#Gunslinger" class="tsd-kind-icon">Gunslinger</a>
 					</li>
 					<li class=" tsd-kind-reference">
-						<a href="modules.html#meta" class="tsd-kind-icon">Meta</a>
+						<a href="modules.html#IGunslinger" class="tsd-kind-icon">IGunslinger</a>
 					</li>
 					<li class=" tsd-kind-reference">
-						<a href="modules.html#nowrap" class="tsd-kind-icon">No<wbr>Wrap</a>
+						<a href="modules.html#Inject" class="tsd-kind-icon">Inject</a>
 					</li>
 					<li class=" tsd-kind-reference">
-						<a href="modules.html#post" class="tsd-kind-icon">Post</a>
+						<a href="modules.html#Injector" class="tsd-kind-icon">Injector</a>
 					</li>
 					<li class=" tsd-kind-reference">
-						<a href="modules.html#put" class="tsd-kind-icon">Put</a>
+						<a href="modules.html#InjectorProvider" class="tsd-kind-icon">Injector<wbr>Provider</a>
 					</li>
 					<li class=" tsd-kind-reference">
-						<a href="modules.html#task" class="tsd-kind-icon">Task</a>
+						<a href="modules.html#Lock" class="tsd-kind-icon">Lock</a>
 					</li>
 					<li class=" tsd-kind-reference">
-						<a href="modules.html#timestamp" class="tsd-kind-icon">Timestamp</a>
+						<a href="modules.html#Meta" class="tsd-kind-icon">Meta</a>
 					</li>
 					<li class=" tsd-kind-reference">
-						<a href="modules.html#toramodule" class="tsd-kind-icon">Tora<wbr>Module</a>
+						<a href="modules.html#OnDestroy" class="tsd-kind-icon">On<wbr>Destroy</a>
 					</li>
 					<li class=" tsd-kind-reference">
-						<a href="modules.html#toraroot" class="tsd-kind-icon">Tora<wbr>Root</a>
+						<a href="modules.html#Post" class="tsd-kind-icon">Post</a>
 					</li>
 					<li class=" tsd-kind-reference">
-						<a href="modules.html#torarouter" class="tsd-kind-icon">Tora<wbr>Router</a>
+						<a href="modules.html#Put" class="tsd-kind-icon">Put</a>
 					</li>
 					<li class=" tsd-kind-reference">
-						<a href="modules.html#toraservice" class="tsd-kind-icon">Tora<wbr>Service</a>
+						<a href="modules.html#Task" class="tsd-kind-icon">Task</a>
 					</li>
 					<li class=" tsd-kind-reference">
-						<a href="modules.html#toratrigger" class="tsd-kind-icon">Tora<wbr>Trigger</a>
+						<a href="modules.html#Timestamp" class="tsd-kind-icon">Timestamp</a>
+					</li>
+					<li class=" tsd-kind-reference">
+						<a href="modules.html#TokenUtils" class="tsd-kind-icon">Token<wbr>Utils</a>
+					</li>
+					<li class=" tsd-kind-reference">
+						<a href="modules.html#ToraModule" class="tsd-kind-icon">Tora<wbr>Module</a>
+					</li>
+					<li class=" tsd-kind-reference">
+						<a href="modules.html#ToraRoot" class="tsd-kind-icon">Tora<wbr>Root</a>
+					</li>
+					<li class=" tsd-kind-reference">
+						<a href="modules.html#ToraRouter" class="tsd-kind-icon">Tora<wbr>Router</a>
+					</li>
+					<li class=" tsd-kind-reference">
+						<a href="modules.html#ToraService" class="tsd-kind-icon">Tora<wbr>Service</a>
+					</li>
+					<li class=" tsd-kind-reference">
+						<a href="modules.html#ToraTrigger" class="tsd-kind-icon">Tora<wbr>Trigger</a>
+					</li>
+					<li class=" tsd-kind-reference">
+						<a href="modules.html#ValueProvider" class="tsd-kind-icon">Value<wbr>Provider</a>
+					</li>
+					<li class=" tsd-kind-reference">
+						<a href="modules.html#def2Provider" class="tsd-kind-icon">def2<wbr>Provider</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter">
-						<a href="classes/apiparams.html" class="tsd-kind-icon">Api<wbr>Params</a>
+						<a href="classes/ApiParams.html" class="tsd-kind-icon">Api<wbr>Params</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/authenticator.html" class="tsd-kind-icon">Authenticator</a>
+						<a href="classes/Authenticator.html" class="tsd-kind-icon">Authenticator</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/cacheproxy.html" class="tsd-kind-icon">Cache<wbr>Proxy</a>
+						<a href="classes/CacheProxy.html" class="tsd-kind-icon">Cache<wbr>Proxy</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/ConfigData.html" class="tsd-kind-icon">Config<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/CurrentTimestamp.html" class="tsd-kind-icon">Current<wbr>Timestamp</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-private">
-						<a href="classes/classprovider.html" class="tsd-kind-icon">Class<wbr>Provider</a>
+						<a href="classes/Judgement.html" class="tsd-kind-icon">Judgement</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/configdata.html" class="tsd-kind-icon">Config<wbr>Data</a>
+						<a href="classes/LifeCycle.html" class="tsd-kind-icon">Life<wbr>Cycle</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/currenttimestamp.html" class="tsd-kind-icon">Current<wbr>Timestamp</a>
+						<a href="classes/Platform.html" class="tsd-kind-icon">Platform</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-private">
-						<a href="classes/factoryprovider.html" class="tsd-kind-icon">Factory<wbr>Provider</a>
-					</li>
-					<li class=" tsd-kind-class tsd-is-private">
-						<a href="classes/injector.html" class="tsd-kind-icon">Injector</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-private">
-						<a href="classes/judgement.html" class="tsd-kind-icon">Judgement</a>
+						<a href="classes/Reference.html" class="tsd-kind-icon">Reference</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/lifecycle.html" class="tsd-kind-icon">Life<wbr>Cycle</a>
+						<a href="classes/ResultWrapper.html" class="tsd-kind-icon">Result<wbr>Wrapper</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/platform.html" class="tsd-kind-icon">Platform</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-private">
-						<a href="classes/reference.html" class="tsd-kind-icon">Reference</a>
+						<a href="classes/Revolver.html" class="tsd-kind-icon">Revolver</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/resultwrapper.html" class="tsd-kind-icon">Result<wbr>Wrapper</a>
+						<a href="classes/Schedule.html" class="tsd-kind-icon">Schedule</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/revolver.html" class="tsd-kind-icon">Revolver</a>
+						<a href="classes/SessionContext.html" class="tsd-kind-icon">Session<wbr>Context</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/schedule.html" class="tsd-kind-icon">Schedule</a>
+						<a href="classes/TaskContext.html" class="tsd-kind-icon">Task<wbr>Context</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/sessioncontext.html" class="tsd-kind-icon">Session<wbr>Context</a>
+						<a href="classes/TaskLifeCycle.html" class="tsd-kind-icon">Task<wbr>Life<wbr>Cycle</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/taskcontext.html" class="tsd-kind-icon">Task<wbr>Context</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/tasklifecycle.html" class="tsd-kind-icon">Task<wbr>Life<wbr>Cycle</a>
-					</li>
-					<li class=" tsd-kind-class">
-						<a href="classes/tasklock.html" class="tsd-kind-icon">Task<wbr>Lock</a>
+						<a href="classes/TaskLock.html" class="tsd-kind-icon">Task<wbr>Lock</a>
 					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter">
-						<a href="classes/toraerror.html" class="tsd-kind-icon">Tora<wbr>Error</a>
+						<a href="classes/ToraError.html" class="tsd-kind-icon">Tora<wbr>Error</a>
 					</li>
 					<li class=" tsd-kind-class">
-						<a href="classes/uuid.html" class="tsd-kind-icon">UUID</a>
-					</li>
-					<li class=" tsd-kind-class tsd-has-type-parameter tsd-is-private">
-						<a href="classes/valueprovider.html" class="tsd-kind-icon">Value<wbr>Provider</a>
+						<a href="classes/UUID.html" class="tsd-kind-icon">UUID</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="interfaces/scheduleoptions.html" class="tsd-kind-icon">Schedule<wbr>Options</a>
+						<a href="interfaces/ScheduleOptions.html" class="tsd-kind-icon">Schedule<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ToraAuthInfo.html" class="tsd-kind-icon">Tora<wbr>Auth<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ToraConfigSchema.html" class="tsd-kind-icon">Tora<wbr>Config<wbr>Schema</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ToraSession.html" class="tsd-kind-icon">Tora<wbr>Session</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter tsd-is-private">
-						<a href="modules.html#path" class="tsd-kind-icon">Path</a>
+						<a href="modules.html#Path" class="tsd-kind-icon">Path</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter tsd-is-private">
-						<a href="modules.html#pathvalue" class="tsd-kind-icon">Path<wbr>Value</a>
+						<a href="modules.html#PathValue" class="tsd-kind-icon">Path<wbr>Value</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
-						<a href="modules.html#valuetype" class="tsd-kind-icon">Value<wbr>Type</a>
+						<a href="modules.html#ValueType" class="tsd-kind-icon">Value<wbr>Type</a>
 					</li>
 					<li class=" tsd-kind-variable">
-						<a href="modules.html#pure_params" class="tsd-kind-icon">PURE_<wbr>PARAMS</a>
+						<a href="modules.html#PURE_PARAMS" class="tsd-kind-icon">PURE_<wbr>PARAMS</a>
 					</li>
 					<li class=" tsd-kind-function">
 						<a href="modules.html#crash" class="tsd-kind-icon">crash</a>

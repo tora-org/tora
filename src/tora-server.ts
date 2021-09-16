@@ -50,7 +50,7 @@ export class ToraServer {
         }
     }
 
-    async handleRequest(context: LiteContext, next: Function) {
+    async handle_request(context: LiteContext, next: Function) {
         const req: Request & { body?: any } = context.request
         const params = req.method === 'GET' || req.method === 'DELETE' ? req.query : req.body
         const res = await this.handlers[req.path]?.[req.method as ApiMethod]?.(params, context)

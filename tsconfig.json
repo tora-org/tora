@@ -23,7 +23,7 @@
         "src/**/*.tsx"
     ],
     "exclude": [
-        "out",
+        "lib",
         "node_modules",
         "**/*.spec.ts"
     ],

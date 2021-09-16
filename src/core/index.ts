@@ -11,11 +11,11 @@
  * @category Namespace
  */
 
-export {
-    ToraRoot, ToraModule, ToraService, ToraRouter, ToraTrigger,
-    Get, Post, Put, Delete,
-    Auth, Task, Lock, Inject, Meta, Disabled, EchoDependencies, NoWrap, CacheWith,
-    OnDestroy
-} from './annotation'
+export * from './annotation'
+export * from './injector'
+export * from './provider'
 
 export { Gunslinger, IGunslinger } from './gunslinger'
+
+export { TokenUtils } from './token-utils'
+export { AnnotationTools } from './annotation-tools'

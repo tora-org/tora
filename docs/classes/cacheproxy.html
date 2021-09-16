@@ -61,7 +61,7 @@
 					<a href="../modules.html">Tora</a>
 				</li>
 				<li>
-					<a href="cacheproxy.html">CacheProxy</a>
+					<a href="CacheProxy.html">CacheProxy</a>
 				</li>
 			</ul>
 			<h1>Class CacheProxy</h1>
@@ -80,7 +80,7 @@
 					<p>这里 key 分为两个部分：</p>
 					<ul>
 						<li><code>cache_prefix</code><br>相当于标记不同请求接口的 namespace，如果不传默认使用请求路径。</li>
-						<li><code>cache_key</code><br>用于标记同一接口下不同请求参数对应的缓存。<br>需要在请求处理函数中进行计算，并由 <a href="sessioncontext.html#return_if_cache">SessionContext.return_if_cache</a> 传入。</li>
+						<li><code>cache_key</code><br>用于标记同一接口下不同请求参数对应的缓存。<br>需要在请求处理函数中进行计算，并由 <a href="SessionContext.html#return_if_cache">SessionContext.return_if_cache</a> 传入。</li>
 					</ul>
 					<p>可以使用 <code>cache_prefix</code> 区分不同的缓存空间，比如不同的 redis database，甚至是不同的 redis。<br>也可以通过 <code>cache_prefix</code> 拼接 <code>cache_key</code>，在同一缓存空间下唯一标记一份缓存。</p>
 				</div>
@@ -100,15 +100,15 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="cacheproxy.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="CacheProxy.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="cacheproxy.html#clear" class="tsd-kind-icon">clear</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="cacheproxy.html#get" class="tsd-kind-icon">get</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="cacheproxy.html#set" class="tsd-kind-icon">set</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="CacheProxy.html#clear" class="tsd-kind-icon">clear</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="CacheProxy.html#get" class="tsd-kind-icon">get</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="CacheProxy.html#set" class="tsd-kind-icon">set</a></li>
 							</ul>
 						</section>
 					</div>
@@ -120,13 +120,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Cache<wbr>Proxy<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="cacheproxy.html" class="tsd-signature-type" data-tsd-kind="Class">CacheProxy</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Cache<wbr>Proxy<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="CacheProxy.html" class="tsd-signature-type" data-tsd-kind="Class">CacheProxy</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="cacheproxy.html" class="tsd-signature-type" data-tsd-kind="Class">CacheProxy</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="CacheProxy.html" class="tsd-signature-type" data-tsd-kind="Class">CacheProxy</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -143,7 +143,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/efbe62e/src/service/cache-proxy.ts#L43">src/service/cache-proxy.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/service/cache-proxy.ts#L43">src/service/cache-proxy.ts:43</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -156,19 +156,19 @@
 								<li>
 									<h5>cache_key: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>通过 <a href="sessioncontext.html#return_if_cache">SessionContext.return_if_cache</a> 传入的 key</p>
+										<p>通过 <a href="SessionContext.html#return_if_cache">SessionContext.return_if_cache</a> 传入的 key</p>
 									</div>
 								</li>
 								<li>
 									<h5>cache_prefix: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>通过 <a href="../modules/tora.html#cachewith">Tora.CacheWith</a> 设置</p>
+										<p>通过 <a href="../modules/Tora.html#CacheWith">Tora.CacheWith</a> 设置</p>
 									</div>
 								</li>
 								<li>
 									<h5>cache_expires: <span class="tsd-signature-type">number</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>通过 <a href="../modules/tora.html#cachewith">Tora.CacheWith</a> 设置</p>
+										<p>通过 <a href="../modules/Tora.html#CacheWith">Tora.CacheWith</a> 设置</p>
 									</div>
 								</li>
 							</ul>
@@ -186,7 +186,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/efbe62e/src/service/cache-proxy.ts#L24">src/service/cache-proxy.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/service/cache-proxy.ts#L24">src/service/cache-proxy.ts:24</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -199,19 +199,19 @@
 								<li>
 									<h5>cache_key: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>通过 <a href="sessioncontext.html#return_if_cache">SessionContext.return_if_cache</a> 传入的 key</p>
+										<p>通过 <a href="SessionContext.html#return_if_cache">SessionContext.return_if_cache</a> 传入的 key</p>
 									</div>
 								</li>
 								<li>
 									<h5>cache_prefix: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>通过 <a href="../modules/tora.html#cachewith">Tora.CacheWith</a> 设置</p>
+										<p>通过 <a href="../modules/Tora.html#CacheWith">Tora.CacheWith</a> 设置</p>
 									</div>
 								</li>
 								<li>
 									<h5>cache_expires: <span class="tsd-signature-type">number</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>通过 <a href="../modules/tora.html#cachewith">Tora.CacheWith</a> 设置</p>
+										<p>通过 <a href="../modules/Tora.html#CacheWith">Tora.CacheWith</a> 设置</p>
 									</div>
 								</li>
 							</ul>
@@ -229,7 +229,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/efbe62e/src/service/cache-proxy.ts#L34">src/service/cache-proxy.ts:34</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/service/cache-proxy.ts#L34">src/service/cache-proxy.ts:34</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -242,25 +242,25 @@
 								<li>
 									<h5>cache_key: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>通过 <a href="sessioncontext.html#return_if_cache">SessionContext.return_if_cache</a> 传入的 key</p>
+										<p>通过 <a href="SessionContext.html#return_if_cache">SessionContext.return_if_cache</a> 传入的 key</p>
 									</div>
 								</li>
 								<li>
 									<h5>value: <span class="tsd-signature-type">any</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>通过 <a href="sessioncontext.html#finish_and_cache">SessionContext.finish_and_cache</a> 传入的 info</p>
+										<p>通过 <a href="SessionContext.html#finish_and_cache">SessionContext.finish_and_cache</a> 传入的 info</p>
 									</div>
 								</li>
 								<li>
 									<h5>cache_prefix: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>通过 <a href="../modules/tora.html#cachewith">Tora.CacheWith</a> 设置</p>
+										<p>通过 <a href="../modules/Tora.html#CacheWith">Tora.CacheWith</a> 设置</p>
 									</div>
 								</li>
 								<li>
 									<h5>cache_expires: <span class="tsd-signature-type">number</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>通过 <a href="../modules/tora.html#cachewith">Tora.CacheWith</a> 设置</p>
+										<p>通过 <a href="../modules/Tora.html#CacheWith">Tora.CacheWith</a> 设置</p>
 									</div>
 								</li>
 							</ul>
@@ -283,19 +283,19 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class">
-						<a href="cacheproxy.html" class="tsd-kind-icon">Cache<wbr>Proxy</a>
+						<a href="CacheProxy.html" class="tsd-kind-icon">Cache<wbr>Proxy</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="cacheproxy.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="CacheProxy.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="cacheproxy.html#clear" class="tsd-kind-icon">clear</a>
+								<a href="CacheProxy.html#clear" class="tsd-kind-icon">clear</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="cacheproxy.html#get" class="tsd-kind-icon">get</a>
+								<a href="CacheProxy.html#get" class="tsd-kind-icon">get</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="cacheproxy.html#set" class="tsd-kind-icon">set</a>
+								<a href="CacheProxy.html#set" class="tsd-kind-icon">set</a>
 							</li>
 						</ul>
 					</li>
