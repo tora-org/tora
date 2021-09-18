@@ -20,6 +20,6 @@ import { makeProviderCollector } from '../../collector'
 export function ToraModule(options?: ToraModuleOptions) {
     return function(target: any) {
         TokenUtils.setComponentTypeNX(target, 'ToraModule')
-        TokenUtils.ToraModuleProviderCollector.set(target, makeProviderCollector(target, options))
+        TokenUtils.ToraModuleProviderCollector(target).set(makeProviderCollector(target, options))
     }
 }

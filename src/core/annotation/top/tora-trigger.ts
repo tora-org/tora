@@ -6,8 +6,8 @@
  */
 
 import { ToraTriggerOptions } from '../../../types'
-import { TokenUtils } from '../../token-utils'
 import { makeProviderCollector, makeTaskCollector } from '../../collector'
+import { TokenUtils } from '../../token-utils'
 
 /**
  * 把一个类标记为 Tora.ToraTrigger，并配置元数据。
@@ -20,8 +20,8 @@ import { makeProviderCollector, makeTaskCollector } from '../../collector'
 export function ToraTrigger(options?: ToraTriggerOptions) {
     return function(constructor: any) {
         TokenUtils.setComponentTypeNX(constructor, 'ToraTrigger')
-        TokenUtils.ToraTriggerOptions.set(constructor, options)
-        TokenUtils.ToraTriggerTaskCollector.set(constructor, makeTaskCollector(constructor, options))
-        TokenUtils.ToraModuleProviderCollector.set(constructor, makeProviderCollector(constructor, options))
+        TokenUtils.ToraTriggerOptions(constructor).set(options)
+        TokenUtils.ToraTriggerTaskCollector(constructor).set(makeTaskCollector(constructor, options))
+        TokenUtils.ToraModuleProviderCollector(constructor).set(makeProviderCollector(constructor, options))
     }
 }

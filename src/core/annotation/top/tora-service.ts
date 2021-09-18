@@ -19,6 +19,6 @@ import { TokenUtils } from '../../token-utils'
 export function ToraService(options?: ToraServiceOptions) {
     return function(target: any) {
         TokenUtils.setComponentTypeNX(target, 'ToraService')
-        TokenUtils.ToraServiceName.set(target, target.name)
+        TokenUtils.ToraServiceName(target).set(target.name)
     }
 }

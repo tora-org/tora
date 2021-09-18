@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { GenericTypeOfCustomMeta } from '../meta-tool'
 import { TokenUtils } from '../token-utils'
+import { MetaValue } from './__types__'
 
 /**
  * 将 Tora.ToraTrigger 中的一个任务标记为需要上锁。
@@ -17,9 +17,9 @@ import { TokenUtils } from '../token-utils'
  * @category Trigger Annotation
  * @param lock_options
  */
-export function Lock(lock_options?: GenericTypeOfCustomMeta<typeof TokenUtils.LockMeta>) {
+export function Lock(lock_options?: MetaValue<typeof TokenUtils.LockMeta>) {
     return (target: any, property_key: string) => {
         const { key, expires } = lock_options ?? {}
-        TokenUtils.LockMeta.set(target, property_key, { key, expires })
+        TokenUtils.LockMeta(target, property_key).set({ key, expires })
     }
 }

@@ -21,7 +21,7 @@ import { TokenUtils } from '../token-utils'
 export function Task(crontab: string, options?: ScheduleOptions) {
     return function(target: any, key: string, desc: PropertyDescriptor) {
 
-        if (TokenUtils.ToraTriggerTask.has(target, key)) {
+        if (TokenUtils.ToraTriggerTask(target, key).exist()) {
             throw new Error(`Decorator @Task duplicated on method ${key}.`)
         }
 
@@ -31,15 +31,15 @@ export function Task(crontab: string, options?: ScheduleOptions) {
         task.schedule = Schedule.parse(crontab, options)
         task.property_key = key
         task.handler = desc.value
-        const inject_token_map = TokenUtils.ParamInjection.get(target, key)
+        const inject_token_map = TokenUtils.ParamInjection(target, key).value
         task.param_types = TokenUtils.getParamTypes(target, key)
             ?.map((t: any, i: number) => inject_token_map?.[i] ?? t)
 
-        TokenUtils.ToraTriggerTask.set(target, key, task)
-
-        const tasks = TokenUtils.ToraTriggerTaskList.getset(target, [])
-        if (!tasks.includes(task)) {
-            tasks.push(task)
-        }
+        TokenUtils.ToraTriggerTask(target, key).set(task)
+        TokenUtils.ToraTriggerTaskList(target).default([]).do(tasks => {
+            if (!tasks.includes(task)) {
+                tasks.push(task)
+            }
+        })
     }
 }

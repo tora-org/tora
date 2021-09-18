@@ -14,7 +14,9 @@ import { TokenUtils } from '../token-utils'
  */
 export function OnDestroy() {
     return (target: any, key: string, desc: PropertyDescriptor) => {
-        const service_property = TokenUtils.ToraServiceProperty.getset(target, {})
-        service_property.destroy_method = desc.value
+        TokenUtils.ToraServiceProperty(target).default({})
+            .do(service_property => {
+                service_property.destroy_method = desc.value
+            })
     }
 }

@@ -16,6 +16,6 @@ import { TokenUtils } from '../token-utils'
  */
 export function Meta<T extends object = any>(meta: T) {
     return function(target: any) {
-        TokenUtils.ClassMeta.set(target, meta)
+        TokenUtils.ClassMeta(target).set(meta)
     }
 }

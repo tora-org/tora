@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { TokenUtils } from './token-utils'
 import { HandlerDescriptor } from '../types'
+import { TokenUtils } from './token-utils'
 
 /**
  * 一些用于开发自定义装饰器的工具函数。
@@ -26,8 +26,10 @@ export namespace AnnotationTools {
     export function create_decorator<T>(processor: (constructor: any, meta: any, options?: T) => void) {
         return function(options?: T) {
             return function(constructor: any) {
-                const meta = TokenUtils.ClassMeta.getset(constructor, {})
-                processor(constructor, meta, options)
+                TokenUtils.ClassMeta(constructor).default({})
+                    .do(meta => {
+                        processor(constructor, meta, options)
+                    })
             }
         }
     }
@@ -42,7 +44,7 @@ export namespace AnnotationTools {
      * @return type_list 类型列表。
      */
     export function get_param_types(proto: any, property_key: string) {
-        const inject_token_map = TokenUtils.ParamInjection.get(proto, property_key)
+        const inject_token_map = TokenUtils.ParamInjection(proto, property_key).value
         return TokenUtils.getParamTypes(proto, property_key)?.map((t: any, i: number) => inject_token_map?.[i] ?? t)
     }
 
@@ -56,7 +58,9 @@ export namespace AnnotationTools {
      * @return
      */
     export function add_handler(proto: any, desc: HandlerDescriptor): void {
-        TokenUtils.ToraRouterHandlerList.getset(proto, [])?.push(desc)
+        TokenUtils.ToraRouterHandlerList(proto).default([]).do(list => {
+            list.push(desc)
+        })
     }
 
     /**
@@ -68,7 +72,7 @@ export namespace AnnotationTools {
      * @return data 查询结果
      */
     export function get_custom_data<T>(proto: any, index: string): T | undefined {
-        return TokenUtils.CustomData.get(proto)?.[index]
+        return TokenUtils.CustomData(proto).value?.[index]
     }
 
     /**
@@ -81,7 +85,7 @@ export namespace AnnotationTools {
      * @return
      */
     export function define_custom_data<T = any>(proto: any, index: string, data: T) {
-        TokenUtils.CustomData.getset(proto, {})[index] = data
+        TokenUtils.CustomData(proto).default({}).do(data => data[index] = data)
     }
 }
 

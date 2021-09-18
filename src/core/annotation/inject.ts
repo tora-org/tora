@@ -25,7 +25,9 @@ import { TokenUtils } from '../token-utils'
  */
 export function Inject(token: any) {
     return function(proto: any, key: string, index: number) {
-        const injection = TokenUtils.ParamInjection.getset(proto, key, [])
-        injection[index] = token
+        TokenUtils.ParamInjection(proto, key).default([])
+            .do(injection => {
+                injection[index] = token
+            })
     }
 }

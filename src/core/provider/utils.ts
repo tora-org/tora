@@ -47,7 +47,7 @@ export function def2Provider(defs: (ProviderDef<any> | Type<any>)[], injector: I
         } else if ((def as any).useClass) {
 
             const d = def as ClassProviderDef<any>
-            const service_name = TokenUtils.ToraServiceName.get(d.useClass)
+            const service_name = TokenUtils.ToraServiceName(d.useClass).value
             if (!service_name) {
                 throw new Error(`${d.useClass.name} is not ToraService.`)
             }
@@ -61,7 +61,7 @@ export function def2Provider(defs: (ProviderDef<any> | Type<any>)[], injector: I
 
         } else {
 
-            const service_name = TokenUtils.ToraServiceName.get(def)
+            const service_name = TokenUtils.ToraServiceName(def).value
             if (!service_name) {
                 throw new Error(`${(def as any).name} is not ToraService.`)
             }

@@ -5,9 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Injector } from './injector'
 import { HandlerDescriptor, ProviderTreeNode, TaskDescriptor, ToraRouterOptions, ToraTriggerOptions, Type } from '../types'
-import { MetaTool } from './meta-tool'
+import { Injector } from './injector'
+import { MetaWrapper } from './meta-tool'
 import { DI_TOKEN } from './token'
 
 /**
@@ -27,56 +27,61 @@ export namespace TokenUtils {
      * Tora 组件类型。
      * @category Basic Meta
      */
-    export const ComponentType = new MetaTool<ComponentType>(DI_TOKEN.class_type)
+    export const ComponentType = MetaWrapper<ComponentType>(DI_TOKEN.class_type)
 
     /**
      * 自定义数据。
      * @category Basic Meta
      */
-    export const CustomData = new MetaTool<{ [prop: string]: any }>(DI_TOKEN.custom_data)
+    export const CustomData = MetaWrapper<{ [prop: string]: any }>(DI_TOKEN.custom_data)
 
     /**
      * 自定义数据。
      * @category Basic Meta
      */
-    export const ClassMeta = new MetaTool<{ [prop: string]: any }>(DI_TOKEN.class_meta)
+    export const ClassMeta = MetaWrapper<{ [prop: string]: any }>(DI_TOKEN.class_meta)
 
     /**
      * 参数类型。
      * @category Basic Meta
      */
-    export const Dependencies = new MetaTool<{ [property: string]: Type<any>[] }>(DI_TOKEN.dependencies)
+    export const Dependencies = MetaWrapper<{ [property: string]: Type<any>[] }>(DI_TOKEN.dependencies)
 
     /**
      * 禁用相关信息。
      * @category Basic Meta
      */
-    export const DisabledMeta = new MetaTool<{}>(DI_TOKEN.disabled_meta)
+    export const DisabledMeta = MetaWrapper<{}>(DI_TOKEN.disabled_meta)
 
     /**
      * 锁相关信息。
      * @category Basic Meta
      */
-    export const LockMeta = new MetaTool<{ key?: string, expires?: number }>(DI_TOKEN.lock_meta)
+    export const LockMeta = MetaWrapper<{ key?: string, expires?: number }>(DI_TOKEN.lock_meta)
 
     /**
      * 存储实例。
      * @category Basic Meta
      */
-    export const Instance = new MetaTool<any>(DI_TOKEN.instance)
+    export const Instance = MetaWrapper<any>(DI_TOKEN.instance)
 
     /**
      * 特殊注入 token 列表。
      * @category Basic Meta
      */
-    export const ParamInjection = new MetaTool<any[]>(DI_TOKEN.param_injection)
+    export const ParamInjection = MetaWrapper<any[]>(DI_TOKEN.param_injection)
 
     /**
      * ToraService 名称。
      * @category Tora Service Meta
      */
-    export const ToraServiceName = new MetaTool<string>(DI_TOKEN.tora_service_name)
-    export const ToraServiceProperty = new MetaTool<{ destroy_method?: Function }>(DI_TOKEN.tora_service_property)
+    export const ToraServiceName = MetaWrapper<string>(DI_TOKEN.tora_service_name)
+
+    /**
+     * ToraService 属性。
+     * @category Tora Service Property
+     */
+    export const ToraServiceProperty = MetaWrapper<{ destroy_method?: Function }>(DI_TOKEN.tora_service_property)
 
     // ToraModule
 
@@ -84,19 +89,19 @@ export namespace TokenUtils {
      * ToraModule 收集函数。
      * @category Tora Module Meta
      */
-    export const ToraModuleProviderCollector = new MetaTool<(injector: Injector) => ProviderTreeNode>(DI_TOKEN.tora_module_provider_collector)
+    export const ToraModuleProviderCollector = MetaWrapper<(injector: Injector) => ProviderTreeNode>(DI_TOKEN.tora_module_provider_collector)
 
     /**
      * ToraModule 的 routers，对应 ToraModuleOptions 中的 routers。
      * @category Tora Module Meta
      */
-    export const ToraRootRouters = new MetaTool<Type<any>[] | undefined>(DI_TOKEN.tora_module_routers)
+    export const ToraRootRouters = MetaWrapper<Type<any>[] | undefined>(DI_TOKEN.tora_module_routers)
 
     /**
      * ToraModule 的 tasks，对应 ToraModuleOptions 中的 tasks。
      * @category Tora Module Meta
      */
-    export const ToraRootTasks = new MetaTool<Type<any>[] | undefined>(DI_TOKEN.tora_module_tasks)
+    export const ToraRootTasks = MetaWrapper<Type<any>[] | undefined>(DI_TOKEN.tora_module_tasks)
 
     // ToraRouter
 
@@ -104,37 +109,37 @@ export namespace TokenUtils {
      * ToraRouter 的处理函数。
      * @category Tora Router Meta
      */
-    export const ToraRouterHandler = new MetaTool<HandlerDescriptor>(DI_TOKEN.tora_router_handler)
+    export const ToraRouterHandler = MetaWrapper<HandlerDescriptor>(DI_TOKEN.tora_router_handler)
 
     /**
      * ToraRouter Handler 收集函数。
      * @category Tora Router Meta
      */
-    export const ToraRouterHandlerCollector = new MetaTool<(injector: Injector) => HandlerDescriptor[]>(DI_TOKEN.tora_router_handler_collector)
+    export const ToraRouterHandlerCollector = MetaWrapper<(injector: Injector) => HandlerDescriptor[]>(DI_TOKEN.tora_router_handler_collector)
 
     /**
      * 一个 ToraRouter 上全部 Handler 的列表。
      * @category Tora Router Meta
      */
-    export const ToraRouterHandlerList = new MetaTool<HandlerDescriptor[]>(DI_TOKEN.tora_router_handler_list)
+    export const ToraRouterHandlerList = MetaWrapper<HandlerDescriptor[]>(DI_TOKEN.tora_router_handler_list)
 
     /**
      * ToraRouterOptions。
      * @category Tora Router Meta
      */
-    export const ToraRouterOptions = new MetaTool<ToraRouterOptions | undefined>(DI_TOKEN.tora_router_options)
+    export const ToraRouterOptions = MetaWrapper<ToraRouterOptions | undefined>(DI_TOKEN.tora_router_options)
 
     /**
      * ToraRouter 挂载的绝对路径。
      * @category Tora Router Meta
      */
-    export const ToraRouterPath = new MetaTool<string>(DI_TOKEN.tora_router_absolute_path)
+    export const ToraRouterPath = MetaWrapper<string>(DI_TOKEN.tora_router_absolute_path)
 
     /**
      * ToraRouter 路径替换列表。
      * @category Tora Router Meta
      */
-    export const ToraRouterPathReplacement = new MetaTool<{ [router_method_key: string]: string }>(DI_TOKEN.tora_router_path_replacement)
+    export const ToraRouterPathReplacement = MetaWrapper<{ [router_method_key: string]: string }>(DI_TOKEN.tora_router_path_replacement)
 
     // ToraTrigger
 
@@ -142,25 +147,25 @@ export namespace TokenUtils {
      * ToraTriggerOptions。
      * @category Tora Trigger Meta
      */
-    export const ToraTriggerOptions = new MetaTool<ToraTriggerOptions | undefined>(DI_TOKEN.tora_trigger_options)
+    export const ToraTriggerOptions = MetaWrapper<ToraTriggerOptions | undefined>(DI_TOKEN.tora_trigger_options)
 
     /**
      * ToraTrigger 的任务函数。
      * @category Tora Trigger Meta
      */
-    export const ToraTriggerTask = new MetaTool<TaskDescriptor>(DI_TOKEN.tora_trigger_task)
+    export const ToraTriggerTask = MetaWrapper<TaskDescriptor>(DI_TOKEN.tora_trigger_task)
 
     /**
      * ToraTrigger 的任务收集函数。
      * @category Tora Trigger Meta
      */
-    export const ToraTriggerTaskCollector = new MetaTool<(injector: Injector) => TaskDescriptor[]>(DI_TOKEN.tora_trigger_task_collector)
+    export const ToraTriggerTaskCollector = MetaWrapper<(injector: Injector) => TaskDescriptor[]>(DI_TOKEN.tora_trigger_task_collector)
 
     /**
      * 一个 ToraTrigger 上全部的任务列表。
      * @category Tora Trigger Meta
      */
-    export const ToraTriggerTaskList = new MetaTool<TaskDescriptor[]>(DI_TOKEN.tora_trigger_task_list)
+    export const ToraTriggerTaskList = MetaWrapper<TaskDescriptor[]>(DI_TOKEN.tora_trigger_task_list)
 
     /**
      * 获取指定类或函数的参数列表。
@@ -201,14 +206,16 @@ export namespace TokenUtils {
      */
     export function setComponentTypeNX(target: any, type: ComponentType) {
 
-        if (TokenUtils.ComponentType.get(target) === type) {
+        const meta = TokenUtils.ComponentType(target)
+
+        if (meta.value === type) {
             throw new Error(`Decorator duplicated on class ${target.name}, @${type} can only be used once.`)
         }
 
-        if (TokenUtils.ComponentType.has(target)) {
+        if (meta.exist()) {
             throw new Error(`Decorator conflicts on class ${target.name}, only one of @ToraService, @ToraModule, @ToraRouter, @ToraTrigger can be used on same class.`)
         }
 
-        ComponentType.set(target, type)
+        meta.set(type)
     }
 }

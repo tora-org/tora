@@ -20,8 +20,8 @@ import { makeProviderCollector } from '../../collector'
 export function ToraRoot(options?: ToraRootOptions) {
     return function(target: any) {
         TokenUtils.setComponentTypeNX(target, 'ToraRoot')
-        TokenUtils.ToraModuleProviderCollector.set(target, makeProviderCollector(target, options))
-        TokenUtils.ToraRootRouters.set(target, options?.routers)
-        TokenUtils.ToraRootTasks.set(target, options?.tasks)
+        TokenUtils.ToraModuleProviderCollector(target).set(makeProviderCollector(target, options))
+        TokenUtils.ToraRootRouters(target).set(options?.routers)
+        TokenUtils.ToraRootTasks(target).set(options?.tasks)
     }
 }

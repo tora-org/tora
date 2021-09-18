@@ -20,7 +20,7 @@ import { TokenUtils } from './token-utils'
  */
 export function makeProviderCollector(target: any, options?: ImportsAndProviders): (injector: Injector) => ProviderTreeNode {
     return function(injector: Injector) {
-        const children = options?.imports?.map(md => TokenUtils.ToraModuleProviderCollector.get(md)?.(injector)) ?? []
+        const children = options?.imports?.map(md => TokenUtils.ToraModuleProviderCollector(md).value?.(injector)) ?? []
 
         const providers: (Provider<any> | undefined)[] = [
             ...def2Provider([...options?.providers ?? []] as (ProviderDef<any> | Type<any>)[], injector) ?? []
@@ -41,17 +41,17 @@ export function makeProviderCollector(target: any, options?: ImportsAndProviders
 export function makeRouterCollector(target: any, options?: ToraRouterOptions): (injector: Injector) => HandlerDescriptor[] {
     return function(injector: Injector) {
         const instance = new ClassProvider(target, injector).create()
-        TokenUtils.Instance.set(target, instance)
-        const handlers: HandlerDescriptor[] = TokenUtils.ToraRouterHandlerList.getset(target.prototype, [])
-        const router_path = TokenUtils.ToraRouterPath.get(target)!
-        handlers?.forEach(item => {
-            item.disabled = TokenUtils.DisabledMeta.get(target.prototype, item.property_key)
-            item.pos = `${target.name}.${item.property_key}`
-            item.path = router_path
-            item.handler = item.handler.bind(instance)
-        })
-
-        return handlers
+        TokenUtils.Instance(target).set(instance)
+        return TokenUtils.ToraRouterHandlerList(target.prototype).default([])
+            .do(handlers => {
+                const router_path = TokenUtils.ToraRouterPath(target).value!
+                handlers?.forEach(item => {
+                    item.disabled = TokenUtils.DisabledMeta(target.prototype, item.property_key).value
+                    item.pos = `${target.name}.${item.property_key}`
+                    item.path = router_path
+                    item.handler = item.handler.bind(instance)
+                })
+            })
     }
 }
 
@@ -66,14 +66,15 @@ export function makeRouterCollector(target: any, options?: ToraRouterOptions): (
 export function makeTaskCollector(target: any, options?: ToraTriggerOptions) {
     return function(injector: Injector) {
         const instance = new ClassProvider<typeof target>(target, injector).create()
-        TokenUtils.Instance.set(target, instance)
-        const tasks = TokenUtils.ToraTriggerTaskList.getset(target.prototype, [])
-        tasks?.forEach((t: any) => {
-            t.handler = t.handler.bind(instance)
-            t.pos = `${target.name}.${t.property_key}`
-            t.lock = TokenUtils.LockMeta.get(target.prototype, t.property_key)
-            t.disabled = TokenUtils.DisabledMeta.get(target.prototype, t.property_key)
-        })
-        return tasks
+        TokenUtils.Instance(target).set(instance)
+        return TokenUtils.ToraTriggerTaskList(target.prototype,).default([])
+            .do(tasks => {
+                tasks?.forEach((t: any) => {
+                    t.handler = t.handler.bind(instance)
+                    t.pos = `${target.name}.${t.property_key}`
+                    t.lock = TokenUtils.LockMeta(target.prototype, t.property_key).value
+                    t.disabled = TokenUtils.DisabledMeta(target.prototype, t.property_key).value
+                })
+            })
     }
 }

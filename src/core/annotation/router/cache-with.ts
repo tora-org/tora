@@ -6,16 +6,19 @@
  */
 
 import { TokenUtils } from '../../token-utils'
+import { DecoratorInstanceMethod } from '../__types__'
 
 /**
  * 将 Tora.ToraRouter 中的一个请求处理函数标记为结果需要进行缓存。
  *
  * @category Router Modifier
  */
-export function CacheWith(prefix?: string, expires?: number) {
-    return (target: any, key: string) => {
-        const handler = TokenUtils.ToraRouterHandler.getset(target, key, {})
-        handler.cache_prefix = prefix
-        handler.cache_expires = expires
+export function CacheWith(prefix?: string, expires?: number): DecoratorInstanceMethod {
+    return (prototype, prop, _) => {
+        TokenUtils.ToraRouterHandler(prototype, prop).default({})
+            .do(handler => {
+                handler.cache_prefix = prefix
+                handler.cache_expires = expires
+            })
     }
 }

@@ -6,8 +6,8 @@
  */
 
 import { ToraRouterOptions } from '../../../types'
-import { TokenUtils } from '../../token-utils'
 import { makeProviderCollector, makeRouterCollector } from '../../collector'
+import { TokenUtils } from '../../token-utils'
 
 /**
  * 把一个类标记为 Tora.ToraRouter，并配置元数据。
@@ -22,18 +22,21 @@ export function ToraRouter(path: `/${string}`, options?: ToraRouterOptions) {
     return function(constructor: any) {
 
         TokenUtils.setComponentTypeNX(constructor, 'ToraRouter')
-        TokenUtils.ToraRouterPath.set(constructor, path)
-        TokenUtils.ToraRouterOptions.set(constructor, options)
-        TokenUtils.ToraRouterHandlerCollector.set(constructor, makeRouterCollector(constructor, options))
-        TokenUtils.ToraModuleProviderCollector.set(constructor, makeProviderCollector(constructor, options))
+        TokenUtils.ToraRouterPath(constructor).set(path)
+        TokenUtils.ToraRouterOptions(constructor).set(options)
+        TokenUtils.ToraRouterHandlerCollector(constructor).set(makeRouterCollector(constructor, options))
+        TokenUtils.ToraModuleProviderCollector(constructor).set(makeProviderCollector(constructor, options))
 
         constructor.mount = (new_path: `/${string}`) => {
-            TokenUtils.ToraRouterPath.set(constructor, new_path)
+            TokenUtils.ToraRouterPath(constructor).set(new_path)
             return constructor
         }
 
         constructor.replace = (router_method_name: string, new_path: string) => {
-            TokenUtils.ToraRouterPathReplacement.getset(constructor, {})[router_method_name] = new_path
+            TokenUtils.ToraRouterPathReplacement(constructor).default({})
+                .do(replacement => {
+                    replacement[router_method_name] = new_path
+                })
             return constructor
         }
     }

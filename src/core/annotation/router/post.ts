@@ -5,14 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { NoTrailingAndLeadingSlash } from '../../../types'
-import { _Post } from './utils'
+import { createRequestDecorator } from '../__lib__/create-request-decorator'
 
 /**
  * 将 Tora.ToraRouter 中的一个方法标记为 POST 请求处理函数。
  *
  * @category Router Request
  */
-export function Post<T extends string>(path_tail?: NoTrailingAndLeadingSlash<T>) {
-    return _Post(path_tail)
-}
+export const Post = createRequestDecorator('GET')

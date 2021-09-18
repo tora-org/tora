@@ -6,7 +6,7 @@
  */
 
 export { Disabled } from './disabled'
-export { EchoDependencies } from './echo-dependencies'
+export { EchoDependencies, EchoMethodDependencies } from './echo-dependencies'
 export { Inject } from './inject'
 export { Lock } from './lock'
 export { Meta } from './meta'

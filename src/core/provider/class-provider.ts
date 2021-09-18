@@ -67,16 +67,20 @@ export class ClassProvider<M> implements Provider<M> {
     }
 
     private get_param_instance(parents?: any[]) {
-        const service_property = TokenUtils.ToraServiceProperty.getset(this.cls.prototype, {})
         const provider_list = this.extract_param_types(parents)
         const param_list = provider_list?.map((provider: any) => {
             return provider?.create(parents)
         }) ?? []
         const instance = new this.cls(...param_list)
-        if (service_property.destroy_method) {
-            const destroy_method = service_property.destroy_method.bind(instance)
-            this.injector.on('tora-destroy', () => destroy_method())
-        }
+
+        TokenUtils.ToraServiceProperty(this.cls.prototype).default({})
+            .do(service_property => {
+                if (service_property.destroy_method) {
+                    const destroy_method = service_property.destroy_method.bind(instance)
+                    this.injector.on('tora-destroy', () => destroy_method())
+                }
+            })
+
         return instance
     }
 
@@ -85,7 +89,7 @@ export class ClassProvider<M> implements Provider<M> {
     }
 
     private extract_param_types(parents?: any[]) {
-        const inject_token_map = TokenUtils.ParamInjection.get(this.cls)
+        const inject_token_map = TokenUtils.ParamInjection(this.cls).value
         return TokenUtils.getParamTypes(this.cls)
             ?.map((token: any, i: number) => {
                 const inject_token = inject_token_map?.[i]

@@ -159,11 +159,11 @@ export class Platform {
      * @param module
      */
     import(module: any) {
-        const component_type = TokenUtils.ComponentType.get(module)
+        const component_type = TokenUtils.ComponentType(module).value
         if (!component_type || !['ToraModule', 'ToraRoot', 'ToraRouter', 'ToraTrigger'].includes(component_type)) {
             throw new Error(`${module.name} is not a ToraModule.`)
         }
-        TokenUtils.ToraModuleProviderCollector.get(module)?.(this.root_injector)
+        TokenUtils.ToraModuleProviderCollector(module).value?.(this.root_injector)
         return this
     }
 
@@ -248,22 +248,22 @@ export class Platform {
      * @param module
      */
     register_module(name: string, module: any) {
-        if (TokenUtils.ComponentType.get(module) !== 'ToraRoot') {
+        if (TokenUtils.ComponentType(module).value !== 'ToraRoot') {
             throw new Error(`${module.name ?? module.prototype?.toString()} is not a "ToraRoot".`)
         }
 
-        const routers = TokenUtils.ToraRootRouters.get(module)
-        const tasks = TokenUtils.ToraRootTasks.get(module)
+        const routers = TokenUtils.ToraRootRouters(module).value
+        const tasks = TokenUtils.ToraRootTasks(module).value
         if (!routers?.length && !tasks?.length) {
             throw new Error(`ToraModule "${module.name}" do not carry any routers or tasks.`)
         } else {
             routers?.forEach(router => {
-                if (TokenUtils.ComponentType.get(router) !== 'ToraRouter') {
+                if (TokenUtils.ComponentType(router).value !== 'ToraRouter') {
                     throw new Error(`${router.name ?? router.prototype?.toString()} is not a "ToraRouter" but place in a routers array.`)
                 }
             })
             tasks?.forEach(task => {
-                if (TokenUtils.ComponentType.get(task) !== 'ToraTrigger') {
+                if (TokenUtils.ComponentType(task).value !== 'ToraTrigger') {
                     throw new Error(`${task.name ?? task.prototype?.toString()} is not a "ToraTrigger" but place in a tasks array.`)
                 }
             })
@@ -297,22 +297,22 @@ export class Platform {
      */
     bootstrap(root_module: any) {
 
-        if (TokenUtils.ComponentType.get(root_module) !== 'ToraRoot') {
+        if (TokenUtils.ComponentType(root_module).value !== 'ToraRoot') {
             throw new Error(`${root_module.name} is not a ToraRoot.`)
         }
 
         const sub_injector = Injector.create(this.root_injector)
-        const provider_tree: ProviderTreeNode | undefined = TokenUtils.ToraModuleProviderCollector.get(root_module)?.(sub_injector)
+        const provider_tree: ProviderTreeNode | undefined = TokenUtils.ToraModuleProviderCollector(root_module).value?.(sub_injector)
 
         sub_injector.get(Authenticator)?.set_used()
         sub_injector.get(LifeCycle)?.set_used()
         sub_injector.get(CacheProxy)?.set_used()
 
-        TokenUtils.ToraRootRouters.get(root_module)?.forEach(router_module => {
+        TokenUtils.ToraRootRouters(root_module).value?.forEach(router_module => {
             this._mount_router(router_module, sub_injector)
         })
 
-        TokenUtils.ToraRootTasks.get(root_module)?.forEach(trigger_module => {
+        TokenUtils.ToraRootTasks(root_module).value?.forEach(trigger_module => {
             this._mount_task(trigger_module, sub_injector)
         })
 
@@ -424,32 +424,36 @@ export class Platform {
     }
 
     private _mount_router(router_module: Type<any>, injector: Injector) {
-        const router_provider_tree: ProviderTreeNode | undefined = TokenUtils.ToraModuleProviderCollector.get(router_module)?.(injector)
-        TokenUtils.ToraRouterHandlerCollector.get(router_module)?.(injector)?.forEach((desc: HandlerDescriptor) => {
+        const router_provider_tree = TokenUtils.ToraModuleProviderCollector(router_module)
+        const handler_collector = TokenUtils.ToraRouterHandlerCollector(router_module)
+        const path_replacement = TokenUtils.ToraRouterPathReplacement(router_module).default({})
+
+        handler_collector.value?.(injector)?.forEach((desc: HandlerDescriptor) => {
             if (!desc.disabled) {
                 const provider_list = this._get_providers(desc, injector, [ApiParams, SessionContext, PURE_PARAMS])
                 provider_list.forEach(p => p.create?.())
-                if (desc.method_and_path) {
-                    const replacement = TokenUtils.ToraRouterPathReplacement.getset(router_module, {})
-                    Object.values(desc.method_and_path)?.forEach(([method, method_path]) => {
-                        const figure_method_path = replacement[desc.property_key ?? ''] ?? method_path
-                        const router_path = desc.path?.startsWith('/') ? desc.path : '/' + desc.path
-                        const full_path = _join_path(router_path, figure_method_path.replace(/(^\/|\/$)/g, ''))
-                        this._server.on(method, full_path, PlatformUtils.makeHandler(injector, desc, provider_list))
-                    })
-                }
+                path_replacement.do(replacements => {
+                    if (desc.method_and_path) {
+                        Object.values(desc.method_and_path)?.forEach(([method, method_path]) => {
+                            const figure_method_path = replacements[desc.property_key ?? ''] ?? method_path
+                            const router_path = desc.path?.startsWith('/') ? desc.path : '/' + desc.path
+                            const full_path = _join_path(router_path, figure_method_path.replace(/(^\/|\/$)/g, ''))
+                            this._server.on(method, full_path, PlatformUtils.makeHandler(injector, desc, provider_list))
+                        })
+                    }
+                })
             }
         })
-        router_provider_tree?.children.filter(def => !_find_usage(def))
+        router_provider_tree.value?.(injector)?.children.filter(def => !_find_usage(def))
             .forEach(def => {
                 console.log(`Warning: ${router_module.name} -> ${def?.name} not used.`)
             })
     }
 
     private _mount_task(trigger_module: Type<any>, injector: Injector) {
-        const router_provider_tree: ProviderTreeNode | undefined = TokenUtils.ToraModuleProviderCollector.get(trigger_module)?.(injector)
+        const router_provider_tree: ProviderTreeNode | undefined = TokenUtils.ToraModuleProviderCollector(trigger_module).value?.(injector)
 
-        TokenUtils.ToraTriggerTaskCollector.get(trigger_module)?.(injector)?.forEach((desc: TaskDescriptor) => {
+        TokenUtils.ToraTriggerTaskCollector(trigger_module).value?.(injector)?.forEach((desc: TaskDescriptor) => {
             if (!desc.disabled) {
                 if (!desc.schedule) {
                     throw new Error(`Crontab of task ${desc.pos} is empty.`)
