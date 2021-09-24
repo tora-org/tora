@@ -12,5 +12,5 @@ export { ApiParams } from './api-params'
 export { SessionContext } from './session-context'
 export { TaskContext } from './task-context'
 
-export { ValueType, Path, PathValue, Judgement, Reference } from './judgement'
-export { Jtl } from './judgement-utils'
+export { ValueType, Path, PathValue, Judgement, Reference, JudgementMatcher } from './judgement'
+export { Jtl, JudgementUtil } from './judgement-utils'

@@ -12,7 +12,7 @@
  */
 
 export {
-    Task,
+    AbstractConstructor,
     ClassMeta,
     ComponentMeta,
     Constructor,
@@ -38,35 +38,50 @@ export {
     ToraRootOptions,
     ToraRouterMeta,
     ToraRouterOptions,
-    ToraTriggerOptions,
-    TriggerFunction,
+    ToraServiceMeta,
     ToraServiceOptions,
     ToraTriggerMeta,
-    ToraRoot,
-    ToraServiceMeta,
-    ToraTrigger,
-    ToraRouter,
-    Meta,
-    ToraModule,
-    Get,
-    ToraService,
-    Put,
-    AbstractConstructor,
-    Delete,
-    Post,
+    ToraTriggerOptions,
+    TriggerFunction,
     Auth,
-    OnDestroy,
     CacheWith,
-    Inject,
+    Delete,
+    Disabled,
     EchoDependencies,
     EchoMethodDependencies,
-    NoWrap,
-    Disabled,
+    Get,
+    Inject,
     Lock,
+    Meta,
+    NoWrap,
+    OnDestroy,
+    Post,
+    Put,
+    Task,
+    ToraModule,
+    ToraRoot,
+    ToraRouter,
+    ToraService,
+    ToraTrigger,
 } from './annotation'
-export { Injector } from './injector'
-export { ClassProviderDef, FactoryProviderDef, Provider, ProviderDef, ValueProviderDef, ClassProvider, def2Provider, ValueProvider, FactoryProvider } from './provider'
 
-export { Gunslinger, IGunslinger } from './gunslinger'
+export { Injector } from './injector'
+
+export {
+    ClassProviderDef,
+    FactoryProviderDef,
+    Provider,
+    ProviderDef,
+    ValueProviderDef,
+    def2Provider,
+    ClassProvider,
+    FactoryProvider,
+    ValueProvider,
+} from './provider'
+
+export {
+    Gunslinger,
+    IGunslinger,
+} from './gunslinger'
 
 export { TokenUtils } from './token-utils'

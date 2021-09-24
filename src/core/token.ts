@@ -12,7 +12,6 @@ import 'reflect-metadata'
  * 用于通过反射存取数据的 metadataKey 集合。
  */
 export enum DI_TOKEN {
-
     // user custom metadata
     custom_data = 'lazor:custom_data',
 
@@ -20,12 +19,8 @@ export enum DI_TOKEN {
     class_meta = 'lazor:class_meta',
     property_meta = 'lazor:property_meta',
     property_function = 'lazor:property_function',
-
     touched = 'lazor:touched',
-
     component_meta = 'lazor:component_meta',
-
     dependencies = 'lazor:dependencies',
     instance = 'lazor:instance',
-    param_injection = 'lazor:param_injection',
 }

@@ -32,12 +32,6 @@ export interface ToraAuthInfo {
 export type ToraEvent =
     | 'tora-destroy'
 
-export interface Type<T> extends Function {
-    prototype: T
-
-    new(...args: any[]): T
-}
-
 export interface AbstractType<T> extends Function {
     prototype: T
 }

@@ -5,11 +5,40 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export { Disabled, EchoMethodDependencies, EchoDependencies, Meta, Inject } from './common'
-export { Auth, Put, Post, CacheWith, Delete, Get, ToraRouter, NoWrap } from './router'
-export { OnDestroy, ToraService } from './service'
-export { ToraModule, ToraRoot } from './top'
-export { ToraTrigger, Task, Lock } from './trigger'
+export {
+    Disabled,
+    EchoMethodDependencies,
+    EchoDependencies,
+    Meta,
+    Inject,
+} from './common'
+
+export {
+    Auth,
+    Put,
+    Post,
+    CacheWith,
+    Delete,
+    Get,
+    ToraRouter,
+    NoWrap,
+} from './router'
+
+export {
+    OnDestroy,
+    ToraService,
+} from './service'
+
+export {
+    ToraModule,
+    ToraRoot,
+} from './top'
+
+export {
+    ToraTrigger,
+    Task,
+    Lock,
+} from './trigger'
 
 export {
     AbstractConstructor,

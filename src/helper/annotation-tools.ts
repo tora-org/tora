@@ -71,7 +71,7 @@ export namespace AnnotationTools {
      * @return type_list 类型列表。
      */
     export function get_param_types(proto: any, property_key: string) {
-        const inject_token_map = TokenUtils.ParamInjection(proto, property_key).value
+        const inject_token_map = TokenUtils.PropertyMeta(proto, property_key).value?.parameter_injection
         return TokenUtils.get_method_parameter_types(proto, property_key)?.map((t: any, i: number) => inject_token_map?.[i] ?? t)
     }
 

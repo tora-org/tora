@@ -5,9 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Type } from '../types'
-import { Constructor } from './annotation'
-import { ImportsAndProviders, ProviderTreeNode, RouterFunction, ToraRouterOptions, ToraTriggerOptions, TriggerFunction } from './annotation/__types__'
+import { Constructor, ImportsAndProviders, ProviderTreeNode, RouterFunction, ToraRouterOptions, ToraTriggerOptions, TriggerFunction } from './annotation'
 import { Injector } from './injector'
 import { ClassProvider, def2Provider, Provider, ProviderDef } from './provider'
 import { TokenUtils } from './token-utils'
@@ -28,7 +26,7 @@ export function makeProviderCollector(constructor: Constructor<any>, options?: I
         }) ?? []
 
         const providers: (Provider<any> | undefined)[] = [
-            ...def2Provider([...options?.providers ?? []] as (ProviderDef<any> | Type<any>)[], injector) ?? []
+            ...def2Provider([...options?.providers ?? []] as (ProviderDef<any> | Constructor<any>)[], injector) ?? []
         ]
 
         return { name: constructor.name, providers, children }

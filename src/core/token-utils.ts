@@ -132,12 +132,6 @@ export namespace TokenUtils {
     export const Instance = MetaWrapper<any>(DI_TOKEN.instance, 'prototype_only')
 
     /**
-     * 特殊注入 token 列表。
-     * @category Basic Meta
-     */
-    export const ParamInjection = MetaWrapper<any[]>(DI_TOKEN.param_injection, 'both')
-
-    /**
      * 获取指定类或函数的参数列表。
      *
      * @category Reflect Metadata
