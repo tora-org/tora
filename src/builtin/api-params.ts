@@ -6,7 +6,7 @@
  */
 
 import { throw_reasonable } from '../http'
-import { Judgement, Path, PathValue, ValueType } from './judgement'
+import { Judgement, JudgementMatcher, Path, PathValue } from './judgement'
 
 /**
  * 内置请求参数解析及检查工具。
@@ -24,7 +24,7 @@ export class ApiParams<T> extends Judgement<T> {
      * @param prop 需要匹配的属性
      * @param match 预设类型或者正则表达式
      */
-    getIf<P extends Path<T>>(prop: P, match: ValueType | RegExp): PathValue<T, P> | undefined
+    getIf<P extends Path<T>>(prop: P, match: JudgementMatcher): PathValue<T, P> | undefined
     /**
      * 参数检查，是否匹配目标的 [类型/正则表达式]。
      *
@@ -35,8 +35,8 @@ export class ApiParams<T> extends Judgement<T> {
      * @param match 预设类型或者正则表达式
      * @param def 默认值
      */
-    getIf<P extends Path<T>>(prop: P, match: ValueType | RegExp, def: PathValue<T, P>): Exclude<PathValue<T, P>, undefined>
-    getIf<P extends Path<T>>(prop: P, match: ValueType | RegExp, def?: PathValue<T, P>) {
+    getIf<P extends Path<T>>(prop: P, match: JudgementMatcher, def: PathValue<T, P>): Exclude<PathValue<T, P>, undefined>
+    getIf<P extends Path<T>>(prop: P, match: JudgementMatcher, def?: PathValue<T, P>) {
         const res = super.get(prop)
         if (res !== undefined && this.testValue(res, match)) {
             return res
@@ -53,7 +53,7 @@ export class ApiParams<T> extends Judgement<T> {
      * @param prop 需要匹配的属性
      * @param match_list 预设的多个类型或者正则表达式
      */
-    getIfAny<P extends Path<T>>(prop: P, match_list: (ValueType | RegExp)[]): PathValue<T, P> | undefined
+    getIfAny<P extends Path<T>>(prop: P, match_list: JudgementMatcher[]): PathValue<T, P> | undefined
     /**
      * 参数检查，是否匹配多个 [类型/正则表达式] 中的任意一个。
      *
@@ -64,8 +64,8 @@ export class ApiParams<T> extends Judgement<T> {
      * @param match_list 预设的多个类型或者正则表达式
      * @param def 默认值
      */
-    getIfAny<P extends Path<T>>(prop: P, match_list: (ValueType | RegExp)[], def: PathValue<T, P>): Exclude<PathValue<T, P>, undefined>
-    getIfAny<P extends Path<T>>(prop: P, match_list: (ValueType | RegExp)[], def?: PathValue<T, P>) {
+    getIfAny<P extends Path<T>>(prop: P, match_list: JudgementMatcher[], def: PathValue<T, P>): Exclude<PathValue<T, P>, undefined>
+    getIfAny<P extends Path<T>>(prop: P, match_list: JudgementMatcher[], def?: PathValue<T, P>) {
         const res = super.get(prop)
         if (res !== undefined && this.any(res, match_list)) {
             return res
@@ -82,7 +82,7 @@ export class ApiParams<T> extends Judgement<T> {
      * @param prop 需要匹配的属性
      * @param match_list 预设的多个类型或者正则表达式
      */
-    getIfAll<P extends Path<T>>(prop: P, match_list: (ValueType | RegExp)[]): PathValue<T, P> | undefined
+    getIfAll<P extends Path<T>>(prop: P, match_list: JudgementMatcher[]): PathValue<T, P> | undefined
     /**
      * 参数检查，是否匹配全部 [类型/正则表达式]。
      *
@@ -93,8 +93,8 @@ export class ApiParams<T> extends Judgement<T> {
      * @param match_list 预设的多个类型或者正则表达式
      * @param def 默认值
      */
-    getIfAll<P extends Path<T>>(prop: P, match_list: (ValueType | RegExp)[], def: PathValue<T, P>): Exclude<PathValue<T, P>, undefined>
-    getIfAll<P extends Path<T>>(prop: P, match_list: (ValueType | RegExp)[], def?: PathValue<T, P>) {
+    getIfAll<P extends Path<T>>(prop: P, match_list: JudgementMatcher[], def: PathValue<T, P>): Exclude<PathValue<T, P>, undefined>
+    getIfAll<P extends Path<T>>(prop: P, match_list: JudgementMatcher[], def?: PathValue<T, P>) {
         const res = super.get(prop)
         if (res !== undefined && this.all(res, match_list)) {
             return res
@@ -108,7 +108,7 @@ export class ApiParams<T> extends Judgement<T> {
      * @param prop 需要匹配的属性
      * @param match 预设类型或者正则表达式
      */
-    ensure<P extends Path<T>>(prop: P, match?: ValueType | RegExp): Exclude<PathValue<T, P>, undefined> {
+    ensure<P extends Path<T>>(prop: P, match?: JudgementMatcher): Exclude<PathValue<T, P>, undefined> {
         match = match || 'exist'
         const res = super.get(prop)
         if (res === undefined) {
@@ -126,7 +126,7 @@ export class ApiParams<T> extends Judgement<T> {
      * @param prop 需要匹配的属性
      * @param match_list 预设的多个类型或者正则表达式
      */
-    ensureAny<P extends Path<T>>(prop: P, match_list: (ValueType | RegExp)[]): Exclude<PathValue<T, P>, undefined> {
+    ensureAny<P extends Path<T>>(prop: P, match_list: JudgementMatcher[]): Exclude<PathValue<T, P>, undefined> {
         const res = super.get(prop)
         if (res === undefined) {
             throw_reasonable(400, `Can not find ${prop}`)
@@ -143,7 +143,7 @@ export class ApiParams<T> extends Judgement<T> {
      * @param prop 需要匹配的属性
      * @param match_list 预设的多个类型或者正则表达式
      */
-    ensureAll<P extends Path<T>>(prop: P, match_list: (ValueType | RegExp)[]): Exclude<PathValue<T, P>, undefined> {
+    ensureAll<P extends Path<T>>(prop: P, match_list: JudgementMatcher[]): Exclude<PathValue<T, P>, undefined> {
         const res = super.get(prop)
         if (res === undefined) {
             throw_reasonable(400, `Can not find ${prop}`)
@@ -161,7 +161,7 @@ export class ApiParams<T> extends Judgement<T> {
      * @param match 预设类型或者正则表达式
      * @param then 回调函数
      */
-    doIf<P extends Path<T>>(prop: P, match: ValueType | RegExp, then?: (res: PathValue<T, P>) => void) {
+    doIf<P extends Path<T>>(prop: P, match: JudgementMatcher, then?: (res: PathValue<T, P>) => void) {
         const res = super.get(prop)
         if (res === undefined) {
             return
@@ -178,7 +178,7 @@ export class ApiParams<T> extends Judgement<T> {
      * @param match_list 预设的多个类型或者正则表达式
      * @param then 回调函数
      */
-    doIfAny<P extends Path<T>>(prop: P, match_list: (ValueType | RegExp)[], then?: (res: PathValue<T, P>) => void) {
+    doIfAny<P extends Path<T>>(prop: P, match_list: JudgementMatcher[], then?: (res: PathValue<T, P>) => void) {
         const res = super.get(prop)
         if (res === undefined) {
             return
@@ -195,7 +195,7 @@ export class ApiParams<T> extends Judgement<T> {
      * @param match_list 预设的多个类型或者正则表达式
      * @param then 回调函数
      */
-    doIfAll<P extends Path<T>>(prop: P, match_list: (ValueType | RegExp)[], then?: (res: PathValue<T, P>) => void) {
+    doIfAll<P extends Path<T>>(prop: P, match_list: JudgementMatcher[], then?: (res: PathValue<T, P>) => void) {
         const res = super.get(prop)
         if (res === undefined) {
             return

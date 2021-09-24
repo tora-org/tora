@@ -13,3 +13,4 @@ export { SessionContext } from './session-context'
 export { TaskContext } from './task-context'
 
 export { ValueType, Path, PathValue, Judgement, Reference } from './judgement'
+export { Jtl } from './judgement-utils'

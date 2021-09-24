@@ -85,7 +85,7 @@ export { TaskLock } from './service/task-lock'
 
 export {
     UUID, CurrentTimestamp, Timestamp, ConfigData, ApiParams, SessionContext, TaskContext,
-    Judgement, Reference, Path, PathValue, ValueType
+    Judgement, Reference, Path, PathValue, ValueType, Jtl
 } from './builtin'
 
 export {

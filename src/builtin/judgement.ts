@@ -4,6 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+import { JudgementUtil } from './judgement-utils'
 
 export type ValueType =
     | 'exist'
@@ -20,6 +21,8 @@ export type ValueType =
     | 'boolean'
     | 'true'
     | 'false'
+
+export type JudgementMatcher = ValueType | RegExp | JudgementUtil<(...args: any[]) => boolean>
 
 /**
  * @private
@@ -110,9 +113,12 @@ export class Reference<T> {
  */
 export class Judgement<T> extends Reference<T> {
 
-    protected testValue(value: any, type?: ValueType | RegExp): any {
+    protected testValue(value: any, type?: JudgementMatcher): any {
         if (type instanceof RegExp) {
             return typeof value === 'string' && type.test(value)
+        }
+        if (type instanceof JudgementUtil) {
+            return type.check(value)
         }
         switch (type) {
             case 'exist':
@@ -148,7 +154,7 @@ export class Judgement<T> extends Reference<T> {
         }
     }
 
-    protected any(value: any, types: (ValueType | RegExp)[]) {
+    protected any(value: any, types: JudgementMatcher[]) {
         for (const type of types) {
             if (this.testValue(value, type)) {
                 return true
@@ -157,7 +163,7 @@ export class Judgement<T> extends Reference<T> {
         return false
     }
 
-    protected all(value: any, types: (ValueType | RegExp)[]) {
+    protected all(value: any, types: JudgementMatcher[]) {
         for (const type of types) {
             if (!this.testValue(value, type)) {
                 return false
