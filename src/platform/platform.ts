@@ -435,7 +435,7 @@ export class Platform {
 
     private _mount_task(trigger_module: Constructor<any>, injector: Injector) {
 
-        const component_meta = TokenUtils.ensure_component(trigger_module.prototype, 'ToraTrigger').value
+        const component_meta = TokenUtils.ensure_component(trigger_module, 'ToraTrigger').value
         const provider_tree = component_meta?.provider_collector?.(injector)
 
         component_meta.task_collector?.(injector)?.forEach(desc => {
