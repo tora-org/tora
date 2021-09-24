@@ -8,21 +8,7 @@
 import fs from 'fs'
 import path from 'path'
 import { ApiParams, ConfigData, SessionContext, Timestamp, UUID } from '../builtin'
-import {
-    ClassMeta,
-    ClassProvider,
-    Constructor,
-    def2Provider,
-    Injector,
-    PropertyFunction,
-    Provider,
-    ProviderDef,
-    ProviderTreeNode,
-    RouterFunction,
-    TokenUtils,
-    TriggerFunction,
-    ValueProvider
-} from '../core'
+import { ClassProvider, Constructor, def2Provider, Injector, PropertyFunction, Provider, ProviderDef, ProviderTreeNode, TokenUtils, ValueProvider } from '../core'
 import { ApiMethod, ApiPath, HandlerReturnType, KoaResponseType, LiteContext, ToraHttpHandler, ToraServerKoa } from '../http'
 import { Revolver, TaskDesc } from '../schedule'
 import { Authenticator } from '../service/authenticator'
@@ -433,7 +419,7 @@ export class Platform {
                 provider_list.forEach(p => p.create?.())
                 Object.values(desc.method_and_path)?.forEach(([method, method_path]) => {
                     const figure_method_path = path_replacement[desc.property ?? ''] ?? method_path
-                    const router_path = desc.path?.startsWith('/') ? desc.path : '/' + desc.path
+                    const router_path = router_meta.router_path?.startsWith('/') ? router_meta.router_path : '/'
                     const full_path = _join_path(router_path, figure_method_path.replace(/(^\/|\/$)/g, ''))
                     this._server.on(method, full_path, PlatformUtils.makeHandler(injector, desc, provider_list))
                 })
