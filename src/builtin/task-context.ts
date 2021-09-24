@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Dayjs } from 'dayjs'
+import { Dora } from '../schedule'
 
 /**
  * 任务执行上下文。
@@ -20,21 +20,19 @@ export class TaskContext {
     private readonly _crontab: string
     private readonly _pos: string
     private readonly _property_key: string
-    private readonly _execution: Dayjs
+    private readonly _execution: Dora
     private readonly _temp_exec: boolean
 
     constructor(
         desc: {
             name: string,
             crontab: string,
-            execution: Dayjs,
+            execution: Dora,
             pos: string,
             property_key: string,
             temp_exec?: boolean,
-            lock?: {
-                key: string
-                expires?: number
-            },
+            lock_key?: string
+            lock_expires?: number
         }
     ) {
         this._name = desc.name
@@ -43,8 +41,8 @@ export class TaskContext {
         this._temp_exec = desc.temp_exec ?? false
         this._property_key = desc.property_key
         this._execution = desc.execution
-        this._lock_key = desc.lock?.key
-        this._lock_expires = desc.lock?.expires
+        this._lock_key = desc.lock_key
+        this._lock_expires = desc.lock_expires
     }
 
     get temp_exec(): boolean {
@@ -75,7 +73,7 @@ export class TaskContext {
         return this._property_key
     }
 
-    get execution(): Dayjs {
+    get execution(): Dora {
         return this._execution
     }
 }

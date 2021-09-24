@@ -5,9 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { HandlerDescriptor, ImportsAndProviders, Provider, ProviderDef, ProviderTreeNode, ToraRouterOptions, ToraTriggerOptions, Type } from '../types'
+import { Type } from '../types'
+import { Constructor } from './annotation'
+import { ImportsAndProviders, ProviderTreeNode, RouterFunction, ToraRouterOptions, ToraTriggerOptions, TriggerFunction } from './annotation/__types__'
 import { Injector } from './injector'
-import { ClassProvider, def2Provider } from './provider'
+import { ClassProvider, def2Provider, Provider, ProviderDef } from './provider'
 import { TokenUtils } from './token-utils'
 
 /**
@@ -15,18 +17,21 @@ import { TokenUtils } from './token-utils'
  *
  * 加载模块及其子模块，注册 Provider。
  *
- * @param target
+ * @param constructor
  * @param options
  */
-export function makeProviderCollector(target: any, options?: ImportsAndProviders): (injector: Injector) => ProviderTreeNode {
+export function makeProviderCollector(constructor: Constructor<any>, options?: ImportsAndProviders): (injector: Injector) => ProviderTreeNode {
     return function(injector: Injector) {
-        const children = options?.imports?.map(md => TokenUtils.ToraModuleProviderCollector(md).value?.(injector)) ?? []
+        const children = options?.imports?.map(md => {
+            const module_meta = TokenUtils.ensure_component(md, 'ToraModuleLike').value
+            return module_meta.provider_collector(injector)
+        }) ?? []
 
         const providers: (Provider<any> | undefined)[] = [
             ...def2Provider([...options?.providers ?? []] as (ProviderDef<any> | Type<any>)[], injector) ?? []
         ]
 
-        return { name: target.name, providers, children }
+        return { name: constructor.name, providers, children }
     }
 }
 
@@ -35,23 +40,25 @@ export function makeProviderCollector(target: any, options?: ImportsAndProviders
  *
  * 收集 Tora.ToraRouter 中的所有请求处理函数。
  *
- * @param target
+ * @param constructor
  * @param options
  */
-export function makeRouterCollector(target: any, options?: ToraRouterOptions): (injector: Injector) => HandlerDescriptor[] {
-    return function(injector: Injector) {
-        const instance = new ClassProvider(target, injector).create()
-        TokenUtils.Instance(target).set(instance)
-        return TokenUtils.ToraRouterHandlerList(target.prototype).default([])
-            .do(handlers => {
-                const router_path = TokenUtils.ToraRouterPath(target).value!
-                handlers?.forEach(item => {
-                    item.disabled = TokenUtils.DisabledMeta(target.prototype, item.property_key).value
-                    item.pos = `${target.name}.${item.property_key}`
-                    item.path = router_path
-                    item.handler = item.handler.bind(instance)
-                })
-            })
+export function makeRouterCollector(constructor: Constructor<any>, options?: ToraRouterOptions) {
+    return (injector: Injector): RouterFunction<any>[] => {
+        TokenUtils.ensure_component(constructor, 'ToraRouter')
+
+        const instance = new ClassProvider(constructor, injector).create()
+        TokenUtils.Instance(constructor).set(instance)
+
+        return TokenUtils.Touched(constructor.prototype)
+            .ensure_default()
+            .do(touched => Object.values(touched).forEach(item => {
+                const property_meta = TokenUtils.PropertyMeta(constructor.prototype, item.property).value
+                item.disabled = property_meta?.disabled
+                item.pos = `${constructor.name}.${item.property}`
+                item.handler = item.handler.bind(instance)
+            }))
+            .convert(touched => Object.values(touched).filter(item => item.type === 'ToraRouterFunction') as RouterFunction<any>[])
     }
 }
 
@@ -60,21 +67,24 @@ export function makeRouterCollector(target: any, options?: ToraRouterOptions): (
  *
  * 收集 Tora.ToraTrigger 中的所有任务。
  *
- * @param target
+ * @param constructor
  * @param options
  */
-export function makeTaskCollector(target: any, options?: ToraTriggerOptions) {
-    return function(injector: Injector) {
-        const instance = new ClassProvider<typeof target>(target, injector).create()
-        TokenUtils.Instance(target).set(instance)
-        return TokenUtils.ToraTriggerTaskList(target.prototype,).default([])
-            .do(tasks => {
-                tasks?.forEach((t: any) => {
-                    t.handler = t.handler.bind(instance)
-                    t.pos = `${target.name}.${t.property_key}`
-                    t.lock = TokenUtils.LockMeta(target.prototype, t.property_key).value
-                    t.disabled = TokenUtils.DisabledMeta(target.prototype, t.property_key).value
-                })
-            })
+export function makeTaskCollector(constructor: Constructor<any>, options?: ToraTriggerOptions) {
+    return (injector: Injector): TriggerFunction<any>[] => {
+        TokenUtils.ensure_component(constructor, 'ToraTrigger')
+
+        const instance = new ClassProvider(constructor, injector).create()
+        TokenUtils.Instance(constructor).set(instance)
+
+        return TokenUtils.Touched(constructor.prototype)
+            .ensure_default()
+            .do(touched => Object.values(touched).forEach(item => {
+                const property_meta = TokenUtils.PropertyMeta(constructor.prototype, item.property).value
+                item.disabled = property_meta?.disabled
+                item.pos = `${constructor.name}.${item.property}`
+                item.handler = item.handler.bind(instance)
+            }))
+            .convert(touched => Object.values(touched).filter(item => item.type === 'ToraTriggerFunction') as TriggerFunction<any>[])
     }
 }

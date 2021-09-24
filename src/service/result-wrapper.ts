@@ -6,7 +6,7 @@
  */
 
 import { SessionContext } from '../builtin'
-import { KoaResponseType } from '../types'
+import { KoaResponseType } from '../http'
 
 /**
  * 请求处理结果包装服务。

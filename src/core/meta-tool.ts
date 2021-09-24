@@ -5,45 +5,75 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+export type MetaWrapperType = 'prototype_only' | 'property_only' | 'both'
+export type MetaWrapperDefaultByFunction<T> = (prototype: any, property?: string) => Exclude<T, undefined>
+
 /**
  * @private
  * 通过 reflect-metadata 存取元数据的工具。
  */
-export function MetaWrapper<T = any>(metadata_key: string): (target: any, property_key?: string) => Meta<T | undefined> {
-    return function (target: any, property_key?: string): Meta<T | undefined> {
-        return new Meta<T | undefined>(metadata_key, target, property_key)
+export function MetaWrapper<T = any>(metadata_key: string, type: 'prototype_only', default_by?: MetaWrapperDefaultByFunction<T>): (proto: any) => Meta<T | undefined>
+export function MetaWrapper<T = any>(metadata_key: string, type: 'property_only', default_by?: MetaWrapperDefaultByFunction<T>): (proto: any, prop: string) => Meta<T | undefined>
+export function MetaWrapper<T = any>(metadata_key: string, type: 'both', default_by?: MetaWrapperDefaultByFunction<T>): (proto: any, prop?: string) => Meta<T | undefined>
+export function MetaWrapper<T = any>(metadata_key: string, type: MetaWrapperType, default_by?: MetaWrapperDefaultByFunction<T>): (proto: any, prop?: string) => Meta<T | undefined> {
+    return function(prototype: any, property?: string): Meta<T | undefined> {
+        return new Meta<T | undefined>(metadata_key, prototype, property, default_by)
     }
 }
 
 export class Meta<T> {
 
+    private _exist: boolean | undefined
+
     constructor(
         private metadata_key: string,
         private target: any,
-        private property_key?: string,
+        private property?: string,
+        private default_by?: MetaWrapperDefaultByFunction<T>,
     ) {
     }
+
+    private _value: T | undefined = undefined
 
     /**
      * 获取数据。
      */
     get value(): T {
-        if (this.property_key === undefined) {
-            return Reflect.getMetadata(this.metadata_key, this.target)
-        } else {
-            return Reflect.getMetadata(this.metadata_key, this.target, this.property_key)
+        if (!this.exist()) {
+            return this._value as T
         }
+        if (this._value === undefined) {
+            if (this.property === undefined) {
+                this._value = Reflect.getMetadata(this.metadata_key, this.target)
+            } else {
+                this._value = Reflect.getMetadata(this.metadata_key, this.target, this.property)
+            }
+        }
+        return this._value as T
     }
 
     /**
      * 是否存在指定元数据。
      */
-    exist(): boolean {
-        if (this.property_key === undefined) {
-            return Reflect.hasMetadata(this.metadata_key, this.target)
-        } else {
-            return Reflect.hasMetadata(this.metadata_key, this.target, this.property_key)
+    exist(): this is Meta<Exclude<T, undefined>> {
+        if (this._exist === undefined) {
+            if (this.property === undefined) {
+                this._exist = Reflect.hasMetadata(this.metadata_key, this.target)
+            } else {
+                this._exist = Reflect.hasMetadata(this.metadata_key, this.target, this.property)
+            }
         }
+        return this._exist
+    }
+
+    /**
+     * 当 meta 存在时执行一些操作。
+     */
+    if_exist(exec: (meta: Exclude<T, undefined>) => void): this {
+        if (this.exist()) {
+            exec(this.value as Exclude<T, undefined>)
+        }
+        return this
     }
 
     /**
@@ -51,13 +81,15 @@ export class Meta<T> {
      *
      * @param value
      */
-    set(value: T): this {
-        if (this.property_key === undefined) {
+    set(value: Exclude<T, undefined>): Meta<Exclude<T, undefined>> {
+        if (this.property === undefined) {
             Reflect.defineMetadata(this.metadata_key, value, this.target)
         } else {
-            Reflect.defineMetadata(this.metadata_key, value, this.target, this.property_key)
+            Reflect.defineMetadata(this.metadata_key, value, this.target, this.property)
         }
-        return this
+        this._value = value
+        this._exist = true
+        return this as any
     }
 
     /**
@@ -65,13 +97,15 @@ export class Meta<T> {
      *
      * @param value
      */
-    default(value: Exclude<T, undefined>): Meta<Exclude<T, undefined>> {
+    ensure_default<R extends Exclude<T, undefined> = Exclude<T, undefined>>(value?: R): Meta<R> {
         if (!this.exist()) {
-            if (this.property_key === undefined) {
-                Reflect.defineMetadata(this.metadata_key, value, this.target)
+            const metadata_value = value ?? this.default_by?.(this.target, this.property)
+            if (this.property === undefined) {
+                Reflect.defineMetadata(this.metadata_key, metadata_value, this.target)
             } else {
-                Reflect.defineMetadata(this.metadata_key, value, this.target, this.property_key)
+                Reflect.defineMetadata(this.metadata_key, metadata_value, this.target, this.property)
             }
+            this._exist = true
         }
         return this as any
     }
@@ -79,19 +113,29 @@ export class Meta<T> {
     /**
      * do something。
      */
-    do(something: (value: T) => T | void): T {
+    do(something: (value: T) => void): this {
         const value = this.value
-        return something(value) ?? value
+        something(value)
+        return this
+    }
+
+    /**
+     * do something。
+     */
+    convert<R>(func: (value: T) => R): R {
+        const value = this.value
+        return func(value)
     }
 
     /**
      * 清除元数据。
      */
     clear() {
-        if (this.property_key === undefined) {
+        if (this.property === undefined) {
             Reflect.deleteMetadata(this.metadata_key, this.target)
         } else {
-            Reflect.deleteMetadata(this.metadata_key, this.target, this.property_key)
+            Reflect.deleteMetadata(this.metadata_key, this.target, this.property)
         }
+        this._exist = false
     }
 }

@@ -6,4 +6,3 @@
  */
 
 export { Injector } from './injector'
-export { InjectorProvider } from './injector-provider'

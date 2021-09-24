@@ -5,10 +5,75 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { HandlerDescriptor, ProviderTreeNode, TaskDescriptor, ToraRouterOptions, ToraTriggerOptions, Type } from '../types'
-import { Injector } from './injector'
-import { MetaWrapper } from './meta-tool'
+import { ClassMeta, ComponentMeta, Constructor, PropertyFunction, PropertyMeta, ReflectComponent, RouterFunction, ToraModuleMetaLike, TriggerFunction } from './annotation'
+import { Meta, MetaWrapper } from './meta-tool'
 import { DI_TOKEN } from './token'
+
+/**
+ * @private
+ *
+ * @param prototype
+ * @param property
+ */
+export function init_router_function<T extends (...args: any) => any>(prototype: any, property?: string): RouterFunction<T> {
+    if (!property) {
+        // TODO: Complete Error message.
+        throw new Error()
+    }
+    const descriptor = Object.getOwnPropertyDescriptor(prototype, property)
+    if (!descriptor) {
+        // TODO: Complete Error message.
+        throw new Error()
+    }
+    const parameter_injection = TokenUtils.PropertyMeta(prototype, property).value?.parameter_injection
+    const router_function: RouterFunction<T> = {
+        type: 'ToraRouterFunction',
+        descriptor: descriptor,
+        handler: descriptor.value,
+        property: property,
+        param_types: TokenUtils.get_method_parameter_types(prototype, property)?.map((t: any, i: number) => parameter_injection?.[i] ?? t) as Parameters<T>,
+        auth: false,
+        wrap_result: true,
+        method_and_path: {},
+    }
+    TokenUtils.Touched(prototype).ensure_default().do(touched => {
+        touched[property] = router_function
+    })
+    return router_function
+}
+
+/**
+ * @private
+ *
+ * @param prototype
+ * @param property
+ */
+export function init_trigger_function<T extends (...args: any) => any>(prototype: any, property?: string): TriggerFunction<T> {
+    if (!property) {
+        // TODO: Complete Error message.
+        throw new Error()
+    }
+    const descriptor = Object.getOwnPropertyDescriptor(prototype, property)
+    if (!descriptor) {
+        // TODO: Complete Error message.
+        throw new Error()
+    }
+    const parameter_injection = TokenUtils.PropertyMeta(prototype, property).value?.parameter_injection
+    const trigger_function: TriggerFunction<T> = {
+        type: 'ToraTriggerFunction',
+        descriptor,
+        handler: descriptor.value,
+        property,
+        param_types: TokenUtils.get_method_parameter_types(prototype, property)?.map((t: any, i: number) => parameter_injection?.[i] ?? t) as Parameters<T>,
+        crontab: '',
+        name: 'unset'
+    }
+    TokenUtils.Touched(prototype).ensure_default()
+        .do(touched => {
+            touched[property] = trigger_function
+        })
+    return trigger_function
+}
 
 /**
  * Reflect Metadata 工具集。
@@ -18,204 +83,107 @@ import { DI_TOKEN } from './token'
 export namespace TokenUtils {
 
     /**
-     * ComponentType
-     * @category Type
-     */
-    export type ComponentType = 'ToraService' | 'ToraModule' | 'ToraRoot' | 'ToraRouter' | 'ToraTrigger'
-
-    /**
-     * Tora 组件类型。
+     * Tora Component 元数据。
      * @category Basic Meta
      */
-    export const ComponentType = MetaWrapper<ComponentType>(DI_TOKEN.class_type)
+    export const ComponentMeta = MetaWrapper<ComponentMeta>(DI_TOKEN.component_meta, 'prototype_only')
 
     /**
      * 自定义数据。
      * @category Basic Meta
      */
-    export const CustomData = MetaWrapper<{ [prop: string]: any }>(DI_TOKEN.custom_data)
+    export const CustomData = MetaWrapper<{ [prop: string]: any }>(DI_TOKEN.custom_data, 'prototype_only', () => ({}))
 
     /**
      * 自定义数据。
      * @category Basic Meta
      */
-    export const ClassMeta = MetaWrapper<{ [prop: string]: any }>(DI_TOKEN.class_meta)
+    export const Touched = MetaWrapper<Record<string, PropertyFunction<any>>>(DI_TOKEN.touched, 'prototype_only', () => ({}))
+
+    /**
+     * 自定义数据。
+     * @category Basic Meta
+     */
+    export const ClassMeta = MetaWrapper<ClassMeta>(DI_TOKEN.class_meta, 'prototype_only', () => ({ parameter_injection: [], router_path_replacement: {} }))
+
+    /**
+     * 自定义数据。
+     * @category Basic Meta
+     */
+    export const PropertyMeta = MetaWrapper<PropertyMeta>(DI_TOKEN.property_meta, 'property_only', () => ({ parameter_injection: [] }))
+
+    /**
+     * 自定义数据。
+     * @category Basic Meta
+     */
+    export const RouterFunction = MetaWrapper<RouterFunction<any>>(DI_TOKEN.property_function, 'property_only', (proto, prop) => init_router_function(proto, prop))
+    export const TriggerFunction = MetaWrapper<TriggerFunction<any>>(DI_TOKEN.property_function, 'property_only', (proto, prop) => init_trigger_function(proto, prop))
 
     /**
      * 参数类型。
      * @category Basic Meta
      */
-    export const Dependencies = MetaWrapper<{ [property: string]: Type<any>[] }>(DI_TOKEN.dependencies)
-
-    /**
-     * 禁用相关信息。
-     * @category Basic Meta
-     */
-    export const DisabledMeta = MetaWrapper<{}>(DI_TOKEN.disabled_meta)
-
-    /**
-     * 锁相关信息。
-     * @category Basic Meta
-     */
-    export const LockMeta = MetaWrapper<{ key?: string, expires?: number }>(DI_TOKEN.lock_meta)
+    export const Dependencies = MetaWrapper<{ [property: string]: any[] }>(DI_TOKEN.dependencies, 'both', () => ({}))
 
     /**
      * 存储实例。
      * @category Basic Meta
      */
-    export const Instance = MetaWrapper<any>(DI_TOKEN.instance)
+    export const Instance = MetaWrapper<any>(DI_TOKEN.instance, 'prototype_only')
 
     /**
      * 特殊注入 token 列表。
      * @category Basic Meta
      */
-    export const ParamInjection = MetaWrapper<any[]>(DI_TOKEN.param_injection)
-
-    /**
-     * ToraService 名称。
-     * @category Tora Service Meta
-     */
-    export const ToraServiceName = MetaWrapper<string>(DI_TOKEN.tora_service_name)
-
-    /**
-     * ToraService 属性。
-     * @category Tora Service Property
-     */
-    export const ToraServiceProperty = MetaWrapper<{ destroy_method?: Function }>(DI_TOKEN.tora_service_property)
-
-    // ToraModule
-
-    /**
-     * ToraModule 收集函数。
-     * @category Tora Module Meta
-     */
-    export const ToraModuleProviderCollector = MetaWrapper<(injector: Injector) => ProviderTreeNode>(DI_TOKEN.tora_module_provider_collector)
-
-    /**
-     * ToraModule 的 routers，对应 ToraModuleOptions 中的 routers。
-     * @category Tora Module Meta
-     */
-    export const ToraRootRouters = MetaWrapper<Type<any>[] | undefined>(DI_TOKEN.tora_module_routers)
-
-    /**
-     * ToraModule 的 tasks，对应 ToraModuleOptions 中的 tasks。
-     * @category Tora Module Meta
-     */
-    export const ToraRootTasks = MetaWrapper<Type<any>[] | undefined>(DI_TOKEN.tora_module_tasks)
-
-    // ToraRouter
-
-    /**
-     * ToraRouter 的处理函数。
-     * @category Tora Router Meta
-     */
-    export const ToraRouterHandler = MetaWrapper<HandlerDescriptor>(DI_TOKEN.tora_router_handler)
-
-    /**
-     * ToraRouter Handler 收集函数。
-     * @category Tora Router Meta
-     */
-    export const ToraRouterHandlerCollector = MetaWrapper<(injector: Injector) => HandlerDescriptor[]>(DI_TOKEN.tora_router_handler_collector)
-
-    /**
-     * 一个 ToraRouter 上全部 Handler 的列表。
-     * @category Tora Router Meta
-     */
-    export const ToraRouterHandlerList = MetaWrapper<HandlerDescriptor[]>(DI_TOKEN.tora_router_handler_list)
-
-    /**
-     * ToraRouterOptions。
-     * @category Tora Router Meta
-     */
-    export const ToraRouterOptions = MetaWrapper<ToraRouterOptions | undefined>(DI_TOKEN.tora_router_options)
-
-    /**
-     * ToraRouter 挂载的绝对路径。
-     * @category Tora Router Meta
-     */
-    export const ToraRouterPath = MetaWrapper<string>(DI_TOKEN.tora_router_absolute_path)
-
-    /**
-     * ToraRouter 路径替换列表。
-     * @category Tora Router Meta
-     */
-    export const ToraRouterPathReplacement = MetaWrapper<{ [router_method_key: string]: string }>(DI_TOKEN.tora_router_path_replacement)
-
-    // ToraTrigger
-
-    /**
-     * ToraTriggerOptions。
-     * @category Tora Trigger Meta
-     */
-    export const ToraTriggerOptions = MetaWrapper<ToraTriggerOptions | undefined>(DI_TOKEN.tora_trigger_options)
-
-    /**
-     * ToraTrigger 的任务函数。
-     * @category Tora Trigger Meta
-     */
-    export const ToraTriggerTask = MetaWrapper<TaskDescriptor>(DI_TOKEN.tora_trigger_task)
-
-    /**
-     * ToraTrigger 的任务收集函数。
-     * @category Tora Trigger Meta
-     */
-    export const ToraTriggerTaskCollector = MetaWrapper<(injector: Injector) => TaskDescriptor[]>(DI_TOKEN.tora_trigger_task_collector)
-
-    /**
-     * 一个 ToraTrigger 上全部的任务列表。
-     * @category Tora Trigger Meta
-     */
-    export const ToraTriggerTaskList = MetaWrapper<TaskDescriptor[]>(DI_TOKEN.tora_trigger_task_list)
+    export const ParamInjection = MetaWrapper<any[]>(DI_TOKEN.param_injection, 'both')
 
     /**
      * 获取指定类或函数的参数列表。
      *
      * @category Reflect Metadata
-     * @param target
-     * @param property_key
+     * @param constructor
      */
-    export function getParamTypes(target: any, property_key?: string): any[] {
-        if (property_key === undefined) {
-            return Reflect.getMetadata('design:paramtypes', target)
-        } else {
-            return Reflect.getMetadata('design:paramtypes', target, property_key)
-        }
+    export function get_constructor_parameter_types(constructor: Constructor<any>): any[] {
+        return Reflect.getMetadata('design:paramtypes', constructor)
+    }
+
+    export function get_method_parameter_types(proto: any, prop: string): any[] {
+        return Reflect.getMetadata('design:paramtypes', proto, prop)
     }
 
     /**
      * 获取指定目标的类型。
      *
      * @category Reflect Metadata
-     * @param target
-     * @param property_key
+     * @param proto
+     * @param prop
      */
-    export function getType(target: any, property_key?: string): any {
-        if (property_key === undefined) {
-            return Reflect.getMetadata('design:type', target)
-        } else {
-            return Reflect.getMetadata('design:type', target, property_key)
-        }
+    export function get_property_type(proto: any, prop: string): any {
+        return Reflect.getMetadata('design:type', proto, prop)
     }
 
-    /**
-     * 当 Tora 组件类型不存在时，添加组件类型，否则抛出异常。
-     *
-     * @category Basic Meta
-     * @param target
-     * @param type
-     */
-    export function setComponentTypeNX(target: any, type: ComponentType) {
-
-        const meta = TokenUtils.ComponentType(target)
-
-        if (meta.value === type) {
-            throw new Error(`Decorator duplicated on class ${target.name}, @${type} can only be used once.`)
+    export function ensure_component(module: Constructor<any>, type: 'ToraComponent', msg?: (meta_value: ComponentMeta | undefined, module: Constructor<any>) => string | undefined): Meta<ComponentMeta>
+    export function ensure_component(module: Constructor<any>, type: 'ToraModuleLike', msg?: (meta_value: ComponentMeta | undefined, module: Constructor<any>) => string | undefined): Meta<ToraModuleMetaLike>
+    export function ensure_component<K extends ComponentMeta['type']>(module: Constructor<any>, type: K, msg?: (meta_value: ComponentMeta | undefined, module: Constructor<any>) => string | undefined): Meta<ReflectComponent<K>>
+    export function ensure_component<K extends ComponentMeta['type'] | 'ToraModuleLike' | 'ToraComponent'>(module: Constructor<any>, type: K, msg?: (meta_value: ComponentMeta | undefined, module: Constructor<any>) => string | undefined): Meta<any> {
+        const meta = TokenUtils.ComponentMeta(module.prototype)
+        const meta_value = meta.value
+        if (!meta_value) {
+            throw new Error(msg?.(meta_value, module) ?? `ComponentMeta of ${module.name ?? module.prototype?.toString()} is empty.`)
         }
-
-        if (meta.exist()) {
-            throw new Error(`Decorator conflicts on class ${target.name}, only one of @ToraService, @ToraModule, @ToraRouter, @ToraTrigger can be used on same class.`)
+        if (type === 'ToraComponent') {
+            if (!/^(ToraRoot|ToraModule|ToraRouter|ToraTrigger|ToraService)$/.test(meta_value.type)) {
+                throw new Error(msg?.(meta_value, module) ?? `${meta_value.name} is "${meta_value.type}", not "ToraComponent".`)
+            }
+        } else if (type === 'ToraModuleLike') {
+            if (!/^(ToraRoot|ToraModule|ToraRouter|ToraTrigger)$/.test(meta_value.type)) {
+                throw new Error(msg?.(meta_value, module) ?? `${meta_value.name} is "${meta_value.type}", not "ToraModuleLike".`)
+            }
+        } else {
+            if (meta_value.type !== type) {
+                throw new Error(msg?.(meta_value, module) ?? `${meta_value.name}  is "${meta_value.type}", not a "${type}".`)
+            }
         }
-
-        meta.set(type)
+        return meta as Meta<any>
     }
 }

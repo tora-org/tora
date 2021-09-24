@@ -16,7 +16,7 @@ export class _NullInjector {
         return false
     }
 
-    get(token: any, info?: string) {
+    get(token: any, info?: string): never {
         throw new Error(`Can't find ${token?.name ?? token} in NullInjector [${info}]`)
     }
 }

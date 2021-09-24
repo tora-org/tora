@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { TaskDescriptor } from '../types'
-import { Dayjs } from './cron/dayjs-snipper'
+import { TriggerFunction } from '../core'
+import { Dora } from './dora'
 import { Schedule } from './schedule'
 
 export class Bullet {
@@ -15,9 +15,9 @@ export class Bullet {
         public id: string,
         public crontab: Schedule,
         public handler: Function,
-        public execution: Dayjs,
+        public execution: Dora,
         public next_bullet: Bullet | null,
-        public desc: TaskDescriptor,
+        public desc: TriggerFunction<any>,
     ) {
     }
 }

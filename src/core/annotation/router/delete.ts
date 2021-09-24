@@ -5,11 +5,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { createRequestDecorator } from '../__lib__/create-request-decorator'
+import { TokenUtils } from '../../token-utils'
+import { DecoratorInstanceMethod } from '../__types__'
 
 /**
  * 将 Tora.ToraRouter 中的一个方法标记为 DELETE 请求处理函数。
  *
  * @category Router Request
  */
-export const Delete = createRequestDecorator('GET')
+export function Delete(path_tail?: string): DecoratorInstanceMethod {
+    return (prototype, prop, _) => {
+        TokenUtils.RouterFunction(prototype, prop)
+            .ensure_default()
+            .do(router_function => {
+                const method_path = path_tail ?? prop
+                router_function.method_and_path[`DELETE-${method_path}`] = ['DELETE', method_path]
+            })
+    }
+}

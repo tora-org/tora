@@ -5,7 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { LiteContext, ToraAuthInfo } from '../types'
+import { LiteContext } from '../http'
+import { ToraAuthInfo } from '../types'
 
 /**
  * 授权服务接口，通过实现抽象类，实现一个授权服务。

@@ -11,11 +11,62 @@
  * @category Namespace
  */
 
-export * from './annotation'
-export * from './injector'
-export * from './provider'
+export {
+    Task,
+    ClassMeta,
+    ComponentMeta,
+    Constructor,
+    DecoratorClass,
+    DecoratorInstanceAccessor,
+    DecoratorInstanceMethod,
+    DecoratorInstanceProperty,
+    DecoratorParameter,
+    DecoratorStaticAccessor,
+    DecoratorStaticMethod,
+    DecoratorStaticProperty,
+    ImportsAndProviders,
+    MetaValue,
+    PropertyFunction,
+    PropertyMeta,
+    ProviderTreeNode,
+    ReflectComponent,
+    RouterFunction,
+    ToraModuleMeta,
+    ToraModuleMetaLike,
+    ToraModuleOptions,
+    ToraRootMeta,
+    ToraRootOptions,
+    ToraRouterMeta,
+    ToraRouterOptions,
+    ToraTriggerOptions,
+    TriggerFunction,
+    ToraServiceOptions,
+    ToraTriggerMeta,
+    ToraRoot,
+    ToraServiceMeta,
+    ToraTrigger,
+    ToraRouter,
+    Meta,
+    ToraModule,
+    Get,
+    ToraService,
+    Put,
+    AbstractConstructor,
+    Delete,
+    Post,
+    Auth,
+    OnDestroy,
+    CacheWith,
+    Inject,
+    EchoDependencies,
+    EchoMethodDependencies,
+    NoWrap,
+    Disabled,
+    Lock,
+} from './annotation'
+export { Injector } from './injector'
+export { ClassProviderDef, FactoryProviderDef, Provider, ProviderDef, ValueProviderDef, ClassProvider, def2Provider, ValueProvider, FactoryProvider } from './provider'
 
 export { Gunslinger, IGunslinger } from './gunslinger'
 
 export { TokenUtils } from './token-utils'
-export { AnnotationTools } from './annotation-tools'

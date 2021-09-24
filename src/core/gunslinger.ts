@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Type } from '../types'
+import { Constructor } from './annotation'
 
 /**
  * @private
@@ -14,13 +14,13 @@ import { Type } from '../types'
  *
  * @category Router Extend
  */
-export interface IGunslinger<T> {
+export interface IGunslinger<T extends object> {
 
-    new(): Type<T>
+    new(): Constructor<T>
 
-    mount(path: `/${string}`): Type<T> & IGunslinger<T>
+    mount(path: `/${string}`): Constructor<T> & IGunslinger<T>
 
-    replace<M extends keyof T>(method: M, new_path: string): Type<Omit<T, M>> & IGunslinger<Omit<T, M>>
+    replace(path: string, new_path: string): Constructor<T> & IGunslinger<T>
 }
 
 /**
@@ -28,7 +28,7 @@ export interface IGunslinger<T> {
  *
  * @category Router Extend
  */
-export function Gunslinger<T>(): IGunslinger<T> {
+export function Gunslinger<T extends object>(): IGunslinger<T> {
     return class {
     } as any
 }

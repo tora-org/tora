@@ -5,7 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { TokenUtils } from '../token-utils'
+import { TokenUtils } from '../../token-utils'
+import { DecoratorClass } from '../__types__'
 
 /**
  * 向 Class 标记一些自定义元信息，在自定义装饰器工具 `AnnotationTools` 中会很有用。
@@ -14,8 +15,8 @@ import { TokenUtils } from '../token-utils'
  *
  * @category Common Annotation
  */
-export function Meta<T extends object = any>(meta: T) {
-    return function(target: any) {
-        TokenUtils.ClassMeta(target).set(meta)
+export function Meta<T extends object = any>(meta: T): DecoratorClass {
+    return constructor => {
+        TokenUtils.CustomData(constructor.prototype).set(meta)
     }
 }

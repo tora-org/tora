@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { LiteContext } from './types'
+import { LiteContext } from './__type__'
 
 /**
  * @category Error

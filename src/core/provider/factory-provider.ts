@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Provider } from '../../types'
+import { Provider } from './__type__'
 
 /**
  * @private

@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { TokenUtils } from '../token-utils'
-import { DecoratorClass, DecoratorInstanceMethod } from './__types__'
+import { TokenUtils } from '../../token-utils'
+import { DecoratorClass, DecoratorInstanceMethod } from '../__types__'
 
 /**
  * 这是一个调试用的装饰器。
@@ -19,8 +19,8 @@ import { DecoratorClass, DecoratorInstanceMethod } from './__types__'
  */
 export function EchoDependencies(): DecoratorClass {
     return constructor => {
-        console.log(`${constructor.name} dependencies`, TokenUtils.getParamTypes(constructor))
-        TokenUtils.Dependencies(constructor.prototype).default({})
+        console.log(`${constructor.name} dependencies`, TokenUtils.get_constructor_parameter_types(constructor))
+        TokenUtils.Dependencies(constructor.prototype).ensure_default()
             .do(dependencies => {
                 Object.keys(dependencies).forEach(propertyKey => {
                     console.log(`${constructor.name}.${propertyKey} dependencies`, dependencies[propertyKey])
@@ -42,8 +42,8 @@ export function EchoDependencies(): DecoratorClass {
  */
 export function EchoMethodDependencies(): DecoratorInstanceMethod {
     return (prototype, prop, _) => {
-        TokenUtils.Dependencies(prototype,).default({}).do(dependencies => {
-            dependencies[prop] = TokenUtils.getParamTypes(prototype, prop)
+        TokenUtils.Dependencies(prototype).ensure_default().do(dependencies => {
+            dependencies[prop] = TokenUtils.get_method_parameter_types(prototype, prop)
         })
     }
 }

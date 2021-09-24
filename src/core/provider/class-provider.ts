@@ -5,23 +5,24 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Provider, Type } from '../../types'
+import { Constructor } from '../annotation'
 import { Injector } from '../injector'
 import { TokenUtils } from '../token-utils'
+import { Provider } from './__type__'
 
 /**
  * @private
  *
  * @category Injector
  */
-export class ClassProvider<M> implements Provider<M> {
+export class ClassProvider<M extends object> implements Provider<M> {
 
     public resolved?: M
     public name: string
     public used = false
 
     constructor(
-        private cls: Type<M>,
+        private cls: Constructor<M>,
         public injector: Injector,
         private readonly multi?: boolean,
     ) {
@@ -47,10 +48,10 @@ export class ClassProvider<M> implements Provider<M> {
         parents = (parents ?? []).concat(this.cls)
         this.used = true
         if (this.multi) {
-            return this.get_param_instance(parents)
+            return this._get_param_instance(parents)
         }
         if (!this.resolved) {
-            this.resolved = this.get_param_instance(parents)
+            this.resolved = this._get_param_instance(parents)
         }
         return this.resolved
     }
@@ -61,22 +62,18 @@ export class ClassProvider<M> implements Provider<M> {
      * @param parents
      */
     set_used(parents?: any[]): void {
-        parents = (parents ?? []).concat(this.cls)
         this.used = true
-        this.set_param_instance_used(parents)
+        this._set_param_instance_used([this.cls, ...parents ?? []])
     }
 
-    private get_param_instance(parents?: any[]) {
-        const provider_list = this.extract_param_types(parents)
-        const param_list = provider_list?.map((provider: any) => {
-            return provider?.create(parents)
-        }) ?? []
+    private _get_param_instance(parents?: any[]) {
+        const param_list = this._extract_param_types(parents)?.map(provider => provider?.create(parents)) ?? []
         const instance = new this.cls(...param_list)
 
-        TokenUtils.ToraServiceProperty(this.cls.prototype).default({})
-            .do(service_property => {
-                if (service_property.destroy_method) {
-                    const destroy_method = service_property.destroy_method.bind(instance)
+        TokenUtils.ClassMeta(this.cls.prototype)
+            .do(meta => {
+                if (meta?.on_destroy) {
+                    const destroy_method = meta.on_destroy.value.bind(instance)
                     this.injector.on('tora-destroy', () => destroy_method())
                 }
             })
@@ -84,18 +81,15 @@ export class ClassProvider<M> implements Provider<M> {
         return instance
     }
 
-    private set_param_instance_used(parents?: any[]) {
-        this.extract_param_types(parents)?.forEach((provider: Provider<any>) => provider?.set_used(parents))
+    private _set_param_instance_used(parents?: any[]) {
+        this._extract_param_types(parents)?.forEach((provider: Provider<any>) => provider?.set_used(parents))
     }
 
-    private extract_param_types(parents?: any[]) {
-        const inject_token_map = TokenUtils.ParamInjection(this.cls).value
-        return TokenUtils.getParamTypes(this.cls)
-            ?.map((token: any, i: number) => {
-                const inject_token = inject_token_map?.[i]
-                if (inject_token) {
-                    token = inject_token
-                }
+    private _extract_param_types(parents?: any[]) {
+        const inject_token_map = TokenUtils.ClassMeta(this.cls.prototype).value?.parameter_injection
+        return TokenUtils.get_constructor_parameter_types(this.cls)
+            ?.map((origin_token: any, i: number) => {
+                const token = inject_token_map?.[i] ?? origin_token
                 if (token === undefined) {
                     throw new Error(`type 'undefined' at ${this.cls?.name}.constructor[${i}], if it's not specified, there maybe a circular import.`)
                 }

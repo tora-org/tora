@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export type FieldType = 'second' | 'minute' | 'hour' | 'dayOfMonth' | 'month' | 'dayOfWeek'
+import { FieldType } from '../__type__'
 
 const VALUE_RANGE = {
     month: { min: 1, max: 12 },

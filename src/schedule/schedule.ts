@@ -5,21 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { dayjs, Dayjs } from './cron/dayjs-snipper'
-import { FieldType, parse_field } from './cron/cron-item-parser'
+import { FieldType, InnerOptions, ScheduleOptions } from './__type__'
+import { parse_field } from './cron/cron-item-parser'
 import { CronMonth } from './cron/cron-month'
 import { ParsedFields } from './cron/parsed-fields'
-
-export interface ScheduleOptions {
-    utc?: boolean
-    tz?: string
-    name?: string
-}
-
-interface InnerOptions {
-    _is_day_of_month_wildcard_match?: boolean
-    _is_day_of_week_wildcard_match?: boolean
-}
+import { Dora } from './dora'
 
 /**
  * @category Schedule
@@ -41,7 +31,7 @@ export class Schedule {
     private readonly _is_day_of_week_wildcard_match: boolean = false
     private _year: number
     private _month: number
-    private _now: Dayjs
+    private _now: Dora
     private _schedule: CronMonth
 
     constructor(
@@ -49,10 +39,10 @@ export class Schedule {
         private readonly options?: ScheduleOptions & InnerOptions,
     ) {
         this._utc = options?.utc ?? false
-        this._tz = this._utc ? 'UTC' : options?.tz ?? dayjs.tz.guess()
+        this._tz = this._utc ? 'UTC' : options?.tz ?? Intl.DateTimeFormat().resolvedOptions().timeZone
         this._is_day_of_month_wildcard_match = options?._is_day_of_month_wildcard_match ?? false
         this._is_day_of_week_wildcard_match = options?._is_day_of_week_wildcard_match ?? false
-        this._now = dayjs().tz(this._tz)
+        this._now = Dora.now(this._tz)
         this._year = this._now.year()
         this._month = this._now.month() + 1
         if (!this.parsed_fields.month.includes(this._month)) {
@@ -123,7 +113,7 @@ export class Schedule {
         this._now = this._now.add(1, 'year').startOf('year').set('month', this._month - 1)
     }
 
-    private _deal_special_day_of_month(schedule: Set<number>, date: Dayjs) {
+    private _deal_special_day_of_month(schedule: Set<number>, date: Dora) {
         const days_in_month = date.daysInMonth()
         this.parsed_fields.dayOfMonth.forEach(ele => {
             if (typeof ele === 'number') {
@@ -153,10 +143,10 @@ export class Schedule {
         })
     }
 
-    private _deal_special_day_of_week(schedule: Set<number>, date: Dayjs) {
+    private _deal_special_day_of_week(schedule: Set<number>, date: Dora) {
         const days_in_month = date.daysInMonth()
         const date_matrix: number[][] = [[], [], [], [], [], [], []]
-        for (let d = 1, wd = date.day(); d <= days_in_month; d++) {
+        for (let d = 1, wd = date.get('day'); d <= days_in_month; d++) {
             date_matrix[wd].push(d)
             wd++
             if (wd === 7) {
@@ -187,10 +177,10 @@ export class Schedule {
     private _make_schedule(): CronMonth {
         const schedule = new Set<number>()
         if (!this._is_day_of_month_wildcard_match || this._is_day_of_week_wildcard_match) {
-            this._deal_special_day_of_month(schedule, dayjs(`${this._year}-${this._month}`).tz(this._tz))
+            this._deal_special_day_of_month(schedule, Dora.from([this._year, this._month - 1], this._tz))
         }
         if (!this._is_day_of_week_wildcard_match) {
-            this._deal_special_day_of_week(schedule, dayjs(`${this._year}-${this._month}`).tz(this._tz))
+            this._deal_special_day_of_week(schedule, Dora.from([this._year, this._month - 1], this._tz))
         }
         return new CronMonth(this._year, this._month - 1, this._now, this._tz, [
             Array.from<number>(schedule).sort((a, b) => a - b),

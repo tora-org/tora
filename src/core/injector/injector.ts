@@ -6,7 +6,8 @@
  */
 
 import EventEmitter from 'events'
-import { AbstractType, Provider, ToraEvent } from '../../types'
+import { AbstractType, ToraEvent } from '../../types'
+import { Provider } from '../provider'
 import { InjectorProvider } from './injector-provider'
 import { _NullInjector, NullInjector } from './null-injector'
 
@@ -19,12 +20,11 @@ import { _NullInjector, NullInjector } from './null-injector'
  */
 export class Injector {
 
-    provider?: InjectorProvider
     readonly children: Injector[] = []
 
     constructor(
         public parent: Injector | _NullInjector,
-        public providers: Map<any, any> = new Map(),
+        public providers: Map<any, Provider<any>> = new Map(),
         public readonly emitter: EventEmitter,
     ) {
     }
@@ -35,17 +35,15 @@ export class Injector {
      * @param parent 父注入器
      * @param providers 默认的 Provider
      */
-    static create(parent?: Injector | null, providers?: Map<any, any>): Injector {
-        providers = providers || new Map()
-        const real_parent: Injector = parent ?? NullInjector as any
-        let parent_emitter: EventEmitter
-        if (!real_parent.emitter) {
-            parent_emitter = new EventEmitter()
-            parent_emitter.setMaxListeners(9999)
-        } else {
-            parent_emitter = real_parent.emitter
-        }
+    static create(parent?: Injector | null, providers?: Map<any, Provider<any>>): Injector {
+        providers = new Map(providers?.entries() ?? [])
+
+        const real_parent = parent ?? NullInjector as unknown as Injector
+        const parent_emitter = real_parent.emitter ?? new EventEmitter().setMaxListeners(9999)
+
         const new_instance = new Injector(real_parent, providers, parent_emitter)
+        new_instance.set_provider(Injector, new InjectorProvider('injector', new_instance))
+
         real_parent.children.push(new_instance)
         return new_instance
     }
@@ -67,12 +65,6 @@ export class Injector {
      * @param info 一些帮助调试的信息
      */
     get<T>(token: AbstractType<T>, info?: string): Provider<T> | undefined {
-        if (token as any === Injector) {
-            if (!this.provider) {
-                this.provider = new InjectorProvider('injector', this)
-            }
-            return this.provider as unknown as Provider<T>
-        }
         return this.providers.get(token) ?? this.parent.get(token, info)
     }
 
@@ -82,9 +74,6 @@ export class Injector {
      * @param token
      */
     local_has(token: any): boolean {
-        if (token === Injector) {
-            return true
-        }
         return this.providers.has(token)
     }
 
@@ -94,9 +83,6 @@ export class Injector {
      * @param token
      */
     has(token: any): boolean {
-        if (token === Injector) {
-            return true
-        }
         return this.providers.has(token) || this.parent.has(token)
     }
 

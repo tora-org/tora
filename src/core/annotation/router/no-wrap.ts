@@ -14,9 +14,11 @@ import { DecoratorInstanceMethod } from '../__types__'
  * @category Router Modifier
  */
 export function NoWrap(): DecoratorInstanceMethod {
-    return (target: any, key: string) => {
-        TokenUtils.ToraRouterHandler(target, key).default({}).do(handler => {
-            handler.wrap_result = false
-        })
+    return (prototype, prop, desc) => {
+        TokenUtils.RouterFunction(prototype, prop)
+            .ensure_default()
+            .do(router_function => {
+                router_function.wrap_result = false
+            })
     }
 }

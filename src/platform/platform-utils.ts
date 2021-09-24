@@ -1,18 +1,21 @@
-import { ApiParams, SessionContext, TaskContext } from './builtin'
-import { Injector } from './core'
-import { InnerFinish, OuterFinish, reasonable, ReasonableError } from './error'
-import { dayjs, Dayjs } from './schedule/cron/dayjs-snipper'
-import { Authenticator } from './service/authenticator'
-import { CacheProxy } from './service/cache-proxy'
-import { LifeCycle } from './service/life-cycle'
-import { ResultWrapper } from './service/result-wrapper'
-import { TaskLifeCycle } from './service/task-life-cycle'
-import { TaskLock } from './service/task-lock'
-import { HandlerDescriptor, KoaResponseType, LiteContext, Provider, TaskDescriptor } from './types'
-
 /**
- * @category Platform
+ * Copyright (c) Plank Root.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  */
+
+import { ApiParams, SessionContext, TaskContext } from '../builtin'
+import { Injector, Provider, RouterFunction, TriggerFunction } from '../core'
+import { InnerFinish, KoaResponseType, LiteContext, OuterFinish, reasonable, ReasonableError } from '../http'
+import { Dora } from '../schedule'
+import { Authenticator } from '../service/authenticator'
+import { CacheProxy } from '../service/cache-proxy'
+import { LifeCycle } from '../service/life-cycle'
+import { ResultWrapper } from '../service/result-wrapper'
+import { TaskLifeCycle } from '../service/task-life-cycle'
+import { TaskLock } from '../service/task-lock'
+
 export const PURE_PARAMS = 'PURE_PARAMS'
 
 export class ToraError<T> {
@@ -89,22 +92,23 @@ export namespace PlatformUtils {
         }
     }
 
-    export function makeTask(injector: Injector, desc: TaskDescriptor, provider_list: Provider<any>[]) {
-        return async function(execution?: Dayjs) {
+    export function makeTask(injector: Injector, desc: TriggerFunction<any>, provider_list: Provider<any>[]) {
+        return async function(execution?: Dora) {
             const hooks = injector.get(TaskLifeCycle)?.create()
             const task_lock = injector.get(TaskLock)?.create()
-            if (desc.lock && !task_lock) {
+            if (desc.lock_key && !task_lock) {
                 throw new Error(`Decorator "@Lock" is settled on ${desc.pos}, but there's no "TaskLock" implements found.`)
             }
 
             const context = new TaskContext({
                 name: desc.name ?? desc.pos ?? '',
-                execution: execution ?? dayjs(),
+                execution: execution ?? Dora.now(),
                 pos: desc.pos!,
-                property_key: desc.property_key!,
-                crontab: desc.crontab!,
+                property_key: desc.property,
+                crontab: desc.crontab,
                 temp_exec: !!execution,
-                lock: desc.lock,
+                lock_key: desc.lock_key,
+                lock_expires: desc.lock_expires,
             })
 
             await hooks?.on_init(context)
@@ -116,13 +120,14 @@ export namespace PlatformUtils {
                 }
             })
 
-            if (task_lock && desc.lock) {
-                const locked = await task_lock.lock(desc.lock.key ?? desc.pos, context)
+            if (task_lock && desc.lock_key) {
+                const locked = await task_lock.lock(desc.lock_key ?? desc.pos, context)
                 if (locked !== undefined) {
+                    const lock_key = desc.lock_key
                     return desc.handler(...param_list)
                         .then((res: any) => hooks?.on_finish(res, context))
                         .catch((err: any) => on_error_or_throw(hooks, err, context))
-                        .finally(() => task_lock.unlock(desc.lock?.key!, locked, context))
+                        .finally(() => task_lock.unlock(lock_key, locked, context))
                 } else {
                     await task_lock.on_lock_failed(context)
                 }
@@ -134,7 +139,7 @@ export namespace PlatformUtils {
         }
     }
 
-    export function makeHandler(injector: Injector, desc: HandlerDescriptor, provider_list: Provider<any>[]) {
+    export function makeHandler(injector: Injector, desc: RouterFunction<any>, provider_list: Provider<any>[]) {
 
         return async function(params: any, koa_context: LiteContext) {
 

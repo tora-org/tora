@@ -7,6 +7,3 @@
 
 export { ToraModule } from './tora-module'
 export { ToraRoot } from './tora-root'
-export { ToraRouter } from './tora-router'
-export { ToraService } from './tora-service'
-export { ToraTrigger } from './tora-trigger'

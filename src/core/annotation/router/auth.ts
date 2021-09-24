@@ -15,9 +15,10 @@ import { DecoratorInstanceMethod } from '../__types__'
  */
 export function Auth(): DecoratorInstanceMethod {
     return (prototype, prop, _) => {
-        TokenUtils.ToraRouterHandler(prototype, prop).default({})
-            .do(handler => {
-                handler.auth = true
+        TokenUtils.RouterFunction(prototype, prop)
+            .ensure_default()
+            .do(router_function => {
+                router_function.auth = true
             })
     }
 }

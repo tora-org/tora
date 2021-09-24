@@ -15,36 +15,17 @@ export enum DI_TOKEN {
 
     // user custom metadata
     custom_data = 'lazor:custom_data',
-    class_meta = 'lazor:class_meta',
 
     // inner metadata
-    class_type = 'lazor:class_type',
+    class_meta = 'lazor:class_meta',
+    property_meta = 'lazor:property_meta',
+    property_function = 'lazor:property_function',
+
+    touched = 'lazor:touched',
+
+    component_meta = 'lazor:component_meta',
+
     dependencies = 'lazor:dependencies',
-    disabled_meta = 'lazor:disabled_meta',
     instance = 'lazor:instance',
-    lock_meta = 'lazor:lock_meta',
     param_injection = 'lazor:param_injection',
-
-    // ToraService
-    tora_service_name = 'lazor:tora_service_name',
-    tora_service_property = 'lazor:tora_service_property',
-
-    // ToraModule
-    tora_module_provider_collector = 'lazor:tora_module_provider_collector',
-    tora_module_routers = 'lazor:tora_module_routers',
-    tora_module_tasks = 'lazor:tora_module_tasks',
-
-    // ToraTrigger
-    tora_trigger_options = 'lazor:tora_trigger_options',
-    tora_trigger_task = 'lazor:tora_trigger_task',
-    tora_trigger_task_collector = 'lazor:tora_trigger_task_collector',
-    tora_trigger_task_list = 'lazor:tora_trigger_task_list',
-
-    // ToraRouter
-    tora_router_absolute_path = 'lazor:tora_router_absolute_path',
-    tora_router_handler = 'lazor:tora_router_handler',
-    tora_router_handler_collector = 'lazor:tora_router_handler_collector',
-    tora_router_handler_list = 'lazor:tora_router_handler_list',
-    tora_router_options = 'lazor:tora_router_options',
-    tora_router_path_replacement = 'lazor:tora_router_path_replacement',
 }

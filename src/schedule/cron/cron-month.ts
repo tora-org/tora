@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { dayjs, Dayjs } from './dayjs-snipper'
+import { Dora } from '../dora'
 
 export class CronMonth {
 
@@ -17,7 +17,7 @@ export class CronMonth {
     constructor(
         private readonly _year: number,
         private readonly _month: number,
-        private _now: Dayjs,
+        private _now: Dora,
         private _tz: string | undefined,
         private readonly _schedule: [number[], number[], number[], number[]],
     ) {
@@ -28,13 +28,7 @@ export class CronMonth {
 
     next() {
         if (this._has_next && this._current) {
-            const y = (this._year + '').padStart(2, '0')
-            const m = (this._month + 1 + '').padStart(2, '0')
-            const d = (this._current[0] + '').padStart(2, '0')
-            const hour = (this._current[1] + '').padStart(2, '0')
-            const min = (this._current[2] + '').padStart(2, '0')
-            const sec = (this._current[3] + '').padStart(2, '0')
-            const date = dayjs.tz(`${y}-${m}-${d} ${hour}:${min}:${sec}`, this._tz)
+            const date = Dora.from([this._year, this._month, ...this._current], this._tz)
             this._current = this._tick()
             return date
         } else {

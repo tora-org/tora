@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { TokenUtils } from '../token-utils'
-import { MetaValue, DecoratorInstanceMethod } from './__types__'
+import { TokenUtils } from '../../token-utils'
+import { DecoratorInstanceMethod } from '../__types__'
 
 /**
  * 用于标记一个 Class 或者 Class 中的一个方法为无效的。
@@ -19,9 +19,12 @@ import { MetaValue, DecoratorInstanceMethod } from './__types__'
  * @category Common Annotation
  * @param disabled_options 目前没有可用的选项内容，后续可能会添加一些。
  */
-export function Disabled(disabled_options?: MetaValue<typeof TokenUtils.DisabledMeta>): DecoratorInstanceMethod {
+export function Disabled(disabled_options?: {}): DecoratorInstanceMethod {
     return (prototype, prop, _) => {
-        disabled_options = disabled_options ?? {}
-        TokenUtils.DisabledMeta(prototype, prop).set(disabled_options)
+        TokenUtils.PropertyMeta(prototype, prop)
+            .ensure_default()
+            .do(meta => {
+                meta.disabled = true
+            })
     }
 }

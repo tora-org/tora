@@ -1,4 +1,5 @@
 const builtinModules = require("builtin-modules")
+const ts = require('typescript')
 const typescript = require('rollup-plugin-typescript2')
 const dts = require("rollup-plugin-dts").default
 const json = require("@rollup/plugin-json")
@@ -69,8 +70,9 @@ function createRollupConfig(externalModules) {
                     }
                 },
                 dts({
-                    banner: false,
-                    compilerOptions: tsconfigOverride.compilerOptions
+                    compilerOptions: {
+                        module: ts.ModuleKind.ESNext
+                    }
                 })
             ],
             output: [
@@ -81,8 +83,6 @@ function createRollupConfig(externalModules) {
 }
 
 const config = createRollupConfig([
-    'dayjs/plugin/timezone',
-    'dayjs/plugin/utc',
 ])
 
 export default config

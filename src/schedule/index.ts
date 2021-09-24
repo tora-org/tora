@@ -5,5 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export { Schedule, ScheduleOptions } from './schedule'
+export {
+    FieldType,
+    InnerOptions,
+    ScheduleOptions,
+    TaskDesc,
+} from './__type__'
+
+export { Dora } from './dora'
+export { Schedule } from './schedule'
 export { Revolver } from './revolver'

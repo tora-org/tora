@@ -5,39 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { TaskDescriptor } from '../types'
+import { TriggerFunction } from '../core'
+import { TaskDesc } from './__type__'
 import { Bullet } from './bullet'
 import { Schedule } from './schedule'
-
-/**
- * 任务描述对象
- */
-export interface TaskDesc {
-    /**
-     * 任务 ID
-     */
-    id: string
-    /**
-     * 任务名称
-     */
-    name: string
-    /**
-     * 任务位置，格式为 类名.方法名
-     */
-    pos: string
-    /**
-     * 任务的 crontab 描述
-     */
-    crontab: string
-    /**
-     * 任务的计划下次执行时间戳。
-     */
-    next_exec_ts: number
-    /**
-     * 任务的计划下次执行时间戳的日期格式。
-     */
-    next_exec_date_string: string
-}
 
 /**
  * ToraTrigger 的触发器。
@@ -62,11 +33,11 @@ export class Revolver {
     /**
      * @private
      */
-    _fill(crontab: Schedule, handler: Function, desc: TaskDescriptor) {
+    _fill(crontab: Schedule, handler: Function, desc: TriggerFunction<any>) {
         const bullet = new Bullet(Revolver.get_id(), crontab, handler, crontab.next(), null, desc)
         if (!this._clip) {
             this._clip = bullet
-        } else if (bullet.execution.isBefore(this._clip.execution)) {
+        } else if (bullet.execution < this._clip.execution) {
             bullet.next_bullet = this._clip
             this._clip = bullet
         } else {
@@ -201,7 +172,7 @@ export class Revolver {
         }
         if (!this._clip) {
             this._clip = bullet
-        } else if (bullet.execution.isBefore(this._clip.execution)) {
+        } else if (bullet.execution.valueOf() < this._clip.execution.valueOf()) {
             bullet.next_bullet = this._clip
             this._clip = bullet
         } else {
@@ -243,7 +214,7 @@ export class Revolver {
             console.log('on error', err)
             this.suspend(clip)
         })
-        if (this._clip.next_bullet && this._clip.next_bullet.execution.isBefore(this._clip.execution)) {
+        if (this._clip.next_bullet && this._clip.next_bullet.execution.valueOf() < this._clip.execution.valueOf()) {
             const bullet = this._clip
             this._clip = bullet.next_bullet!
             bullet.next_bullet = null
@@ -261,7 +232,7 @@ export class Revolver {
     private insert(clip: Bullet, bullet: Bullet) {
         if (!clip.next_bullet) {
             clip.next_bullet = bullet
-        } else if (bullet.execution.isBefore(clip.next_bullet.execution)) {
+        } else if (bullet.execution.valueOf() < clip.next_bullet.execution.valueOf()) {
             bullet.next_bullet = clip.next_bullet
             clip.next_bullet = bullet
         } else {

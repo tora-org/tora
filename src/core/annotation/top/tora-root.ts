@@ -5,9 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { ToraRootOptions } from '../../../types'
-import { TokenUtils } from '../../token-utils'
 import { makeProviderCollector } from '../../collector'
+import { TokenUtils } from '../../token-utils'
+import { DecoratorClass, ToraRootOptions } from '../__types__'
 
 /**
  * 把一个类标记为 Tora.ToraRoot，并提供配置元数据。
@@ -17,11 +17,18 @@ import { makeProviderCollector } from '../../collector'
  * @category Tora Core
  * @param options
  */
-export function ToraRoot(options?: ToraRootOptions) {
-    return function(target: any) {
-        TokenUtils.setComponentTypeNX(target, 'ToraRoot')
-        TokenUtils.ToraModuleProviderCollector(target).set(makeProviderCollector(target, options))
-        TokenUtils.ToraRootRouters(target).set(options?.routers)
-        TokenUtils.ToraRootTasks(target).set(options?.tasks)
+export function ToraRoot(options?: ToraRootOptions): DecoratorClass {
+    return constructor => {
+        const meta = TokenUtils.ComponentMeta(constructor.prototype)
+        if (meta.exist() && meta.value.type) {
+            throw new Error(`Component ${meta.value.type} is exist -> ${meta.value.name}.`)
+        }
+        meta.set({
+            type: 'ToraRoot',
+            name: constructor.name,
+            routers: options?.routers,
+            tasks: options?.tasks,
+            provider_collector: makeProviderCollector(constructor, options),
+        })
     }
 }

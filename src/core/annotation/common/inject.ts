@@ -5,7 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { TokenUtils } from '../token-utils'
+import { TokenUtils } from '../../token-utils'
+import { Constructor, DecoratorParameter } from '../__types__'
 
 /**
  * 当你需要使用 Class 和 Enum 以外的值进行依赖查找时，可以使用此装饰器。
@@ -23,11 +24,15 @@ import { TokenUtils } from '../token-utils'
  * @category Common Annotation
  * @param token - 任何可以通过 === 进行相等判断的值。一般会选择具有某些含义的字符串。
  */
-export function Inject(token: any) {
-    return function(proto: any, key: string, index: number) {
-        TokenUtils.ParamInjection(proto, key).default([])
-            .do(injection => {
-                injection[index] = token
-            })
+export function Inject(token: any): DecoratorParameter {
+    if (token === undefined) {
+        throw new Error(`You can not inject a "undefined".`)
+    }
+    return <CLASS extends object>(target: Constructor<CLASS> | CLASS, prop: string | undefined, index: number) => {
+        if (prop === undefined) {
+            TokenUtils.ClassMeta((target as Constructor<CLASS>).prototype).ensure_default().do(meta => meta.parameter_injection[index] = token)
+        } else {
+            TokenUtils.PropertyMeta(target, prop).ensure_default().do(meta => meta.parameter_injection[index] = token)
+        }
     }
 }

@@ -5,11 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import CoBody from 'co-body'
 import { Server } from 'http'
 import Koa from 'koa'
-import { ToraServer } from './tora-server'
-import { LiteContext } from './types'
+import { LiteContext, ToraServer } from './__type__'
+import { BodyParser } from './body-parser'
+import { ToraHttpHandler } from './tora-http-handler'
 
 declare module 'koa' {
     interface Request {
@@ -22,7 +22,7 @@ declare module 'koa' {
  * @private
  * Koa adaptor.
  */
-export class ToraKoa {
+export class ToraServerKoa implements ToraServer {
 
     private _koa = new Koa()
     private _server?: Server
@@ -54,8 +54,8 @@ export class ToraKoa {
      *
      * @param server
      */
-    handle_by(server: ToraServer) {
-        this._koa.use(async (ctx: LiteContext, next) => server.handle_request(ctx, next))
+    handle_by(server: ToraHttpHandler): this {
+        this._koa.use(async (ctx: LiteContext, next) => server.handle(ctx, next))
         return this
     }
 
@@ -107,27 +107,3 @@ export class ToraKoa {
     }
 }
 
-class BodyParser {
-
-    private readonly opts: CoBody.Options
-
-    private jsonTypes = ['application/json', 'application/json-patch+json', 'application/vnd.api+json', 'application/csp-report']
-    private formTypes = ['application/x-www-form-urlencoded']
-    private textTypes = ['text/plain', 'text/xml', 'application/xml', 'text/html']
-
-    constructor() {
-        this.opts = { returnRawBody: true }
-    }
-
-    async parseBody(ctx: Koa.Context) {
-        if (ctx.request.is(this.jsonTypes)) {
-            return CoBody.json(ctx, this.opts)
-        } else if (ctx.request.is(this.formTypes)) {
-            return CoBody.form(ctx, this.opts)
-        } else if (ctx.request.is(this.textTypes)) {
-            return CoBody.text(ctx, this.opts).then((v: any) => v || '')
-        } else {
-            return {}
-        }
-    }
-}

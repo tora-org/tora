@@ -15,10 +15,11 @@ import { DecoratorInstanceMethod } from '../__types__'
  */
 export function CacheWith(prefix?: string, expires?: number): DecoratorInstanceMethod {
     return (prototype, prop, _) => {
-        TokenUtils.ToraRouterHandler(prototype, prop).default({})
-            .do(handler => {
-                handler.cache_prefix = prefix
-                handler.cache_expires = expires
+        TokenUtils.RouterFunction(prototype, prop)
+            .ensure_default()
+            .do(router_function => {
+                router_function.cache_prefix = prefix
+                router_function.cache_expires = expires
             })
     }
 }
