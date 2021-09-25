@@ -6,7 +6,7 @@
  */
 
 import { ApiParams, SessionContext, TaskContext } from '../builtin'
-import { Injector, Provider, RouterFunction, TriggerFunction } from '../core'
+import { Injector, PropertyFunction, Provider, RouterFunction, TriggerFunction } from '../core'
 import { InnerFinish, KoaResponseType, LiteContext, OuterFinish, reasonable, ReasonableError } from '../http'
 import { Dora } from '../schedule'
 import { Authenticator } from '../service/authenticator'
@@ -90,6 +90,23 @@ export namespace PlatformUtils {
         } else {
             throw err
         }
+    }
+
+    export function get_providers(desc: PropertyFunction<any>, injector: Injector, except_list?: any[]): Provider<any>[] {
+        return desc.param_types?.map((token: any, i: number) => {
+            if (token === undefined) {
+                throw new Error(`type 'undefined' at ${desc.pos}[${i}], if it's not specified, there maybe a circular import.`)
+            }
+            if (except_list?.includes(token)) {
+                return token
+            }
+            const provider = injector.get(token, desc.pos)
+            if (provider) {
+                provider.create()
+                return provider
+            }
+            throw new Error(`Can't find provider of "${token}" in [${desc.pos}, args[${i}]]`)
+        }) ?? []
     }
 
     export function makeTask(injector: Injector, desc: TriggerFunction<any>, provider_list: Provider<any>[]) {

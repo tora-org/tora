@@ -104,7 +104,7 @@ export namespace TokenUtils {
      * 自定义数据。
      * @category Basic Meta
      */
-    export const ClassMeta = MetaWrapper<ClassMeta>(DI_TOKEN.class_meta, 'prototype_only', () => ({ parameter_injection: [], router_path_replacement: {} }))
+    export const ClassMeta = MetaWrapper<ClassMeta>(DI_TOKEN.class_meta, 'prototype_only', () => ({ parameter_injection: [] }))
 
     /**
      * 自定义数据。

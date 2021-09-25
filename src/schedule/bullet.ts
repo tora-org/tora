@@ -6,17 +6,16 @@
  */
 
 import { TriggerFunction } from '../core'
-import { Dora } from './dora'
-import { Schedule } from './schedule'
 
 export class Bullet {
 
+    public crontab = this.desc.schedule
+    public execution = this.desc.schedule.next()
+    public next_bullet: Bullet | null = null
+
     constructor(
         public id: string,
-        public crontab: Schedule,
         public handler: Function,
-        public execution: Dora,
-        public next_bullet: Bullet | null,
         public desc: TriggerFunction<any>,
     ) {
     }

@@ -8,7 +8,6 @@
 import { TriggerFunction } from '../core'
 import { TaskDesc } from './__type__'
 import { Bullet } from './bullet'
-import { Schedule } from './schedule'
 
 /**
  * ToraTrigger 的触发器。
@@ -33,8 +32,8 @@ export class Revolver {
     /**
      * @private
      */
-    _fill(crontab: Schedule, handler: Function, desc: TriggerFunction<any>) {
-        const bullet = new Bullet(Revolver.get_id(), crontab, handler, crontab.next(), null, desc)
+    _fill(handler: Function, desc: TriggerFunction<any>) {
+        const bullet = new Bullet(Revolver.get_id(), handler, desc)
         if (!this._clip) {
             this._clip = bullet
         } else if (bullet.execution < this._clip.execution) {

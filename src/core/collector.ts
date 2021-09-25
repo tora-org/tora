@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Constructor, ImportsAndProviders, ProviderTreeNode, RouterFunction, ToraRouterOptions, ToraTriggerOptions, TriggerFunction } from './annotation'
+import { Constructor, ImportsAndProviders, PropertyFunction, ProviderTreeNode, RouterFunction, ToraRouterOptions, ToraTriggerOptions, TriggerFunction } from './annotation'
 import { Injector } from './injector'
 import { ClassProvider, def2Provider, Provider, ProviderDef } from './provider'
 import { TokenUtils } from './token-utils'
@@ -50,12 +50,7 @@ export function makeRouterCollector(constructor: Constructor<any>, options?: Tor
 
         return TokenUtils.Touched(constructor.prototype)
             .ensure_default()
-            .do(touched => Object.values(touched).forEach(item => {
-                const property_meta = TokenUtils.PropertyMeta(constructor.prototype, item.property).value
-                item.disabled = property_meta?.disabled
-                item.pos = `${constructor.name}.${item.property}`
-                item.handler = item.handler.bind(instance)
-            }))
+            .do(mark_touched(constructor, instance))
             .convert(touched => Object.values(touched).filter(item => item.type === 'ToraRouterFunction') as RouterFunction<any>[])
     }
 }
@@ -77,12 +72,15 @@ export function makeTaskCollector(constructor: Constructor<any>, options?: ToraT
 
         return TokenUtils.Touched(constructor.prototype)
             .ensure_default()
-            .do(touched => Object.values(touched).forEach(item => {
-                const property_meta = TokenUtils.PropertyMeta(constructor.prototype, item.property).value
-                item.disabled = property_meta?.disabled
-                item.pos = `${constructor.name}.${item.property}`
-                item.handler = item.handler.bind(instance)
-            }))
+            .do(mark_touched(constructor, instance))
             .convert(touched => Object.values(touched).filter(item => item.type === 'ToraTriggerFunction') as TriggerFunction<any>[])
     }
+}
+
+function mark_touched(constructor: Constructor<any>, instance: any) {
+    return (touched: Record<string, PropertyFunction<any>>) => Object.values(touched).forEach(item => {
+        item.meta = TokenUtils.PropertyMeta(constructor.prototype, item.property).value
+        item.pos = `${constructor.name}.${item.property}`
+        item.handler = item.handler.bind(instance)
+    })
 }

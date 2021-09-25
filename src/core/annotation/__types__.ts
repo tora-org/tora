@@ -75,6 +75,10 @@ export interface ToraServiceMeta extends BaseToraComponentMeta {
     type: 'ToraService'
 }
 
+export interface ToraMQMeta extends BaseToraComponentMeta {
+    type: 'ToraMQ'
+}
+
 export interface ToraModuleMeta extends BaseToraModuleMeta {
     type: 'ToraModule'
 }
@@ -83,6 +87,7 @@ export interface ToraRouterMeta extends BaseToraModuleMeta {
     type: 'ToraRouter'
     router_path: `/${string}`
     router_options?: ToraRouterOptions
+    path_replacement: Record<string, string>
     handler_collector: (injector: Injector) => RouterFunction<any>[]
 }
 
@@ -106,6 +111,7 @@ export type ToraModuleMetaLike =
 
 export type ComponentMeta =
     | ToraServiceMeta
+    | ToraMQMeta
     | ToraModuleMetaLike
 
 export type ReflectComponent<K extends ComponentMeta['type'], T extends ComponentMeta = ComponentMeta> = T extends { type: K } ? T : never
@@ -113,22 +119,22 @@ export type ReflectComponent<K extends ComponentMeta['type'], T extends Componen
 export interface ClassMeta {
     on_destroy?: TypedPropertyDescriptor<any>
     parameter_injection: any[]
-    router_path_replacement: Record<string, string>
 }
 
 export interface PropertyMeta {
     disabled?: boolean
+    worker?: { channel: string }
     parameter_injection: any[]
 }
 
-interface BasePropertyFunction<T extends (...args: any) => any> {
+export interface BasePropertyFunction<T extends (...args: any) => any> {
     type: string
     property: string
     descriptor: TypedPropertyDescriptor<T>
     handler: T
     param_types: Parameters<T>
     pos?: string
-    disabled?: boolean
+    meta?: PropertyMeta
 }
 
 export interface RouterFunction<T extends (...args: any) => any> extends BasePropertyFunction<T> {
@@ -143,8 +149,8 @@ export interface RouterFunction<T extends (...args: any) => any> extends BasePro
 
 export interface TriggerFunction<T extends (...args: any) => any> extends BasePropertyFunction<T> {
     type: 'ToraTriggerFunction'
-    schedule?: Schedule
-    name?: string
+    schedule: Schedule
+    name: string
     crontab: string
     lock_key?: string
     lock_expires?: number
@@ -153,32 +159,3 @@ export interface TriggerFunction<T extends (...args: any) => any> extends BasePr
 export type PropertyFunction<T extends (...args: any) => any> =
     | RouterFunction<T>
     | TriggerFunction<T>
-//
-// export interface HandlerDescriptor {
-//     path?: string
-//     method_and_path?: { [prop: string]: [ApiMethod, string] }
-//     handler?: any
-//     param_types?: any[]
-//     inject_except_list?: any[]
-//     auth?: boolean
-//     wrap_result?: boolean
-//     cache_prefix?: string
-//     cache_expires?: number
-//     disabled?: {}
-//     pos?: string
-//     property_key?: string
-// }
-//
-// export interface TaskDescriptor {
-//     schedule?: Schedule
-//     name?: string
-//     crontab?: string
-//     lock_key?: string
-//     lock_expires?: number
-//     disabled?: boolean
-//     handler?: any
-//     param_types?: any[]
-//     property_key?: string
-//     inject_except_list?: any[]
-//     pos?: string
-// }

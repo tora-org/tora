@@ -8,7 +8,7 @@
 import fs from 'fs'
 import path from 'path'
 import { ApiParams, ConfigData, SessionContext, Timestamp, UUID } from '../builtin'
-import { ClassProvider, Constructor, def2Provider, Injector, PropertyFunction, Provider, ProviderDef, ProviderTreeNode, TokenUtils, ValueProvider } from '../core'
+import { ClassProvider, Constructor, def2Provider, Injector, ProviderDef, ProviderTreeNode, TokenUtils, ValueProvider } from '../core'
 import { ApiMethod, ApiPath, HandlerReturnType, KoaResponseType, LiteContext, ToraHttpHandler, ToraServerKoa } from '../http'
 import { Revolver, TaskDesc } from '../schedule'
 import { Authenticator } from '../service/authenticator'
@@ -18,7 +18,7 @@ import { ResultWrapper } from '../service/result-wrapper'
 import { TaskLifeCycle } from '../service/task-life-cycle'
 import { TaskLock } from '../service/task-lock'
 import { AbstractType, ClassMethod, ToraConfigSchema } from '../types'
-import { PlatformUtils, PURE_PARAMS } from './platform-utils'
+import { PlatformUtils as Ptl, PURE_PARAMS } from './platform-utils'
 
 function _join_path(front: string, rear: string) {
     return [front, rear].filter(i => i).join('/')
@@ -54,10 +54,6 @@ export function _find_usage(tree_node: ProviderTreeNode | undefined, indent: num
 }
 
 /**
- * @category Platform
- */
-
-/**
  * Tora 运行时。
  *
  * @category Platform
@@ -69,14 +65,6 @@ export class Platform {
      * 记录创建 [[Platform]] 的时间，用于计算启动时间。
      */
     private readonly started_at: number
-
-    /**
-     * @private
-     * 记录注册的 ToraModule。
-     */
-    private modules: {
-        [prop: string]: any
-    } = {}
 
     /**
      * @private
@@ -108,17 +96,19 @@ export class Platform {
      */
     private _revolver = new Revolver()
 
-    private readonly _interval: NodeJS.Timeout
-
     /**
      * @private
      * 定时器。
      */
+    private readonly _interval: NodeJS.Timeout
+
     constructor() {
         this._interval = setInterval(() => {
             this._revolver?._shoot(new Date().getTime())
         }, 100)
+
         this.started_at = new Date().getTime()
+
         // 设置默认的内置 Provider，如果没有另外设置 Provider 时，查找结果为 null，而不会查找到 NullInjector。
         this.root_injector.set_provider(Authenticator, new ValueProvider('Authenticator', null))
         this.root_injector.set_provider(CacheProxy, new ValueProvider('CacheProxy', null))
@@ -227,70 +217,22 @@ export class Platform {
     }
 
     /**
-     * 注册包含 routers 的 ToraModule。
-     * 这里只是做了一个记录，通过调用 [[Platform.select_module]] 进行加载。
-     *
-     * @param name
-     * @param module
-     */
-    register_module(name: string, module: any) {
-        const module_meta = TokenUtils.ensure_component(module, 'ToraRoot',
-            meta => meta && `"register_module" only accept "ToraRoot" as argument, not ${meta.type}`).value
-
-        if (!module_meta.routers?.length && !module_meta.tasks?.length) {
-            throw new Error(`ToraModule "${module.name}" do not carry any routers or tasks.`)
-        } else {
-            module_meta.routers?.forEach(router => {
-                TokenUtils.ensure_component(router, 'ToraRouter', meta => meta && `Array "routers" only accept "ToraRouter" as element, not ${meta.type}`)
-            })
-            module_meta.tasks?.forEach(trigger => {
-                TokenUtils.ensure_component(trigger, 'ToraTrigger', meta => meta && `Array "tasks" only accept "ToraTrigger" as element, not ${meta.type}`)
-            })
-        }
-        this.modules[name] = module
-        return this
-    }
-
-    /**
-     * 加载已经注册了的包含 routers 的 ToraModule。
-     * 通过调用 [[Platform.register_module]] 进行注册。
-     *
-     * @param keys
-     */
-    select_module(keys: string[]) {
-        const unknown_keys = keys.filter(k => !this.modules[k])
-        if (unknown_keys?.length) {
-            throw new Error(`Module: "${unknown_keys}" not registered.`)
-        }
-        console.log('selected servers:', keys)
-        keys.map(k => this.modules[k])
-            .filter(m => m)
-            .forEach(m => this.bootstrap(m))
-        return this
-    }
-
-    /**
      * 直接加载一个包含 routers 的 ToraModule。
      *
      * @param root_module
      */
     bootstrap(root_module: Constructor<any>) {
-        const root_meta = TokenUtils.ensure_component(root_module, 'ToraRoot', meta => meta && `"bootstrap" can only accept "ToraRoot", not ${meta.type}.`).value
 
+        const root_meta = TokenUtils.ensure_component(root_module, 'ToraRoot', meta => meta && `"bootstrap" can only accept "ToraRoot", not ${meta.type}.`).value
         const sub_injector = Injector.create(this.root_injector)
-        const provider_tree: ProviderTreeNode | undefined = root_meta.provider_collector?.(sub_injector)
+        const provider_tree = root_meta.provider_collector?.(sub_injector)
 
         sub_injector.get(Authenticator)?.set_used()
         sub_injector.get(LifeCycle)?.set_used()
         sub_injector.get(CacheProxy)?.set_used()
 
-        root_meta.routers?.forEach(router_module => {
-            this._mount_router(router_module, sub_injector)
-        })
-
-        root_meta.tasks?.forEach(trigger_module => {
-            this._mount_task(trigger_module, sub_injector)
-        })
+        root_meta.routers?.forEach(router => this._mount_router(router, sub_injector))
+        root_meta.tasks?.forEach(trigger => this._mount_trigger(trigger, sub_injector))
 
         provider_tree?.children.filter(def => !_find_usage(def))
             .forEach(def => {
@@ -401,27 +343,18 @@ export class Platform {
 
     private _mount_router(router_module: Constructor<any>, injector: Injector) {
         const router_meta = TokenUtils.ensure_component(router_module, 'ToraRouter').value
+        const provider_tree = router_meta.provider_collector(injector)
 
-        // const provider_collector = TokenUtils.ToraModuleProviderCollector(router_module)
-        // const handler_collector = TokenUtils.ToraRouterHandlerCollector(router_module)
-        const path_replacement = TokenUtils.ClassMeta(router_module).ensure_default().value.router_path_replacement
+        router_meta.handler_collector(injector).forEach(desc => {
+            if (!desc.meta?.disabled) {
+                const router_handler = Ptl.makeHandler(injector, desc,
+                    Ptl.get_providers(desc, injector, [ApiParams, SessionContext, PURE_PARAMS]))
 
-        const provider_collector = router_meta.provider_collector
-        const handler_collector = router_meta.handler_collector
-        // const path_replacement = router_meta.
-
-        // do injection
-        const provider_tree = provider_collector?.(injector)
-
-        handler_collector?.(injector)?.forEach(desc => {
-            if (!desc.disabled) {
-                const provider_list = this._get_providers(desc, injector, [ApiParams, SessionContext, PURE_PARAMS])
-                provider_list.forEach(p => p.create?.())
                 Object.values(desc.method_and_path)?.forEach(([method, method_path]) => {
-                    const figure_method_path = path_replacement[desc.property ?? ''] ?? method_path
+                    const figure_method_path = router_meta.path_replacement[desc.property ?? ''] ?? method_path
                     const router_path = router_meta.router_path?.startsWith('/') ? router_meta.router_path : '/'
                     const full_path = _join_path(router_path, figure_method_path.replace(/(^\/|\/$)/g, ''))
-                    this._server.on(method, full_path, PlatformUtils.makeHandler(injector, desc, provider_list))
+                    this._server.on(method, full_path, router_handler)
                 })
             }
         })
@@ -433,19 +366,15 @@ export class Platform {
             })
     }
 
-    private _mount_task(trigger_module: Constructor<any>, injector: Injector) {
+    private _mount_trigger(trigger_module: Constructor<any>, injector: Injector) {
 
         const component_meta = TokenUtils.ensure_component(trigger_module, 'ToraTrigger').value
-        const provider_tree = component_meta?.provider_collector?.(injector)
+        const provider_tree = component_meta.provider_collector(injector)
 
-        component_meta.task_collector?.(injector)?.forEach(desc => {
-            if (!desc.disabled) {
-                if (!desc.schedule) {
-                    throw new Error(`Crontab of task ${desc.pos} is empty.`)
-                }
-                const provider_list = this._get_providers(desc, injector)
-                provider_list.forEach(p => p.create?.())
-                this._revolver._fill(desc.schedule, PlatformUtils.makeTask(injector, desc, provider_list), desc)
+        component_meta.task_collector(injector).forEach(desc => {
+            if (!desc.meta?.disabled) {
+                const task_handler = Ptl.makeTask(injector, desc, Ptl.get_providers(desc, injector))
+                this._revolver._fill(task_handler, desc)
             }
         })
         provider_tree?.children.filter(def => !_find_usage(def))
@@ -454,20 +383,4 @@ export class Platform {
             })
     }
 
-    private _get_providers(desc: PropertyFunction<any>, injector: Injector, except_list?: any[]): Provider<any>[] {
-        return desc.param_types?.map((token: any, i: number) => {
-            if (token === undefined) {
-                throw new Error(`type 'undefined' at ${desc.pos}[${i}], if it's not specified, there maybe a circular import.`)
-            }
-            if (except_list?.includes(token)) {
-                return token
-            } else {
-                const provider = injector.get(token, desc.pos)
-                if (provider) {
-                    return provider
-                }
-            }
-            throw new Error(`Can't find provider of "${token}" in [${desc.pos}, args[${i}]]`)
-        }) ?? []
-    }
 }

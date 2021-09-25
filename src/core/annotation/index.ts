@@ -42,6 +42,7 @@ export {
 
 export {
     AbstractConstructor,
+    BasePropertyFunction,
     ClassMeta,
     ComponentMeta,
     Constructor,

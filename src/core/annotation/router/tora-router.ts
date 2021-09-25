@@ -32,6 +32,7 @@ export function ToraRouter(path: `/${string}`, options?: ToraRouterOptions): Dec
             router_options: options,
             handler_collector: makeRouterCollector(constructor, options),
             provider_collector: makeProviderCollector(constructor, options),
+            path_replacement: {},
         })
 
         constructor.mount = (new_path: `/${string}`) => {
@@ -42,8 +43,8 @@ export function ToraRouter(path: `/${string}`, options?: ToraRouterOptions): Dec
         }
 
         constructor.replace = (property_key: string, new_path: string) => {
-            TokenUtils.ClassMeta(constructor).ensure_default().do(meta => {
-                meta.router_path_replacement[property_key] = new_path
+            TokenUtils.ensure_component(constructor, 'ToraRouter').do(meta => {
+                meta.path_replacement[property_key] = new_path
             })
             return constructor
         }
