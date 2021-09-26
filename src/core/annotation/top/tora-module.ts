@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { makeProviderCollector } from '../../collector'
+import { make_provider_collector } from '../../collector'
 import { TokenUtils } from '../../token-utils'
 import { DecoratorClass, ToraModuleOptions } from '../__types__'
 
@@ -26,7 +26,7 @@ export function ToraModule(options?: ToraModuleOptions): DecoratorClass {
         meta.set({
             type: 'ToraModule',
             name: constructor.name,
-            provider_collector: makeProviderCollector(constructor, options)
+            provider_collector: make_provider_collector(constructor, options)
         })
     }
 }

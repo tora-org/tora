@@ -6,11 +6,13 @@
  */
 
 import { TriggerFunction } from '../core'
+import { Dora } from './dora'
+import { Schedule } from './schedule'
 
 export class Bullet {
 
-    public crontab = this.desc.schedule
-    public execution = this.desc.schedule.next()
+    public crontab: Schedule
+    public execution: Dora
     public next_bullet: Bullet | null = null
 
     constructor(
@@ -18,5 +20,10 @@ export class Bullet {
         public handler: Function,
         public desc: TriggerFunction<any>,
     ) {
+        if (!desc.crontab) {
+            throw new Error()
+        }
+        this.crontab = Schedule.parse(desc.crontab, desc.schedule_options)
+        this.execution = this.crontab.next()
     }
 }

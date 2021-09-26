@@ -5,8 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { ApiMethod } from '../../http'
-import { Schedule } from '../../schedule'
+import { Schedule, ScheduleOptions } from '../../schedule'
 import { Injector } from '../injector'
 import { Meta } from '../meta-tool'
 import { Provider, ProviderDef } from '../provider'
@@ -88,13 +87,13 @@ export interface ToraRouterMeta extends BaseToraModuleMeta {
     router_path: `/${string}`
     router_options?: ToraRouterOptions
     path_replacement: Record<string, string>
-    handler_collector: (injector: Injector) => RouterFunction<any>[]
+    function_collector: (injector: Injector) => RouterFunction<any>[]
 }
 
 export interface ToraTriggerMeta extends BaseToraModuleMeta {
     type: 'ToraTrigger'
     trigger_options?: ToraTriggerOptions
-    task_collector: (injector: Injector) => TriggerFunction<any>[]
+    function_collector: (injector: Injector) => TriggerFunction<any>[]
 }
 
 export interface ToraRootMeta extends BaseToraModuleMeta {
@@ -105,9 +104,12 @@ export interface ToraRootMeta extends BaseToraModuleMeta {
 
 export type ToraModuleMetaLike =
     | ToraModuleMeta
+    | ToraFunctionalComponent
+    | ToraRootMeta
+
+export type ToraFunctionalComponent =
     | ToraRouterMeta
     | ToraTriggerMeta
-    | ToraRootMeta
 
 export type ComponentMeta =
     | ToraServiceMeta
@@ -139,8 +141,11 @@ export interface BasePropertyFunction<T extends (...args: any) => any> {
 
 export interface RouterFunction<T extends (...args: any) => any> extends BasePropertyFunction<T> {
     type: 'ToraRouterFunction'
-    path?: string
-    method_and_path: { [prop: string]: [ApiMethod, string] }
+    path: string
+    GET?: boolean
+    POST?: boolean
+    PUT?: boolean
+    DELETE?: boolean
     auth: boolean
     wrap_result: boolean
     cache_prefix?: string
@@ -149,9 +154,10 @@ export interface RouterFunction<T extends (...args: any) => any> extends BasePro
 
 export interface TriggerFunction<T extends (...args: any) => any> extends BasePropertyFunction<T> {
     type: 'ToraTriggerFunction'
-    schedule: Schedule
-    name: string
-    crontab: string
+    crontab?: string
+    schedule?: Schedule
+    schedule_options?: ScheduleOptions
+    name?: string
     lock_key?: string
     lock_expires?: number
 }

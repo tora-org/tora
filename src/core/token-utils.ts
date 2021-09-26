@@ -28,13 +28,13 @@ export function init_router_function<T extends (...args: any) => any>(prototype:
     const parameter_injection = TokenUtils.PropertyMeta(prototype, property).value?.parameter_injection
     const router_function: RouterFunction<T> = {
         type: 'ToraRouterFunction',
+        path: property,
         descriptor: descriptor,
         handler: descriptor.value,
         property: property,
         param_types: TokenUtils.get_method_parameter_types(prototype, property)?.map((t: any, i: number) => parameter_injection?.[i] ?? t) as Parameters<T>,
         auth: false,
         wrap_result: true,
-        method_and_path: {},
     }
     TokenUtils.Touched(prototype).ensure_default().do(touched => {
         touched[property] = router_function
@@ -68,10 +68,9 @@ export function init_trigger_function<T extends (...args: any) => any>(prototype
         crontab: '',
         name: 'unset'
     }
-    TokenUtils.Touched(prototype).ensure_default()
-        .do(touched => {
-            touched[property] = trigger_function
-        })
+    TokenUtils.Touched(prototype).ensure_default().do(touched => {
+        touched[property] = trigger_function
+    })
     return trigger_function
 }
 

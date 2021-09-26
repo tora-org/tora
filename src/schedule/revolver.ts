@@ -5,9 +5,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { TriggerFunction } from '../core'
+import { TaskContext } from '../builtin'
+import { Injector, ToraTriggerMeta, TriggerFunction } from '../core'
+import { get_providers } from '../core/collector'
+import { TaskLifeCycle } from '../service/task-life-cycle'
+import { TaskLock } from '../service/task-lock'
 import { TaskDesc } from './__type__'
 import { Bullet } from './bullet'
+import { Dora } from './dora'
+
+function on_error_or_throw(hooks: TaskLifeCycle | undefined, err: any, context: TaskContext) {
+    if (hooks) {
+        return hooks.on_error(err, context)
+    } else {
+        throw err
+    }
+}
 
 /**
  * ToraTrigger 的触发器。
@@ -32,7 +45,7 @@ export class Revolver {
     /**
      * @private
      */
-    _fill(handler: Function, desc: TriggerFunction<any>) {
+    private _fill(handler: Function, desc: TriggerFunction<any>) {
         const bullet = new Bullet(Revolver.get_id(), handler, desc)
         if (!this._clip) {
             this._clip = bullet
@@ -157,6 +170,13 @@ export class Revolver {
         return list
     }
 
+    load(trigger_function: TriggerFunction<any>, injector: Injector, _: ToraTriggerMeta): void {
+        if (!trigger_function.meta?.disabled) {
+            const task_handler = this.make_trigger(injector, trigger_function)
+            this._fill(task_handler, trigger_function)
+        }
+    }
+
     /**
      * 重启一个任务
      *
@@ -255,6 +275,60 @@ export class Revolver {
             return
         } else {
             this.remove(clip.next_bullet, bullet)
+        }
+    }
+
+    private make_trigger(injector: Injector, desc: TriggerFunction<any>, except_list?: any[]) {
+
+        const provider_list = get_providers(desc, injector, except_list)
+
+        return async function(execution?: Dora) {
+            const hooks = injector.get(TaskLifeCycle)?.create()
+            const task_lock = injector.get(TaskLock)?.create()
+            if (desc.lock_key && !task_lock) {
+                throw new Error(`Decorator "@Lock" is settled on ${desc.pos}, but there's no "TaskLock" implements found.`)
+            }
+
+            if (!desc.crontab) {
+                throw new Error()
+            }
+
+            const context = new TaskContext({
+                name: desc.name ?? desc.pos ?? '',
+                execution: execution ?? Dora.now(),
+                pos: desc.pos!,
+                property_key: desc.property,
+                crontab: desc.crontab,
+                temp_exec: !!execution,
+                lock_key: desc.lock_key,
+                lock_expires: desc.lock_expires,
+            })
+
+            await hooks?.on_init(context)
+            const param_list = provider_list.map((provider: any) => {
+                if (provider === undefined) {
+                    return undefined
+                } else {
+                    return provider.create()
+                }
+            })
+
+            if (task_lock && desc.lock_key) {
+                const locked = await task_lock.lock(desc.lock_key ?? desc.pos, context)
+                if (locked !== undefined) {
+                    const lock_key = desc.lock_key
+                    return desc.handler(...param_list)
+                        .then((res: any) => hooks?.on_finish(res, context))
+                        .catch((err: any) => on_error_or_throw(hooks, err, context))
+                        .finally(() => task_lock.unlock(lock_key, locked, context))
+                } else {
+                    await task_lock.on_lock_failed(context)
+                }
+            } else {
+                return desc.handler(...param_list)
+                    .then((res: any) => hooks?.on_finish(res, context))
+                    .catch((err: any) => on_error_or_throw(hooks, err, context))
+            }
         }
     }
 }

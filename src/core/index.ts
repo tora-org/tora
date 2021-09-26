@@ -43,6 +43,7 @@ export {
     ToraTriggerMeta,
     ToraTriggerOptions,
     TriggerFunction,
+    ToraFunctionalComponent,
     Auth,
     CacheWith,
     Delete,

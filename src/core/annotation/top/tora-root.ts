@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { makeProviderCollector } from '../../collector'
+import { make_provider_collector } from '../../collector'
 import { TokenUtils } from '../../token-utils'
 import { DecoratorClass, ToraRootOptions } from '../__types__'
 
@@ -28,7 +28,7 @@ export function ToraRoot(options?: ToraRootOptions): DecoratorClass {
             name: constructor.name,
             routers: options?.routers,
             tasks: options?.tasks,
-            provider_collector: makeProviderCollector(constructor, options),
+            provider_collector: make_provider_collector(constructor, options),
         })
     }
 }

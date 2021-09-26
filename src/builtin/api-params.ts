@@ -5,8 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { throw_reasonable } from '../http'
 import { Judgement, JudgementMatcher, Path, PathValue } from './judgement'
+import { ReasonableError } from './tora-error'
+
+export const PURE_PARAMS = 'PURE_PARAMS'
 
 /**
  * 内置请求参数解析及检查工具。
@@ -112,12 +114,12 @@ export class ApiParams<T> extends Judgement<T> {
         match = match || 'exist'
         const res = super.get(prop)
         if (res === undefined) {
-            throw_reasonable(400, `Can not find ${prop}`)
+            throw new ReasonableError(400, `Can not find ${prop}`)
         }
         if (this.testValue(res, match)) {
             return res as any
         }
-        throw_reasonable(400, `prop "${prop}" is illegal.`)
+        throw new ReasonableError(400, `prop "${prop}" is illegal.`)
     }
 
     /**
@@ -129,12 +131,12 @@ export class ApiParams<T> extends Judgement<T> {
     ensureAny<P extends Path<T>>(prop: P, match_list: JudgementMatcher[]): Exclude<PathValue<T, P>, undefined> {
         const res = super.get(prop)
         if (res === undefined) {
-            throw_reasonable(400, `Can not find ${prop}`)
+            throw new ReasonableError(400, `Can not find ${prop}`)
         }
         if (this.any(res, match_list)) {
             return res as any
         }
-        throw_reasonable(400, `prop "${prop}" is illegal.`)
+        throw new ReasonableError(400, `prop "${prop}" is illegal.`)
     }
 
     /**
@@ -146,12 +148,12 @@ export class ApiParams<T> extends Judgement<T> {
     ensureAll<P extends Path<T>>(prop: P, match_list: JudgementMatcher[]): Exclude<PathValue<T, P>, undefined> {
         const res = super.get(prop)
         if (res === undefined) {
-            throw_reasonable(400, `Can not find ${prop}`)
+            throw new ReasonableError(400, `Can not find ${prop}`)
         }
         if (this.all(res, match_list)) {
             return res as any
         }
-        throw_reasonable(400, `prop "${prop}" is illegal.`)
+        throw new ReasonableError(400, `prop "${prop}" is illegal.`)
     }
 
     /**

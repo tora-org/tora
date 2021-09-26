@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Schedule, ScheduleOptions } from '../../../schedule'
+import { ScheduleOptions } from '../../../schedule'
 import { TokenUtils } from '../../token-utils'
 import { DecoratorInstanceMethod } from '../__types__'
 
@@ -25,7 +25,7 @@ export function Task(crontab: string, options?: ScheduleOptions): DecoratorInsta
             .do(trigger_function => {
                 trigger_function.crontab = crontab
                 trigger_function.name = options?.name
-                trigger_function.schedule = Schedule.parse(crontab, options)
+                trigger_function.schedule_options = options
             })
     }
 }

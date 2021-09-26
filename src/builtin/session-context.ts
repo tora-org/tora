@@ -5,9 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { InnerFinish, LiteContext, OuterFinish } from '../http'
+import { LiteContext } from '../http'
 import { CacheProxy } from '../service/cache-proxy'
 import { ToraAuthInfo, ToraSession } from '../types'
+import { InnerFinish, OuterFinish } from './tora-error'
 
 /**
  * 请求上下文对象。

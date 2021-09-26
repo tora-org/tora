@@ -17,6 +17,10 @@ import { DecoratorClass } from '../__types__'
  */
 export function Meta<T extends object = any>(meta: T): DecoratorClass {
     return constructor => {
-        TokenUtils.CustomData(constructor.prototype).set(meta)
+        TokenUtils.CustomData(constructor.prototype).ensure_default().do(origin_meta => {
+            Object.entries(meta).forEach(([k, v]) => {
+                origin_meta[k] = v
+            })
+        })
     }
 }

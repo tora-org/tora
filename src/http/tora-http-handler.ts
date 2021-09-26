@@ -15,7 +15,7 @@ export class ToraHttpHandler {
 
     private handlers: { [path: HttpHandlerKey]: HttpHandler } = {}
 
-    list(need_handler?: boolean): HttpHandlerDescriptor[] {
+    list(need_handler?: boolean): HttpHandlerDescriptor[] | Omit<HttpHandlerDescriptor, 'handler'>[] {
         return Object.keys(this.handlers).sort().map((mp) => {
             const [, method, path] = /^(GET|POST|PUT|DELETE)-(.+)$/.exec(mp) ?? []
             return {
@@ -26,7 +26,7 @@ export class ToraHttpHandler {
         })
     }
 
-    on<T, R extends KoaResponseType>(method: ApiMethod, path: ApiPath, handler: (params: T, ctx: LiteContext) => HandlerReturnType<R>) {
+    on<T, R extends KoaResponseType>(method: ApiMethod, path: ApiPath, handler: (params: T, ctx: LiteContext) => HandlerReturnType<R>): void {
         if (Array.isArray(path)) {
             for (const p of path) {
                 this.handlers[`${method}-${p}`] = handler

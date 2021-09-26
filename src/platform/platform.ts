@@ -7,9 +7,9 @@
 
 import fs from 'fs'
 import path from 'path'
-import { ApiParams, ConfigData, SessionContext, Timestamp, UUID } from '../builtin'
-import { ClassProvider, Constructor, def2Provider, Injector, ProviderDef, ProviderTreeNode, TokenUtils, ValueProvider } from '../core'
-import { ApiMethod, ApiPath, HandlerReturnType, KoaResponseType, LiteContext, ToraHttpHandler, ToraServerKoa } from '../http'
+import { ConfigData, Timestamp, UUID } from '../builtin'
+import { ClassProvider, Constructor, def2Provider, Injector, ProviderDef, ProviderTreeNode, RouterFunction, TokenUtils, ToraFunctionalComponent, TriggerFunction, ValueProvider } from '../core'
+import { ApiMethod, ApiPath, HandlerReturnType, KoaResponseType, LiteContext, ToraServer, ToraServerKoa } from '../http'
 import { Revolver, TaskDesc } from '../schedule'
 import { Authenticator } from '../service/authenticator'
 import { CacheProxy } from '../service/cache-proxy'
@@ -17,12 +17,7 @@ import { LifeCycle } from '../service/life-cycle'
 import { ResultWrapper } from '../service/result-wrapper'
 import { TaskLifeCycle } from '../service/task-life-cycle'
 import { TaskLock } from '../service/task-lock'
-import { AbstractType, ClassMethod, ToraConfigSchema } from '../types'
-import { PlatformUtils as Ptl, PURE_PARAMS } from './platform-utils'
-
-function _join_path(front: string, rear: string) {
-    return [front, rear].filter(i => i).join('/')
-}
+import { ToraConfigSchema } from '../types'
 
 function _try_read_json(file: string) {
     try {
@@ -62,40 +57,29 @@ export class Platform {
 
     /**
      * @private
+     * Revolver 实例，用于管理定时任务。
+     */
+    readonly _revolver = new Revolver()
+    /**
+     * @protected
+     * 根注入器，在它上面还有 NullInjector。
+     */
+    protected root_injector = Injector.create()
+    /**
+     * @private
      * 记录创建 [[Platform]] 的时间，用于计算启动时间。
      */
     private readonly started_at: number
-
-    /**
-     * @private
-     * 根注入器，在它上面还有 NullInjector。
-     */
-    private root_injector = Injector.create()
-
-    /**
-     * @private
-     * ToraServer 实例，用于集中管理 Handler。
-     */
-    private _server = new ToraHttpHandler()
-
     /**
      * @private
      * ToraServerKoa 实例，用于管理 HTTP 连接。
      */
-    private _koa = new ToraServerKoa({ cors: true, body_parser: true })
-
+    private _server: ToraServer = new ToraServerKoa({ cors: true, body_parser: true })
     /**
      * @private
      * ConfigData 实例，用于管理加载的配置文件内容。
      */
     private _config_data?: ConfigData
-
-    /**
-     * @private
-     * Revolver 实例，用于管理定时任务。
-     */
-    private _revolver = new Revolver()
-
     /**
      * @private
      * 定时器。
@@ -149,7 +133,7 @@ export class Platform {
      * @param router_module 需要 ToraRouter。
      */
     route(router_module: Constructor<any>) {
-        this._mount_router(router_module, this.root_injector)
+        this._mount_component(router_module, 'ToraRouter', this.root_injector)
         return this
     }
 
@@ -230,9 +214,10 @@ export class Platform {
         sub_injector.get(Authenticator)?.set_used()
         sub_injector.get(LifeCycle)?.set_used()
         sub_injector.get(CacheProxy)?.set_used()
+        sub_injector.get(ResultWrapper)?.set_used()
 
-        root_meta.routers?.forEach(router => this._mount_router(router, sub_injector))
-        root_meta.tasks?.forEach(trigger => this._mount_trigger(trigger, sub_injector))
+        root_meta.routers?.forEach(router => this._mount_component(router, 'ToraRouter', sub_injector))
+        root_meta.tasks?.forEach(trigger => this._mount_component(trigger, 'ToraTrigger', sub_injector))
 
         provider_tree?.children.filter(def => !_find_usage(def))
             .forEach(def => {
@@ -249,7 +234,30 @@ export class Platform {
      * @param middleware
      */
     koa_use(middleware: (ctx: LiteContext, next: () => Promise<any>) => void) {
-        this._koa.use(middleware)
+        // this._server.use(middleware)
+        return this
+    }
+
+    /**
+     * 开始监听请求。
+     */
+    start(port?: number) {
+        port = port ?? this._config_data?.get('tora.port') ?? 3000
+
+        console.log(`tora server start at ${new Date().toISOString()}`)
+        console.log(`    listen at port ${port}...`)
+
+        this._server.listen(port, () => {
+            const duration = new Date().getTime() - this.started_at
+            console.log(`\ntora server started successfully in ${duration / 1000}s.`)
+        })
+        return this
+    }
+
+    destroy() {
+        this.root_injector.emit('tora-destroy')
+        clearInterval(this._interval)
+        this._server.destroy()
         return this
     }
 
@@ -268,13 +276,6 @@ export class Platform {
     }
 
     /**
-     * 获取当前任务列表。
-     */
-    get_task_list() {
-        return this._revolver.get_task_list()
-    }
-
-    /**
      * 展示任务列表，按执行顺序。
      *
      * @param formatter 自定义格式处理函数。
@@ -288,99 +289,20 @@ export class Platform {
         return this
     }
 
-    /**
-     * 暴露 root_injector，允许直接调用服务，一般用于测试
-     */
-    call<RES>(executor: (injector: Injector) => RES): RES {
-        return executor(this.root_injector)
-    }
-
-    /**
-     * 向外暴露指定 ToraService，一般用于测试
-     */
-    expose_service<T>(target: AbstractType<T>): T | undefined {
-        return this.root_injector.get(target)?.create()
-    }
-
-    /**
-     * 向外暴露指定 ToraService 的一个 method，一般用于测试
-     */
-    expose_service_method<T, P extends ClassMethod<T>>(target: AbstractType<T>, prop: P): { (...args: Parameters<T[P]>): ReturnType<T[P]> } {
-        const executor = this.root_injector.get(target)?.create()
-        if (!executor) {
-            return undefined as any
-        }
-        const method = executor[prop] as Function
-        if (typeof method !== 'function') {
-            return undefined as any
-        }
-        return method?.bind(executor)
-    }
-
-    /**
-     * 开始监听请求。
-     */
-    start(port?: number) {
-        port = port ?? this._config_data?.get('tora.port') ?? 3000
-
-        console.log(`tora server start at ${new Date().toISOString()}`)
-        console.log(`    listen at port ${port}...`)
-
-        this._koa.handle_by(this._server)
-            .listen(port, () => {
-                const duration = new Date().getTime() - this.started_at
-                console.log(`\ntora server started successfully in ${duration / 1000}s.`)
-            })
-        return this
-    }
-
-    destroy() {
-        this.root_injector.emit('tora-destroy')
-        clearInterval(this._interval)
-        this._koa.destroy()
-        return this
-    }
-
-    private _mount_router(router_module: Constructor<any>, injector: Injector) {
-        const router_meta = TokenUtils.ensure_component(router_module, 'ToraRouter').value
-        const provider_tree = router_meta.provider_collector(injector)
-
-        router_meta.handler_collector(injector).forEach(desc => {
-            if (!desc.meta?.disabled) {
-                const router_handler = Ptl.makeHandler(injector, desc,
-                    Ptl.get_providers(desc, injector, [ApiParams, SessionContext, PURE_PARAMS]))
-
-                Object.values(desc.method_and_path)?.forEach(([method, method_path]) => {
-                    const figure_method_path = router_meta.path_replacement[desc.property ?? ''] ?? method_path
-                    const router_path = router_meta.router_path?.startsWith('/') ? router_meta.router_path : '/'
-                    const full_path = _join_path(router_path, figure_method_path.replace(/(^\/|\/$)/g, ''))
-                    this._server.on(method, full_path, router_handler)
-                })
-            }
-        })
-
-        // check use
-        provider_tree?.children.filter(def => !_find_usage(def))
-            .forEach(def => {
-                console.log(`Warning: ${router_module.name} -> ${def?.name} not used.`)
-            })
-    }
-
-    private _mount_trigger(trigger_module: Constructor<any>, injector: Injector) {
-
-        const component_meta = TokenUtils.ensure_component(trigger_module, 'ToraTrigger').value
+    private _mount_component(module: Constructor<any>, as: ToraFunctionalComponent['type'], injector: Injector): void {
+        const component_meta = TokenUtils.ensure_component(module, as).value
         const provider_tree = component_meta.provider_collector(injector)
+        const function_list = component_meta.function_collector(injector)
 
-        component_meta.task_collector(injector).forEach(desc => {
-            if (!desc.meta?.disabled) {
-                const task_handler = Ptl.makeTask(injector, desc, Ptl.get_providers(desc, injector))
-                this._revolver._fill(task_handler, desc)
-            }
-        })
+        if (component_meta.type === 'ToraRouter') {
+            function_list.forEach(f => this._server.load(f as RouterFunction<any>, injector, component_meta))
+        } else if (component_meta.type === 'ToraTrigger') {
+            function_list.forEach(f => this._revolver.load(f as TriggerFunction<any>, injector, component_meta))
+        }
+
         provider_tree?.children.filter(def => !_find_usage(def))
             .forEach(def => {
-                console.log(`Warning: ${trigger_module.name} -> ${def?.name} not used.`)
+                console.log(`Warning: ${module.name} -> ${def?.name} not used.`)
             })
     }
-
 }

@@ -14,12 +14,10 @@ export {
     HttpHandlerKey,
     KoaResponseType,
     LiteContext,
+    ToraServer,
 } from './__type__'
 
 export {
-    InnerFinish,
-    OuterFinish,
-    ReasonableError,
     reasonable,
     response,
     throw_reasonable,
@@ -27,4 +25,3 @@ export {
 } from './error'
 
 export { ToraServerKoa } from './tora-server-koa'
-export { ToraHttpHandler } from './tora-http-handler'

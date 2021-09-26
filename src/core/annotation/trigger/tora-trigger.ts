@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { makeProviderCollector, makeTaskCollector } from '../../collector'
+import { make_provider_collector, make_trigger_collector } from '../../collector'
 import { TokenUtils } from '../../token-utils'
 import { DecoratorClass, ToraTriggerOptions } from '../__types__'
 
@@ -27,8 +27,8 @@ export function ToraTrigger(options?: ToraTriggerOptions): DecoratorClass {
             type: 'ToraTrigger',
             name: constructor.name,
             trigger_options: options,
-            task_collector: makeTaskCollector(constructor, options),
-            provider_collector: makeProviderCollector(constructor, options),
+            function_collector: make_trigger_collector(constructor, options),
+            provider_collector: make_provider_collector(constructor, options),
         })
     }
 }

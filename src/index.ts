@@ -43,6 +43,7 @@ export {
     ProviderTreeNode,
     ReflectComponent,
     RouterFunction,
+    ToraFunctionalComponent,
     ToraModuleMeta,
     ToraModuleMetaLike,
     ToraModuleOptions,
@@ -96,12 +97,17 @@ export {
     ApiParams,
     ConfigData,
     CurrentTimestamp,
+    InnerFinish,
     Judgement,
     JudgementUtil,
+    OuterFinish,
+    PURE_PARAMS,
+    ReasonableError,
     Reference,
     SessionContext,
     TaskContext,
     Timestamp,
+    ToraError,
     UUID,
     JudgementMatcher,
     Path,
@@ -110,10 +116,6 @@ export {
 } from './builtin'
 
 export {
-    ReasonableError,
-    OuterFinish,
-    InnerFinish,
-    ToraHttpHandler,
     ToraServerKoa,
     throw_reasonable,
     reasonable,
@@ -144,7 +146,5 @@ export {
 } from './schedule'
 
 export {
-    PURE_PARAMS,
     Platform,
-    ToraError
 } from './platform'

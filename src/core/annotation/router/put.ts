@@ -18,8 +18,8 @@ export function Put(path_tail?: string): DecoratorInstanceMethod {
         TokenUtils.RouterFunction(prototype, prop)
             .ensure_default()
             .do(router_function => {
-                const method_path = path_tail ?? prop
-                router_function.method_and_path[`PUT-${method_path}`] = ['PUT', method_path]
+                router_function.path = path_tail ?? prop
+                router_function.PUT = true
             })
     }
 }
