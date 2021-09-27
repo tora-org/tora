@@ -145,4 +145,5 @@ export {
 
 export {
     Platform,
+    DebugPlatform,
 } from './platform'
