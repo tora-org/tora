@@ -8,7 +8,7 @@
 import { Server } from 'http'
 import Koa from 'koa'
 import { Injector, RouterFunction, ToraRouterMeta } from '../core'
-import { ApiMethod, ApiPath, HandlerReturnType, HttpHandlerDescriptor, KoaResponseType, LiteContext, ToraServer } from './__type__'
+import { ApiMethod, ApiPath, HandlerReturnType, HttpHandlerDescriptor, KoaResponseType, LiteContext } from './__type__'
 import { BodyParser } from './body-parser'
 import { Handler } from './handler'
 
@@ -23,7 +23,7 @@ declare module 'koa' {
  * @private
  * Koa adaptor.
  */
-export class ToraServerKoa implements ToraServer {
+export class ToraServer {
 
     private _koa = new Koa()
     private _server?: Server

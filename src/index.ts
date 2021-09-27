@@ -114,7 +114,7 @@ export {
 } from './builtin'
 
 export {
-    ToraServerKoa,
+    ToraServer,
     throw_reasonable,
     reasonable,
     response,

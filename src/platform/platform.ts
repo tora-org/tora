@@ -9,8 +9,8 @@ import fs from 'fs'
 import path from 'path'
 import { ConfigData, Timestamp, UUID } from '../builtin'
 import { ClassProvider, Constructor, def2Provider, Injector, ProviderDef, ProviderTreeNode, RouterFunction, TokenUtils, ToraFunctionalComponent, TriggerFunction, ValueProvider } from '../core'
-import { ApiMethod, ApiPath, HandlerReturnType, KoaResponseType, LiteContext, ToraServer, ToraServerKoa } from '../http'
-import { Revolver, TaskDesc } from '../schedule'
+import { ApiMethod, ApiPath, HandlerReturnType, KoaResponseType, LiteContext, ToraServer } from '../http'
+import { Revolver } from '../schedule'
 import { Authenticator } from '../service/authenticator'
 import { CacheProxy } from '../service/cache-proxy'
 import { LifeCycle } from '../service/life-cycle'
@@ -56,25 +56,26 @@ export function _find_usage(tree_node: ProviderTreeNode | undefined, indent: num
 export class Platform {
 
     /**
-     * @private
-     * Revolver 实例，用于管理定时任务。
-     */
-    readonly _revolver = new Revolver()
-    /**
      * @protected
      * 根注入器，在它上面还有 NullInjector。
      */
     protected root_injector = Injector.create()
     /**
+     * @protected
+     * Revolver 实例，用于管理定时任务。
+     */
+    protected readonly revolver = new Revolver()
+    /**
+     * @protected
+     * ToraServerKoa 实例，用于管理 HTTP 连接。
+     */
+    protected readonly server = new ToraServer({ cors: true, body_parser: true })
+    /**
      * @private
      * 记录创建 [[Platform]] 的时间，用于计算启动时间。
      */
     private readonly started_at: number
-    /**
-     * @private
-     * ToraServerKoa 实例，用于管理 HTTP 连接。
-     */
-    private _server: ToraServer = new ToraServerKoa({ cors: true, body_parser: true })
+
     /**
      * @private
      * ConfigData 实例，用于管理加载的配置文件内容。
@@ -93,7 +94,8 @@ export class Platform {
         this.root_injector.set_provider(TaskLifeCycle, new ValueProvider('TaskLifeCycle', null))
         this.root_injector.set_provider(TaskLock, new ValueProvider('TaskLock', null))
         this.root_injector.set_provider(Platform, new ValueProvider('Platform', this))
-        this.root_injector.set_provider(Revolver, new ValueProvider('Revolver', this._revolver))
+        this.root_injector.set_provider(Revolver, new ValueProvider('Revolver', this.revolver))
+        this.root_injector.set_provider(ToraServer, new ValueProvider('ToraServer', this.server))
         this.root_injector.set_provider(UUID, new ClassProvider(UUID, this.root_injector))
         this.root_injector.set_provider(Timestamp, new ClassProvider(Timestamp, this.root_injector, true))
     }
@@ -138,7 +140,7 @@ export class Platform {
      * @param func
      */
     handle<R extends KoaResponseType>(method: ApiMethod, path: ApiPath, func?: () => HandlerReturnType<R>): Platform {
-        this._server.on<any, any>(method, path, func ?? (() => ''))
+        this.server.on<any, any>(method, path, func ?? (() => ''))
         return this
     }
 
@@ -226,7 +228,7 @@ export class Platform {
      * @param middleware
      */
     koa_use(middleware: (ctx: LiteContext, next: () => Promise<any>) => void) {
-        this._server.use(middleware)
+        this.server.use(middleware)
         return this
     }
 
@@ -234,12 +236,13 @@ export class Platform {
      * 开始监听请求。
      */
     start(port?: number) {
+
         port = port ?? this._config_data?.get('tora.port') ?? 3000
 
         console.log(`tora server start at ${new Date().toISOString()}`)
         console.log(`    listen at port ${port}...`)
 
-        this._server.listen(port, () => {
+        this.server.listen(port, () => {
             const duration = new Date().getTime() - this.started_at
             console.log(`\ntora server started successfully in ${duration / 1000}s.`)
         })
@@ -248,36 +251,8 @@ export class Platform {
 
     destroy() {
         this.root_injector.emit('tora-destroy')
-        this._revolver.destroy()
-        this._server.destroy()
-        return this
-    }
-
-    /**
-     * 列出全部 API 列表。
-     *
-     * @param formatter 自定义格式处理函数。
-     */
-    show_api_list(formatter?: (method: ApiMethod, path: string) => string) {
-        const handler_list = this._server.list()
-        console.log('\nUsable API list:')
-        for (const desc of handler_list) {
-            console.log(formatter?.(desc.method, desc.path) ?? `    ${desc.method.padEnd(7)} ${desc.path}`)
-        }
-        return this
-    }
-
-    /**
-     * 展示任务列表，按执行顺序。
-     *
-     * @param formatter 自定义格式处理函数。
-     */
-    show_task_list(formatter?: (task: TaskDesc) => string) {
-        const task_list = this._revolver.get_task_list()
-        console.log('\nCurrent Task list:')
-        for (const task of task_list) {
-            console.log(formatter?.(task) ?? `    ${task.next_exec_date_string} ${task.name.padEnd(7)} ${task.crontab}`)
-        }
+        this.revolver.destroy()
+        this.server.destroy()
         return this
     }
 
@@ -287,9 +262,9 @@ export class Platform {
         const function_list = component_meta.function_collector(injector)
 
         if (component_meta.type === 'ToraRouter') {
-            function_list.forEach(f => this._server.load(f as RouterFunction<any>, injector, component_meta))
+            function_list.forEach(f => this.server.load(f as RouterFunction<any>, injector, component_meta))
         } else if (component_meta.type === 'ToraTrigger') {
-            function_list.forEach(f => this._revolver.load(f as TriggerFunction<any>, injector, component_meta))
+            function_list.forEach(f => this.revolver.load(f as TriggerFunction<any>, injector, component_meta))
         }
 
         provider_tree?.children.filter(def => !_find_usage(def))

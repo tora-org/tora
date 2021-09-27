@@ -14,7 +14,6 @@ export {
     HttpHandlerKey,
     KoaResponseType,
     LiteContext,
-    ToraServer,
 } from './__type__'
 
 export {
@@ -24,4 +23,4 @@ export {
     crash,
 } from './error'
 
-export { ToraServerKoa } from './tora-server-koa'
+export { ToraServer } from './tora-server'

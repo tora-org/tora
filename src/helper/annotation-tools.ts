@@ -90,7 +90,6 @@ export namespace AnnotationTools {
                 if (touched[desc.property]) {
                     console.log(`Warning: ${desc.property} have been touched with ${desc.type}.`)
                 }
-                console.log(desc)
                 touched[desc.property] = desc
             })
     }
