@@ -11,33 +11,27 @@ import { ReasonableError } from './tora-error'
 export const PURE_PARAMS = 'PURE_PARAMS'
 
 /**
- * 内置请求参数解析及检查工具。
+ * 内置参数检查及检查工具。
  *
  * @category Builtin
  */
 export class ApiParams<T> extends Judgement<T> {
 
     /**
-     * 参数检查，是否匹配目标的 [类型/正则表达式]。
+     * 指定参数是否匹配指定规则。是：返回参数本身；否：返回 `undefined`。
      *
-     * - 匹配则返回参数本身。
-     * - 不匹配返回 `undefined`。
-     *
-     * @param prop 需要匹配的属性
-     * @param match 预设类型或者正则表达式
+     * @param prop
+     * @param match
      */
     getIf<P extends Path<T>>(prop: P, match: JudgementMatcher): PathValue<T, P> | undefined
     /**
-     * 参数检查，是否匹配目标的 [类型/正则表达式]。
+     * 指定参数是否匹配指定规则。是：返回参数本身；否：返回默认值 def。
      *
-     * - 匹配则返回参数本身。
-     * - 不匹配返回默认值。
-     *
-     * @param prop 需要匹配的属性
-     * @param match 预设类型或者正则表达式
-     * @param def 默认值
+     * @param prop
+     * @param match
+     * @param def
      */
-    getIf<P extends Path<T>>(prop: P, match: JudgementMatcher, def: PathValue<T, P>): Exclude<PathValue<T, P>, undefined>
+    getIf<P extends Path<T>>(prop: P, match: JudgementMatcher, def: Exclude<PathValue<T, P>, undefined>): Exclude<PathValue<T, P>, undefined>
     getIf<P extends Path<T>>(prop: P, match: JudgementMatcher, def?: PathValue<T, P>) {
         const res = super.get(prop)
         if (res !== undefined && this.testValue(res, match)) {
@@ -47,26 +41,20 @@ export class ApiParams<T> extends Judgement<T> {
     }
 
     /**
-     * 参数检查，是否匹配多个 [类型/正则表达式] 中的任意一个。
-     *
-     * - 匹配则返回参数本身。
-     * - 不匹配返回默认值。
+     * 指定参数是否匹配指定规则中的任意一个。是：返回参数本身；否：返回 `undefined`。
      *
      * @param prop 需要匹配的属性
-     * @param match_list 预设的多个类型或者正则表达式
+     * @param match_list 预设的多个匹配规则
      */
     getIfAny<P extends Path<T>>(prop: P, match_list: JudgementMatcher[]): PathValue<T, P> | undefined
     /**
-     * 参数检查，是否匹配多个 [类型/正则表达式] 中的任意一个。
+     * 指定参数是否匹配指定规则中的任意一个。是：返回参数本身；否：返回默认值 def。
      *
-     * - 匹配则返回参数本身。
-     * - 不匹配返回默认值。
-     *
-     * @param prop 需要匹配的属性
-     * @param match_list 预设的多个类型或者正则表达式
-     * @param def 默认值
+     * @param prop
+     * @param match_list
+     * @param def
      */
-    getIfAny<P extends Path<T>>(prop: P, match_list: JudgementMatcher[], def: PathValue<T, P>): Exclude<PathValue<T, P>, undefined>
+    getIfAny<P extends Path<T>>(prop: P, match_list: JudgementMatcher[], def: Exclude<PathValue<T, P>, undefined>): Exclude<PathValue<T, P>, undefined>
     getIfAny<P extends Path<T>>(prop: P, match_list: JudgementMatcher[], def?: PathValue<T, P>) {
         const res = super.get(prop)
         if (res !== undefined && this.any(res, match_list)) {
@@ -76,26 +64,20 @@ export class ApiParams<T> extends Judgement<T> {
     }
 
     /**
-     * 参数检查，是否匹配全部 [类型/正则表达式]。
+     * 指定参数是否匹配全部指定规则。是：返回参数本身；否：返回 `undefined`。
      *
-     * - 匹配则返回参数本身。
-     * - 不匹配返回默认值。
-     *
-     * @param prop 需要匹配的属性
-     * @param match_list 预设的多个类型或者正则表达式
+     * @param prop
+     * @param match_list
      */
     getIfAll<P extends Path<T>>(prop: P, match_list: JudgementMatcher[]): PathValue<T, P> | undefined
     /**
-     * 参数检查，是否匹配全部 [类型/正则表达式]。
+     * 指定参数是否匹配全部指定规则。是：返回参数本身；否：返回默认值 def。
      *
-     * - 匹配则返回参数本身。
-     * - 不匹配返回默认值。
-     *
-     * @param prop 需要匹配的属性
-     * @param match_list 预设的多个类型或者正则表达式
-     * @param def 默认值
+     * @param prop
+     * @param match_list
+     * @param def
      */
-    getIfAll<P extends Path<T>>(prop: P, match_list: JudgementMatcher[], def: PathValue<T, P>): Exclude<PathValue<T, P>, undefined>
+    getIfAll<P extends Path<T>>(prop: P, match_list: JudgementMatcher[], def: Exclude<PathValue<T, P>, undefined>): Exclude<PathValue<T, P>, undefined>
     getIfAll<P extends Path<T>>(prop: P, match_list: JudgementMatcher[], def?: PathValue<T, P>) {
         const res = super.get(prop)
         if (res !== undefined && this.all(res, match_list)) {
@@ -105,10 +87,10 @@ export class ApiParams<T> extends Judgement<T> {
     }
 
     /**
-     * 参数检查，是否匹配目标的 [类型/正则表达式]，不匹配则抛出错误信息。
+     * 指定参数是否匹配指定规则。是：返回参数本身；否：抛出 ReasonableError。
      *
-     * @param prop 需要匹配的属性
-     * @param match 预设类型或者正则表达式
+     * @param prop
+     * @param match
      */
     ensure<P extends Path<T>>(prop: P, match?: JudgementMatcher): Exclude<PathValue<T, P>, undefined> {
         match = match || 'exist'
@@ -123,10 +105,10 @@ export class ApiParams<T> extends Judgement<T> {
     }
 
     /**
-     * 参数检查，是否匹配多个 [类型/正则表达式] 中的任意一个，不匹配则抛出错误信息。
+     * 指定参数是否匹配指定规则中的任意一个。是：返回参数本身；否：抛出 ReasonableError。
      *
-     * @param prop 需要匹配的属性
-     * @param match_list 预设的多个类型或者正则表达式
+     * @param prop
+     * @param match_list
      */
     ensureAny<P extends Path<T>>(prop: P, match_list: JudgementMatcher[]): Exclude<PathValue<T, P>, undefined> {
         const res = super.get(prop)
@@ -140,10 +122,10 @@ export class ApiParams<T> extends Judgement<T> {
     }
 
     /**
-     * 参数检查，是否匹配全部 [类型/正则表达式]，不匹配则抛出错误信息。
+     * 指定参数是否匹配全部指定规则。是：返回参数本身；否：抛出 ReasonableError。
      *
-     * @param prop 需要匹配的属性
-     * @param match_list 预设的多个类型或者正则表达式
+     * @param prop
+     * @param match_list
      */
     ensureAll<P extends Path<T>>(prop: P, match_list: JudgementMatcher[]): Exclude<PathValue<T, P>, undefined> {
         const res = super.get(prop)
@@ -157,11 +139,11 @@ export class ApiParams<T> extends Judgement<T> {
     }
 
     /**
-     * 参数检查，是否匹配目标的 [类型/正则表达式]，如果匹配则执行操作。
+     * 指定参数是否匹配指定规则。是：执行 then；否：什么都不做。
      *
-     * @param prop 需要匹配的属性
-     * @param match 预设类型或者正则表达式
-     * @param then 回调函数
+     * @param prop
+     * @param match
+     * @param then
      */
     doIf<P extends Path<T>>(prop: P, match: JudgementMatcher, then?: (res: PathValue<T, P>) => void) {
         const res = super.get(prop)
@@ -174,11 +156,11 @@ export class ApiParams<T> extends Judgement<T> {
     }
 
     /**
-     * 参数检查，是否匹配多个 [类型/正则表达式] 中的任意一个，如果匹配则执行操作。
+     * 指定参数是否匹配指定规则中的任意一个。是：执行 then；否：什么都不做。
      *
-     * @param prop 需要匹配的属性
-     * @param match_list 预设的多个类型或者正则表达式
-     * @param then 回调函数
+     * @param prop
+     * @param match_list
+     * @param then
      */
     doIfAny<P extends Path<T>>(prop: P, match_list: JudgementMatcher[], then?: (res: PathValue<T, P>) => void) {
         const res = super.get(prop)
@@ -191,11 +173,11 @@ export class ApiParams<T> extends Judgement<T> {
     }
 
     /**
-     * 参数检查，是否匹配全部 [类型/正则表达式]，如果匹配则执行操作。
+     * 指定参数是否匹配全部指定规则。是：执行 then；否：什么都不做。
      *
-     * @param prop 需要匹配的属性
-     * @param match_list 预设的多个类型或者正则表达式
-     * @param then 回调函数
+     * @param prop
+     * @param match_list
+     * @param then
      */
     doIfAll<P extends Path<T>>(prop: P, match_list: JudgementMatcher[], then?: (res: PathValue<T, P>) => void) {
         const res = super.get(prop)

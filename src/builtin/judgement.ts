@@ -26,9 +26,7 @@ export type ValueType =
 export type JudgementMatcher = ValueType | RegExp | JudgementUtil<(...args: any[]) => boolean>
 
 /**
- * @private
  * 推断配置对象的合法路径。
- *
  * **注意**：类型中不能出现 any，对于未知类型请使用 unknown。
  */
 export type Path<T, Key extends keyof T = keyof T> =
@@ -47,7 +45,6 @@ export type Path<T, Key extends keyof T = keyof T> =
         never;
 
 /**
- * @private
  * 根据指定的配置路径推断配置内容。
  */
 export type PathValue<T extends Object, P extends Path<T>> =
@@ -70,7 +67,7 @@ export type PathValue<T extends Object, P extends Path<T>> =
             never;
 
 /**
- * @private
+ * 内置字段查询类，提供了路径类型的定义。
  */
 export class Reference<T> {
 
@@ -110,10 +107,17 @@ export class Reference<T> {
 }
 
 /**
- * @private
+ * 内置对象内容检查。
  */
 export class Judgement<T> extends Reference<T> {
 
+    /**
+     * 检查一个字段的值是否匹配指定规则。
+     *
+     * @param value
+     * @param type
+     * @protected
+     */
     protected testValue(value: any, type?: JudgementMatcher): any {
         if (type instanceof RegExp) {
             return typeof value === 'string' && type.test(value)
@@ -155,6 +159,13 @@ export class Judgement<T> extends Reference<T> {
         }
     }
 
+    /**
+     * 检查一个字段的值是否匹配指定规则中的任意一个。
+     *
+     * @param value
+     * @param types
+     * @protected
+     */
     protected any(value: any, types: JudgementMatcher[]) {
         for (const type of types) {
             if (this.testValue(value, type)) {
@@ -164,6 +175,13 @@ export class Judgement<T> extends Reference<T> {
         return false
     }
 
+    /**
+     * 检查一个字段的值是否匹配全部指定规则。
+     *
+     * @param value
+     * @param types
+     * @protected
+     */
     protected all(value: any, types: JudgementMatcher[]) {
         for (const type of types) {
             if (!this.testValue(value, type)) {

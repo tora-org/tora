@@ -12,9 +12,7 @@ import { DecoratorClass, ToraRootOptions } from '../__types__'
 /**
  * 把一个类标记为 Tora.ToraRoot，并提供配置元数据。
  *
- * [[include:core/tora-root.md]]
- *
- * @category Tora Core
+ * @category Root Annotation
  * @param options
  */
 export function ToraRoot(options?: ToraRootOptions): DecoratorClass {

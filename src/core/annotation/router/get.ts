@@ -10,8 +10,9 @@ import { DecoratorInstanceMethod } from '../__types__'
 
 /**
  * 将 Tora.ToraRouter 中的一个方法标记为 GET 请求处理函数。
+ * 等效于 @Route(['GET'], path_tail)
  *
- * @category Router Request
+ * @category Router Annotation
  */
 export function Get(path_tail?: string): DecoratorInstanceMethod {
     return (prototype, prop, _) => {

@@ -11,7 +11,7 @@ import { DecoratorInstanceMethod } from '../__types__'
 /**
  * 将 Tora.ToraRouter 中的一个请求处理函数标记为需要进行授权。
  *
- * @category Router Modifier
+ * @category Router Annotation
  */
 export function Auth(): DecoratorInstanceMethod {
     return (prototype, prop, _) => {

@@ -76,23 +76,6 @@
 					<div class="lead">
 						<p>内置的 UUID（通用唯一识别码）服务，版本为 Version 1 (date-time and MAC address)。</p>
 					</div>
-					<pre><code class="language-typescript"><span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">ToraComponent</span><span style="color: #000000">, </span><span style="color: #001080">Post</span><span style="color: #000000">, </span><span style="color: #001080">UUID</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;tora&#039;</span>
-
-<span style="color: #000000">@</span><span style="color: #795E26">ToraComponent</span><span style="color: #000000">()</span>
-<span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">TestRouter</span><span style="color: #000000"> {</span>
-
-<span style="color: #000000">    </span><span style="color: #0000FF">constructor</span><span style="color: #000000">(</span>
-<span style="color: #000000">        </span><span style="color: #0000FF">private</span><span style="color: #000000"> </span><span style="color: #001080">uuid</span><span style="color: #000000">: </span><span style="color: #267F99">UUID</span><span style="color: #000000">,</span>
-<span style="color: #000000">    ) {</span>
-<span style="color: #000000">    }</span>
-
-<span style="color: #000000">    </span><span style="color: #795E26">generate_id</span><span style="color: #000000">() {</span>
-<span style="color: #000000">        </span><span style="color: #008000">// 生成新的 id。</span>
-<span style="color: #000000">        </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">new_id</span><span style="color: #000000"> = </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">uuid</span><span style="color: #000000">.</span><span style="color: #795E26">create</span><span style="color: #000000">()</span>
-<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> { </span><span style="color: #001080">id:</span><span style="color: #000000"> </span><span style="color: #001080">new_id</span><span style="color: #000000"> }</span>
-<span style="color: #000000">    }</span>
-<span style="color: #000000">}</span>
-</code></pre>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
@@ -164,7 +147,7 @@
 					<div class="tsd-signature tsd-kind-icon">CLOCK_<wbr>SEQ<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/builtin/uuid.ts#L32">src/builtin/uuid.ts:32</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/builtin/uuid.ts#L30">src/builtin/uuid.ts:30</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -174,7 +157,7 @@
 					<div class="tsd-signature tsd-kind-icon">NODE_<wbr>ID<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/builtin/uuid.ts#L24">src/builtin/uuid.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/builtin/uuid.ts#L22">src/builtin/uuid.ts:22</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -184,7 +167,7 @@
 					<div class="tsd-signature tsd-kind-icon">_lastMSecs<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/builtin/uuid.ts#L33">src/builtin/uuid.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/builtin/uuid.ts#L31">src/builtin/uuid.ts:31</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -194,7 +177,7 @@
 					<div class="tsd-signature tsd-kind-icon">_lastNSecs<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/builtin/uuid.ts#L34">src/builtin/uuid.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/builtin/uuid.ts#L32">src/builtin/uuid.ts:32</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -204,7 +187,7 @@
 					<div class="tsd-signature tsd-kind-icon">byte<wbr>ToHex<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/builtin/uuid.ts#L35">src/builtin/uuid.ts:35</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/builtin/uuid.ts#L33">src/builtin/uuid.ts:33</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -214,7 +197,7 @@
 					<div class="tsd-signature tsd-kind-icon">pool<wbr>Ptr<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/builtin/uuid.ts#L22">src/builtin/uuid.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/builtin/uuid.ts#L20">src/builtin/uuid.ts:20</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -224,7 +207,7 @@
 					<div class="tsd-signature tsd-kind-icon">random_<wbr>8_pool<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/builtin/uuid.ts#L21">src/builtin/uuid.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/builtin/uuid.ts#L19">src/builtin/uuid.ts:19</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -234,7 +217,7 @@
 					<div class="tsd-signature tsd-kind-icon">seed_<wbr>bytes<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Uint8Array</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/builtin/uuid.ts#L23">src/builtin/uuid.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/builtin/uuid.ts#L21">src/builtin/uuid.ts:21</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -251,7 +234,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/builtin/uuid.ts#L144">src/builtin/uuid.ts:144</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/builtin/uuid.ts#L142">src/builtin/uuid.ts:142</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -286,7 +269,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/builtin/uuid.ts#L89">src/builtin/uuid.ts:89</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/builtin/uuid.ts#L87">src/builtin/uuid.ts:87</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h4>
@@ -303,7 +286,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/builtin/uuid.ts#L54">src/builtin/uuid.ts:54</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/builtin/uuid.ts#L52">src/builtin/uuid.ts:52</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Uint8Array</span></h4>
@@ -320,7 +303,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/builtin/uuid.ts#L62">src/builtin/uuid.ts:62</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/builtin/uuid.ts#L60">src/builtin/uuid.ts:60</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -346,7 +329,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/builtin/uuid.ts#L74">src/builtin/uuid.ts:74</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/builtin/uuid.ts#L72">src/builtin/uuid.ts:72</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -441,8 +424,17 @@
 				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
 			</ul>
 			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
 				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
@@ -451,12 +443,6 @@
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
 			</ul>
 		</div>
 	</div>

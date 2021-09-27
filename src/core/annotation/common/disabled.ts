@@ -9,12 +9,13 @@ import { TokenUtils } from '../../token-utils'
 import { DecoratorInstanceMethod } from '../__types__'
 
 /**
- * 用于标记一个 Class 或者 Class 中的一个方法为无效的。
+ * 用于标记一个 Function 类型中的一个方法为无效的。
  *
- * 目前支持这个装饰器的位置只有 ToraRouter 中标记了 @Get，@Post 等装饰器的方法。
- * 无效化的是将该函数添加进处理函数列表的操作。
+ * 目前支持这个装饰器的位置有：
+ * - ToraRouter 中的 @Route，@Get，@Post 等装饰器的方法。
+ * - ToraTrigger 中的 @Task
  *
- * [[include:di/disabled.md]]
+ * 无效化是指挂载 Function 前检查 disabled 参数，跳过挂载过程。
  *
  * @category Common Annotation
  * @param disabled_options 目前没有可用的选项内容，后续可能会添加一些。

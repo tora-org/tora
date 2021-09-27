@@ -9,9 +9,18 @@ import { TokenUtils } from '../../token-utils'
 import { DecoratorClass } from '../__types__'
 
 /**
- * 向 Class 标记一些自定义元信息，在自定义装饰器工具 `AnnotationTools` 中会很有用。
+ * 向 Class 标记一些自定义元信息（CustomData），在自定义装饰器工具 `AnnotationTools` 中会很有用。
  *
- * 使用方式参考 [[AnnotationTools.create_decorator]]
+ * ```
+ * @Meta({ a: 1, b: 'b' })
+ * class SomeClass {
+ * }
+ *
+ * // 等效于
+ *
+ * AnnotationTools.define_custom_data(SomeClass.prototype, a, 1)
+ * AnnotationTools.define_custom_data(SomeClass.prototype, b, 'b')
+ * ```
  *
  * @category Common Annotation
  */

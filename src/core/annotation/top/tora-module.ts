@@ -12,9 +12,7 @@ import { DecoratorClass, ToraModuleOptions } from '../__types__'
 /**
  * 把一个类标记为 Tora.ToraModule，并提供配置元数据。
  *
- * [[include:core/tora-module.md]]
- *
- * @category Tora Core
+ * @category Module Annotation
  * @param options
  */
 export function ToraModule(options?: ToraModuleOptions): DecoratorClass {

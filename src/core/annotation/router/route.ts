@@ -3,9 +3,9 @@ import { TokenUtils } from '../../token-utils'
 import { DecoratorInstanceMethod } from '../__types__'
 
 /**
- * 将 Tora.ToraRouter 中的一个方法标记为 PUT 请求处理函数。
+ * 将 Tora.ToraRouter 中的一个方法标记为请求处理函数。
  *
- * @category Router Request
+ * @category Router Annotation
  */
 export function Route(methods: ApiMethod[], path_tail?: string,): DecoratorInstanceMethod {
     return (prototype, prop, _) => {

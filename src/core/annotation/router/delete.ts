@@ -10,8 +10,9 @@ import { DecoratorInstanceMethod } from '../__types__'
 
 /**
  * 将 Tora.ToraRouter 中的一个方法标记为 DELETE 请求处理函数。
+ * 等效于 @Route(['DELETE'], path_tail)
  *
- * @category Router Request
+ * @category Router Annotation
  */
 export function Delete(path_tail?: string): DecoratorInstanceMethod {
     return (prototype, prop, _) => {

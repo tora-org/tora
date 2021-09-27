@@ -10,10 +10,8 @@ import { DecoratorClass, DecoratorInstanceMethod } from '../__types__'
 
 /**
  * 这是一个调试用的装饰器。
- * 在一个 Tora 组件上使用 `@EchoDependencies` 会在加载组件时将入参类型打印到控制台。
+ * 在一个 ToraComponent 上使用 `@EchoDependencies` 会在加载组件时将入参类型打印到控制台。
  * 这里的类型是指在被 Inject 装饰器替换之前的。
- *
- * [[include:di/echo-dependencies.md]]
  *
  * @category Common Annotation
  */
@@ -31,12 +29,10 @@ export function EchoDependencies(): DecoratorClass {
 
 /**
  * 这是一个调试用的装饰器。
- * 在一个 Tora 组件方法上使用 `@EchoMethodDependencies` 会在加载组件时将入参类型打印到控制台。
+ * 在一个 ToraComponent 上使用 `@EchoDependencies` 会在加载组件时将入参类型打印到控制台。
  * 这里的类型是指在被 Inject 装饰器替换之前的。
  *
  * **注意**：由于在执行方法装饰器时无法拿到类名，所以使用 `EchoMethodDependencies` 输出方法参数时，必须在 class 上同时标记 `EchoDependencies` 使用。单独使用 `EchoMethodDependencies` 不会输出任何内容。
- *
- * [[include:di/echo-dependencies.md]]
  *
  * @category Common Annotation
  */

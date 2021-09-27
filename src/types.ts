@@ -32,10 +32,6 @@ export interface ToraAuthInfo {
 export type ToraEvent =
     | 'tora-destroy'
 
-export interface AbstractType<T> extends Function {
-    prototype: T
-}
-
 export type KeyOfFilterType<T, U> = {
     [K in keyof T]: Exclude<T[K], undefined> extends U ? K : never
 }[keyof T]

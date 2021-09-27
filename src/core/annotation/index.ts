@@ -15,13 +15,14 @@ export {
 
 export {
     Auth,
-    Put,
-    Post,
     CacheWith,
     Delete,
     Get,
-    ToraRouter,
     NoWrap,
+    Post,
+    Put,
+    Route,
+    ToraRouter,
 } from './router'
 
 export {

@@ -114,6 +114,8 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="Revolver.html#get_task_list" class="tsd-kind-icon">get_<wbr>task_<wbr>list</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="Revolver.html#insert" class="tsd-kind-icon">insert</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="Revolver.html#interim" class="tsd-kind-icon">interim</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="Revolver.html#load" class="tsd-kind-icon">load</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="Revolver.html#make_trigger" class="tsd-kind-icon">make_<wbr>trigger</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="Revolver.html#remove" class="tsd-kind-icon">remove</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="Revolver.html#renew" class="tsd-kind-icon">renew</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="Revolver.html#renew_task" class="tsd-kind-icon">renew_<wbr>task</a></li>
@@ -137,7 +139,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/schedule/revolver.ts#L53">src/schedule/revolver.ts:53</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L36">src/schedule/revolver.ts:36</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="Revolver.html" class="tsd-signature-type" data-tsd-kind="Class">Revolver</a></h4>
@@ -153,7 +155,7 @@
 					<div class="tsd-signature tsd-kind-icon">_clip<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Bullet</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/schedule/revolver.ts#L50">src/schedule/revolver.ts:50</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L33">src/schedule/revolver.ts:33</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -163,7 +165,7 @@
 					<div class="tsd-signature tsd-kind-icon">_suspended_<wbr>task<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol"> = {}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/schedule/revolver.ts#L51">src/schedule/revolver.ts:51</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L34">src/schedule/revolver.ts:34</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -181,7 +183,7 @@
 					<div class="tsd-signature tsd-kind-icon">id_<wbr>cursor<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 1</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/schedule/revolver.ts#L49">src/schedule/revolver.ts:49</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L32">src/schedule/revolver.ts:32</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -192,25 +194,22 @@
 					<a name="_fill" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _fill</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
-						<li class="tsd-signature tsd-kind-icon">_fill<span class="tsd-signature-symbol">(</span>crontab<span class="tsd-signature-symbol">: </span><a href="Schedule.html" class="tsd-signature-type" data-tsd-kind="Class">Schedule</a>, handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span>, desc<span class="tsd-signature-symbol">: </span><a href="../interfaces/ToraTypes.TaskDescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">TaskDescriptor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">_fill<span class="tsd-signature-symbol">(</span>handler<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span>, desc<span class="tsd-signature-symbol">: </span><a href="../interfaces/TriggerFunction.html" class="tsd-signature-type" data-tsd-kind="Interface">TriggerFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/schedule/revolver.ts#L65">src/schedule/revolver.ts:65</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L48">src/schedule/revolver.ts:48</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>crontab: <a href="Schedule.html" class="tsd-signature-type" data-tsd-kind="Class">Schedule</a></h5>
-								</li>
-								<li>
 									<h5>handler: <span class="tsd-signature-type">Function</span></h5>
 								</li>
 								<li>
-									<h5>desc: <a href="../interfaces/ToraTypes.TaskDescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">TaskDescriptor</a></h5>
+									<h5>desc: <a href="../interfaces/TriggerFunction.html" class="tsd-signature-type" data-tsd-kind="Interface">TriggerFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -227,7 +226,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/schedule/revolver.ts#L80">src/schedule/revolver.ts:80</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L63">src/schedule/revolver.ts:63</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -250,7 +249,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/schedule/revolver.ts#L235">src/schedule/revolver.ts:235</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L225">src/schedule/revolver.ts:225</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -266,13 +265,13 @@
 					<a name="get_suspended_list" class="tsd-anchor"></a>
 					<h3>get_<wbr>suspended_<wbr>list</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get_<wbr>suspended_<wbr>list<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TaskDesc</span><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">get_<wbr>suspended_<wbr>list<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/TaskDesc.html" class="tsd-signature-type" data-tsd-kind="Interface">TaskDesc</a><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/schedule/revolver.ts#L157">src/schedule/revolver.ts:157</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L140">src/schedule/revolver.ts:140</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -280,7 +279,7 @@
 									<p>获取挂起任务列表。</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TaskDesc</span><span class="tsd-signature-symbol">[]</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/TaskDesc.html" class="tsd-signature-type" data-tsd-kind="Interface">TaskDesc</a><span class="tsd-signature-symbol">[]</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -288,13 +287,13 @@
 					<a name="get_task_list" class="tsd-anchor"></a>
 					<h3>get_<wbr>task_<wbr>list</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get_<wbr>task_<wbr>list<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TaskDesc</span><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">get_<wbr>task_<wbr>list<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/TaskDesc.html" class="tsd-signature-type" data-tsd-kind="Interface">TaskDesc</a><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/schedule/revolver.ts#L173">src/schedule/revolver.ts:173</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L156">src/schedule/revolver.ts:156</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -302,7 +301,7 @@
 									<p>获取任务队列中的任务列表。</p>
 								</div>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TaskDesc</span><span class="tsd-signature-symbol">[]</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/TaskDesc.html" class="tsd-signature-type" data-tsd-kind="Interface">TaskDesc</a><span class="tsd-signature-symbol">[]</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -316,7 +315,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/schedule/revolver.ts#L261">src/schedule/revolver.ts:261</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L251">src/schedule/revolver.ts:251</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -347,7 +346,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/schedule/revolver.ts#L114">src/schedule/revolver.ts:114</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L97">src/schedule/revolver.ts:97</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -369,6 +368,82 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="load" class="tsd-anchor"></a>
+					<h3>load</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">load<span class="tsd-signature-symbol">(</span>trigger_function<span class="tsd-signature-symbol">: </span><a href="../interfaces/TriggerFunction.html" class="tsd-signature-type" data-tsd-kind="Interface">TriggerFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span>, injector<span class="tsd-signature-symbol">: </span><a href="Injector.html" class="tsd-signature-type" data-tsd-kind="Class">Injector</a>, _<span class="tsd-signature-symbol">: </span><a href="../interfaces/ToraTriggerMeta.html" class="tsd-signature-type" data-tsd-kind="Interface">ToraTriggerMeta</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L173">src/schedule/revolver.ts:173</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>trigger_function: <a href="../interfaces/TriggerFunction.html" class="tsd-signature-type" data-tsd-kind="Interface">TriggerFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5>injector: <a href="Injector.html" class="tsd-signature-type" data-tsd-kind="Class">Injector</a></h5>
+								</li>
+								<li>
+									<h5>_: <a href="../interfaces/ToraTriggerMeta.html" class="tsd-signature-type" data-tsd-kind="Interface">ToraTriggerMeta</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="make_trigger" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> make_<wbr>trigger</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">make_<wbr>trigger<span class="tsd-signature-symbol">(</span>injector<span class="tsd-signature-symbol">: </span><a href="Injector.html" class="tsd-signature-type" data-tsd-kind="Class">Injector</a>, desc<span class="tsd-signature-symbol">: </span><a href="../interfaces/TriggerFunction.html" class="tsd-signature-type" data-tsd-kind="Interface">TriggerFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span>, except_list<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>execution<span class="tsd-signature-symbol">?: </span><a href="Dora.html" class="tsd-signature-type" data-tsd-kind="Class">Dora</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L281">src/schedule/revolver.ts:281</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>injector: <a href="Injector.html" class="tsd-signature-type" data-tsd-kind="Class">Injector</a></h5>
+								</li>
+								<li>
+									<h5>desc: <a href="../interfaces/TriggerFunction.html" class="tsd-signature-type" data-tsd-kind="Interface">TriggerFunction</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> except_list: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">(</span>execution<span class="tsd-signature-symbol">?: </span><a href="Dora.html" class="tsd-signature-type" data-tsd-kind="Class">Dora</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<ul class="tsd-parameters">
+								<li class="tsd-parameter-signature">
+									<ul class="tsd-signatures tsd-kind-type-literal">
+										<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>execution<span class="tsd-signature-symbol">?: </span><a href="Dora.html" class="tsd-signature-type" data-tsd-kind="Class">Dora</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
+									</ul>
+									<ul class="tsd-descriptions">
+										<li class="tsd-description">
+											<h4 class="tsd-parameters-title">Parameters</h4>
+											<ul class="tsd-parameters">
+												<li>
+													<h5><span class="tsd-flag ts-flagOptional">Optional</span> execution: <a href="Dora.html" class="tsd-signature-type" data-tsd-kind="Class">Dora</a></h5>
+												</li>
+											</ul>
+											<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
 					<a name="remove" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> remove</h3>
@@ -379,7 +454,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/schedule/revolver.ts#L279">src/schedule/revolver.ts:279</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L269">src/schedule/revolver.ts:269</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -410,7 +485,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/schedule/revolver.ts#L196">src/schedule/revolver.ts:196</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L186">src/schedule/revolver.ts:186</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -438,7 +513,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/schedule/revolver.ts#L137">src/schedule/revolver.ts:137</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L120">src/schedule/revolver.ts:120</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -475,7 +550,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/schedule/revolver.ts#L96">src/schedule/revolver.ts:96</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L79">src/schedule/revolver.ts:79</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -507,7 +582,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/schedule/revolver.ts#L218">src/schedule/revolver.ts:218</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L208">src/schedule/revolver.ts:208</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -535,7 +610,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/11bb219/src/schedule/revolver.ts#L56">src/schedule/revolver.ts:56</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L39">src/schedule/revolver.ts:39</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -592,6 +667,12 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="Revolver.html#interim" class="tsd-kind-icon">interim</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="Revolver.html#load" class="tsd-kind-icon">load</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="Revolver.html#make_trigger" class="tsd-kind-icon">make_<wbr>trigger</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="Revolver.html#remove" class="tsd-kind-icon">remove</a>
 							</li>
@@ -630,8 +711,17 @@
 				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
 			</ul>
 			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
 				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
@@ -640,12 +730,6 @@
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
 			</ul>
 		</div>
 	</div>

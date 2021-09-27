@@ -6,7 +6,8 @@
  */
 
 import EventEmitter from 'events'
-import { AbstractType, ToraEvent } from '../../types'
+import { ToraEvent } from '../../types'
+import { AbstractConstructor } from '../annotation'
 import { Provider } from '../provider'
 import { InjectorProvider } from './injector-provider'
 import { _NullInjector, NullInjector } from './null-injector'
@@ -64,7 +65,7 @@ export class Injector {
      * @param token
      * @param info 一些帮助调试的信息
      */
-    get<T>(token: AbstractType<T>, info?: string): Provider<T> | undefined {
+    get<T extends object>(token: AbstractConstructor<T>, info?: string): Provider<T> | undefined {
         return this.providers.get(token) ?? this.parent.get(token, info)
     }
 

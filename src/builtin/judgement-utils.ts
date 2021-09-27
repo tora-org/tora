@@ -5,6 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+/**
+ * 提供针对 Judgement 提供的检查工具。
+ * 通过扩展 JudgementUtil 实现。
+ */
 export class JudgementUtil<T extends (...args: any[]) => boolean> {
     constructor(
         public check: T
@@ -12,7 +16,11 @@ export class JudgementUtil<T extends (...args: any[]) => boolean> {
     }
 }
 
+/**
+ * 预设的 JudgementUtil。
+ */
 export namespace Jtl {
+
     export function greater_than(value: number) {
         return new JudgementUtil((target: any) => typeof target === 'number' && target > value)
     }

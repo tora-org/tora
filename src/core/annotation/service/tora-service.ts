@@ -11,9 +11,7 @@ import { DecoratorClass, ToraServiceOptions } from '../__types__'
 /**
  * 把一个类标记为 Tora.ToraService。
  *
- * [[include:core/tora-service.md]]
- *
- * @category Tora Core
+ * @category Service Annotation
  * @param options
  */
 export function ToraService(options?: ToraServiceOptions): DecoratorClass {

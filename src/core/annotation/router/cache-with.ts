@@ -11,7 +11,7 @@ import { DecoratorInstanceMethod } from '../__types__'
 /**
  * 将 Tora.ToraRouter 中的一个请求处理函数标记为结果需要进行缓存。
  *
- * @category Router Modifier
+ * @category Router Annotation
  */
 export function CacheWith(prefix?: string, expires?: number): DecoratorInstanceMethod {
     return (prototype, prop, _) => {

@@ -17,7 +17,7 @@ import { ResultWrapper } from '../service/result-wrapper'
 import { ApiMethod, ApiPath, HandlerReturnType, HttpHandlerDescriptor, KoaResponseType, LiteContext, ToraServer } from './__type__'
 import { BodyParser } from './body-parser'
 import { reasonable } from './error'
-import { ToraHttpHandler } from './tora-http-handler'
+import { Handler } from './handler'
 
 declare module 'koa' {
     interface Request {
@@ -68,7 +68,7 @@ export class ToraServerKoa implements ToraServer {
 
     private _koa = new Koa()
     private _server?: Server
-    private _http_handler = new ToraHttpHandler()
+    private _http_handler = new Handler()
     private _body_parser = new BodyParser()
 
     constructor(options: {

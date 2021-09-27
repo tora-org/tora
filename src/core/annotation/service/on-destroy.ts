@@ -11,7 +11,7 @@ import { DecoratorInstanceMethod } from '../__types__'
 /**
  * 将 Tora.ToraService 中的一个方法标记为清理函数。
  *
- * @category Service Modifier
+ * @category Service Annotation
  */
 export function OnDestroy(): DecoratorInstanceMethod {
     return (prototype, prop, descriptor) => {

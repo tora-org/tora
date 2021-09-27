@@ -1,3 +1,10 @@
+/**
+ * Copyright (c) Plank Root.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import { LiteContext } from '../http'
 
 /**
@@ -50,6 +57,9 @@ export class OuterFinish<Context extends LiteContext = LiteContext> extends Erro
     }
 }
 
+/**
+ * @category Error
+ */
 export class ToraError<T> {
 
     public readonly err_data: any

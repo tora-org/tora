@@ -13,11 +13,7 @@ import { Constructor, DecoratorClass, ToraRouterOptions } from '../__types__'
 /**
  * 把一个类标记为 Tora.ToraRouter，并配置元数据。
  *
- * [[include:core/tora-router.md]]
- *
- * @category Tora Core
- * @param path
- * @param options
+ * @category Router Annotation
  */
 export function ToraRouter(path: `/${string}`, options?: ToraRouterOptions): DecoratorClass {
     return (constructor: Constructor<any> & IGunslinger<any>) => {
@@ -43,8 +39,12 @@ export function ToraRouter(path: `/${string}`, options?: ToraRouterOptions): Dec
         }
 
         constructor.replace = (property_key: string, new_path: string) => {
-            TokenUtils.ensure_component(constructor, 'ToraRouter').do(meta => {
-                meta.path_replacement[property_key] = new_path
+            TokenUtils.RouterFunction(constructor.prototype, property_key).do(router_function => {
+                if (router_function) {
+                    router_function.path = new_path
+                } else {
+                    console.log(`Warning: No RouterFunction exist at ${constructor.name}.${property_key}.`)
+                }
             })
             return constructor
         }

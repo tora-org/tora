@@ -12,8 +12,6 @@ import { DecoratorInstanceMethod } from '../__types__'
  * 将 Tora.ToraTrigger 中的一个任务标记为需要上锁。
  * 通过实现 TaskLock 并注入服务来实现任务的锁机制。
  *
- * [[include:core/lock.md]]
- *
  * @category Trigger Annotation
  * @param lock_options
  */

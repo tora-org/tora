@@ -11,8 +11,6 @@ import { ToraService } from '../core'
 /**
  * 内置的 UUID（通用唯一识别码）服务，版本为 Version 1 (date-time and MAC address)。
  *
- * [[include:builtin/uuid.md]]
- *
  * @category Builtin
  */
 @ToraService()

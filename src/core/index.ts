@@ -13,6 +13,7 @@
 
 export {
     AbstractConstructor,
+    BasePropertyFunction,
     ClassMeta,
     ComponentMeta,
     Constructor,
@@ -58,6 +59,7 @@ export {
     OnDestroy,
     Post,
     Put,
+    Route,
     Task,
     ToraModule,
     ToraRoot,
