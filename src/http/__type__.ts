@@ -38,5 +38,7 @@ export interface ToraServer {
 
     listen(port: number, cb: () => void): void
 
+    use(middleware: (ctx: LiteContext, next: () => Promise<any>) => void): void
+
     destroy(): void
 }

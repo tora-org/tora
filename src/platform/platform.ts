@@ -80,16 +80,8 @@ export class Platform {
      * ConfigData 实例，用于管理加载的配置文件内容。
      */
     private _config_data?: ConfigData
-    /**
-     * @private
-     * 定时器。
-     */
-    private readonly _interval: NodeJS.Timeout
 
     constructor() {
-        this._interval = setInterval(() => {
-            this._revolver?._shoot(new Date().getTime())
-        }, 100)
 
         this.started_at = new Date().getTime()
 
@@ -234,7 +226,7 @@ export class Platform {
      * @param middleware
      */
     koa_use(middleware: (ctx: LiteContext, next: () => Promise<any>) => void) {
-        // this._server.use(middleware)
+        this._server.use(middleware)
         return this
     }
 
@@ -256,7 +248,7 @@ export class Platform {
 
     destroy() {
         this.root_injector.emit('tora-destroy')
-        clearInterval(this._interval)
+        this._revolver.destroy()
         this._server.destroy()
         return this
     }

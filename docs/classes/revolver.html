@@ -100,6 +100,7 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="Revolver.html#_clip" class="tsd-kind-icon">_clip</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="Revolver.html#_interval" class="tsd-kind-icon">_interval</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="Revolver.html#_suspended_task" class="tsd-kind-icon">_suspended_<wbr>task</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static"><a href="Revolver.html#id_cursor" class="tsd-kind-icon">id_<wbr>cursor</a></li>
 							</ul>
@@ -109,6 +110,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="Revolver.html#_fill" class="tsd-kind-icon">_fill</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="Revolver.html#_shoot" class="tsd-kind-icon">_shoot</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="Revolver.html#destroy" class="tsd-kind-icon">destroy</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="Revolver.html#execute" class="tsd-kind-icon">execute</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="Revolver.html#get_suspended_list" class="tsd-kind-icon">get_<wbr>suspended_<wbr>list</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="Revolver.html#get_task_list" class="tsd-kind-icon">get_<wbr>task_<wbr>list</a></li>
@@ -139,7 +141,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L36">src/schedule/revolver.ts:36</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/10d82f8/src/schedule/revolver.ts#L42">src/schedule/revolver.ts:42</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="Revolver.html" class="tsd-signature-type" data-tsd-kind="Class">Revolver</a></h4>
@@ -155,7 +157,17 @@
 					<div class="tsd-signature tsd-kind-icon">_clip<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Bullet</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L33">src/schedule/revolver.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/10d82f8/src/schedule/revolver.ts#L33">src/schedule/revolver.ts:33</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="_interval" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> _interval</h3>
+					<div class="tsd-signature tsd-kind-icon">_interval<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Timeout</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/10d82f8/src/schedule/revolver.ts#L40">src/schedule/revolver.ts:40</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -165,7 +177,7 @@
 					<div class="tsd-signature tsd-kind-icon">_suspended_<wbr>task<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol"> = {}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L34">src/schedule/revolver.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/10d82f8/src/schedule/revolver.ts#L34">src/schedule/revolver.ts:34</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -183,7 +195,7 @@
 					<div class="tsd-signature tsd-kind-icon">id_<wbr>cursor<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 1</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L32">src/schedule/revolver.ts:32</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/10d82f8/src/schedule/revolver.ts#L32">src/schedule/revolver.ts:32</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -200,7 +212,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L48">src/schedule/revolver.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/10d82f8/src/schedule/revolver.ts#L169">src/schedule/revolver.ts:169</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -226,7 +238,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L63">src/schedule/revolver.ts:63</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/10d82f8/src/schedule/revolver.ts#L184">src/schedule/revolver.ts:184</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -235,6 +247,23 @@
 									<h5>timestamp: <span class="tsd-signature-type">number</span></h5>
 								</li>
 							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="destroy" class="tsd-anchor"></a>
+					<h3>destroy</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">destroy<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/10d82f8/src/schedule/revolver.ts#L162">src/schedule/revolver.ts:162</a></li>
+								</ul>
+							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -249,7 +278,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L225">src/schedule/revolver.ts:225</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/10d82f8/src/schedule/revolver.ts#L238">src/schedule/revolver.ts:238</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -271,7 +300,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L140">src/schedule/revolver.ts:140</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/10d82f8/src/schedule/revolver.ts#L122">src/schedule/revolver.ts:122</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -293,7 +322,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L156">src/schedule/revolver.ts:156</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/10d82f8/src/schedule/revolver.ts#L138">src/schedule/revolver.ts:138</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -315,7 +344,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L251">src/schedule/revolver.ts:251</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/10d82f8/src/schedule/revolver.ts#L264">src/schedule/revolver.ts:264</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -346,7 +375,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L97">src/schedule/revolver.ts:97</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/10d82f8/src/schedule/revolver.ts#L79">src/schedule/revolver.ts:79</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -378,7 +407,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L173">src/schedule/revolver.ts:173</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/10d82f8/src/schedule/revolver.ts#L155">src/schedule/revolver.ts:155</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -407,7 +436,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L281">src/schedule/revolver.ts:281</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/10d82f8/src/schedule/revolver.ts#L294">src/schedule/revolver.ts:294</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -454,7 +483,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L269">src/schedule/revolver.ts:269</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/10d82f8/src/schedule/revolver.ts#L282">src/schedule/revolver.ts:282</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -485,7 +514,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L186">src/schedule/revolver.ts:186</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/10d82f8/src/schedule/revolver.ts#L199">src/schedule/revolver.ts:199</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -513,7 +542,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L120">src/schedule/revolver.ts:120</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/10d82f8/src/schedule/revolver.ts#L102">src/schedule/revolver.ts:102</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -550,7 +579,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L79">src/schedule/revolver.ts:79</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/10d82f8/src/schedule/revolver.ts#L61">src/schedule/revolver.ts:61</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -582,7 +611,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L208">src/schedule/revolver.ts:208</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/10d82f8/src/schedule/revolver.ts#L221">src/schedule/revolver.ts:221</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -610,7 +639,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/schedule/revolver.ts#L39">src/schedule/revolver.ts:39</a></li>
+									<li>Defined in <a href="https://github.com/tora-org/tora/blob/10d82f8/src/schedule/revolver.ts#L48">src/schedule/revolver.ts:48</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -641,6 +670,9 @@
 								<a href="Revolver.html#_clip" class="tsd-kind-icon">_clip</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="Revolver.html#_interval" class="tsd-kind-icon">_interval</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="Revolver.html#_suspended_task" class="tsd-kind-icon">_suspended_<wbr>task</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
@@ -651,6 +683,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="Revolver.html#_shoot" class="tsd-kind-icon">_shoot</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="Revolver.html#destroy" class="tsd-kind-icon">destroy</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="Revolver.html#execute" class="tsd-kind-icon">execute</a>

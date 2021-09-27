@@ -74,52 +74,9 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>通过全局声明合并扩展 ToraConfigSchema。</p>
+						<p>Copyright (c) Plank Root.</p>
 					</div>
-					<pre><code class="language-typescript"><span style="color: #008000">// 你可以通过如下方式修改 &lt;ToraConfigSchema&gt;：</span>
-
-<span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">ConfigData</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;./config-data&#039;</span>
-
-<span style="color: #0000FF">declare</span><span style="color: #000000"> </span><span style="color: #0000FF">module</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;tora&#039;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">    </span><span style="color: #0000FF">interface</span><span style="color: #000000"> </span><span style="color: #267F99">ToraConfigSchema</span><span style="color: #000000"> {</span>
-<span style="color: #000000">        </span><span style="color: #001080">sample</span><span style="color: #000000">: {</span>
-<span style="color: #000000">            </span><span style="color: #001080">sample_property1</span><span style="color: #000000">: </span><span style="color: #098658">255</span>
-<span style="color: #000000">            </span><span style="color: #001080">sample_property2</span><span style="color: #000000">: </span><span style="color: #A31515">&#039;sample&#039;</span>
-<span style="color: #000000">        }</span>
-<span style="color: #000000">    }</span>
-<span style="color: #000000">}</span>
-
-<span style="color: #008000">// 修改之后的 &lt;ToraConfigSchema&gt; 大概长成下面这样：</span>
-
-<span style="color: #0000FF">interface</span><span style="color: #000000"> </span><span style="color: #267F99">ToraConfigSchema</span><span style="color: #000000"> {</span>
-<span style="color: #000000">    </span><span style="color: #001080">sample</span><span style="color: #000000">: {</span>
-<span style="color: #000000">        </span><span style="color: #001080">sample_property1</span><span style="color: #000000">: </span><span style="color: #098658">255</span>
-<span style="color: #000000">        </span><span style="color: #001080">sample_property2</span><span style="color: #000000">: </span><span style="color: #A31515">&#039;sample&#039;</span>
-<span style="color: #000000">    }</span>
-<span style="color: #000000">    </span><span style="color: #001080">tora</span><span style="color: #000000">?: {</span>
-<span style="color: #000000">        </span><span style="color: #001080">port</span><span style="color: #000000">?: </span><span style="color: #267F99">number</span>
-<span style="color: #000000">    }</span>
-<span style="color: #000000">}</span>
-
-<span style="color: #008000">// 此时使用如下方式查找配置内容，typescript 会检查配置文件路径是否合法，IDE（如：Idea）也会给出相应的配置路径提示：</span>
-
-<span style="color: #000000">@</span><span style="color: #795E26">ToraComponent</span><span style="color: #000000">()</span>
-<span style="color: #AF00DB">export</span><span style="color: #000000"> </span><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">SampleToraComponent</span><span style="color: #000000"> {</span>
-
-<span style="color: #000000">    </span><span style="color: #0000FF">constructor</span><span style="color: #000000">(</span>
-<span style="color: #000000">        </span><span style="color: #0000FF">private</span><span style="color: #000000"> </span><span style="color: #001080">_config</span><span style="color: #000000">: </span><span style="color: #267F99">ConfigData</span>
-<span style="color: #000000">    ) {</span>
-<span style="color: #000000">    }</span>
-
-<span style="color: #000000">    </span><span style="color: #795E26">get_sample_property1</span><span style="color: #000000">(): </span><span style="color: #267F99">number</span><span style="color: #000000"> {</span>
-<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">_config</span><span style="color: #000000">.</span><span style="color: #795E26">get</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;sample.sample_property1&#039;</span><span style="color: #000000">)</span>
-<span style="color: #000000">    }</span>
-
-<span style="color: #000000">    </span><span style="color: #795E26">get_sample_property2</span><span style="color: #000000">(): </span><span style="color: #267F99">string</span><span style="color: #000000"> {</span>
-<span style="color: #000000">        </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">_config</span><span style="color: #000000">.</span><span style="color: #795E26">get</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;sample.sample_property2&#039;</span><span style="color: #000000">)</span>
-<span style="color: #000000">    }</span>
-<span style="color: #000000">}</span>
-</code></pre>
+					<p>This source code is licensed under the MIT license found in the<br>LICENSE file in the root directory of this source tree.</p>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
@@ -151,7 +108,7 @@
 					<div class="tsd-signature tsd-kind-icon">tora<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>port<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/tora-org/tora/blob/840db86/src/types.ts#L19">src/types.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/tora-org/tora/blob/10d82f8/src/types.ts#L19">src/types.ts:19</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">

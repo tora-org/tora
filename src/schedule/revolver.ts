@@ -33,40 +33,22 @@ export class Revolver {
     private _clip?: Bullet | null
     private _suspended_task: { [id: string]: Bullet } = {}
 
+    /**
+     * @private
+     * 定时器。
+     */
+    private readonly _interval: NodeJS.Timeout
+
     constructor() {
+        this._interval = setInterval(() => {
+            this._shoot(new Date().getTime())
+        }, 100)
     }
 
     private static get_id(): string {
         const id = Revolver.id_cursor
         Revolver.id_cursor++
         return `bullet-${id}`
-    }
-
-    /**
-     * @private
-     */
-    private _fill(handler: Function, desc: TriggerFunction<any>) {
-        const bullet = new Bullet(Revolver.get_id(), handler, desc)
-        if (!this._clip) {
-            this._clip = bullet
-        } else if (bullet.execution < this._clip.execution) {
-            bullet.next_bullet = this._clip
-            this._clip = bullet
-        } else {
-            this.insert(this._clip, bullet)
-        }
-    }
-
-    /**
-     * @private
-     */
-    _shoot(timestamp: number) {
-        if (!this._clip) {
-            return
-        }
-        while (this._clip.execution.valueOf() <= timestamp) {
-            this.execute()
-        }
     }
 
     /**
@@ -174,6 +156,37 @@ export class Revolver {
         if (!trigger_function.meta?.disabled) {
             const task_handler = this.make_trigger(injector, trigger_function)
             this._fill(task_handler, trigger_function)
+        }
+    }
+
+    destroy() {
+        clearInterval(this._interval)
+    }
+
+    /**
+     * @private
+     */
+    private _fill(handler: Function, desc: TriggerFunction<any>) {
+        const bullet = new Bullet(Revolver.get_id(), handler, desc)
+        if (!this._clip) {
+            this._clip = bullet
+        } else if (bullet.execution < this._clip.execution) {
+            bullet.next_bullet = this._clip
+            this._clip = bullet
+        } else {
+            this.insert(this._clip, bullet)
+        }
+    }
+
+    /**
+     * @private
+     */
+    private _shoot(timestamp: number) {
+        if (!this._clip) {
+            return
+        }
+        while (this._clip.execution.valueOf() <= timestamp) {
+            this.execute()
         }
     }
 
