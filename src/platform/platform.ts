@@ -158,7 +158,9 @@ export class Platform {
      * @param func
      */
     handle<R extends KoaResponseType>(method: ApiMethod, path: ApiPath, func?: () => HandlerReturnType<R>): Platform {
-        this.server.on<any, any>(method, path, func ?? (() => ''))
+        this.server.on<any, any>(method, path, async (_, ctx: LiteContext) => {
+            ctx.response.body = await (func ?? (() => ''))()
+        })
         return this
     }
 

@@ -85,7 +85,7 @@ export class Handler {
         if (!handler) {
             return next()
         }
-        context.response.body = await handler(params, context)
+        await handler(params, context)
         return next()
     }
 
