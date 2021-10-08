@@ -69,6 +69,14 @@ export class UUID {
         ).toLowerCase()
     }
 
+    private static stringify_2_d_node(arr: number[], offset = 0) {
+        return (
+            UUID.stringify_short(arr, 0) +
+            UUID.byteToHex[arr[offset + 10]] +
+            UUID.byteToHex[arr[offset + 11]]
+        ).toLowerCase()
+    }
+
     private static stringify_short(arr: number[], offset = 0) {
         return (
             UUID.byteToHex[arr[offset]] +
@@ -139,11 +147,18 @@ export class UUID {
      *
      * @param type short 格式会去掉 node_id 部分。
      */
-    create(type: 'short' | 'long' = 'long') {
+    create(type: 'short' | '2-digit' | 'long' = 'long') {
         const b = UUID._create()
         if (type === 'short') {
             return UUID.stringify_short(b)
-        } else {
+        } else if (type === '2-digit') {
+            let node = UUID.NODE_ID
+            const i = b.length
+            for (let n = 0; n < 2; ++n) {
+                b[i + n] = node[n]
+            }
+            return UUID.stringify_2_d_node(b)
+        }else {
             let node = UUID.NODE_ID
             const i = b.length
             for (let n = 0; n < 6; ++n) {

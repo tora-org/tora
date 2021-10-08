@@ -18,6 +18,7 @@
 export interface ToraConfigSchema {
     tora?: {
         port?: number
+        sentinel_port?: number
     }
 }
 
