@@ -9,8 +9,8 @@ import fs from 'fs'
 import path from 'path'
 import { ConfigData, Timestamp, UUID } from '../builtin'
 import { ClassProvider, Constructor, def2Provider, Injector, ProviderDef, ProviderTreeNode, RouterFunction, TokenUtils, ToraFunctionalComponent, TriggerFunction, ValueProvider } from '../core'
-import { ApiMethod, ApiPath, HandlerReturnType, KoaResponseType, LiteContext, ToraServer } from '../http'
-import { Revolver } from '../schedule'
+import { ApiMethod, ApiPath, HandlerReturnType, HttpHandlerDescriptor, KoaResponseType, LiteContext, ToraServer } from '../http'
+import { Revolver, TaskDesc } from '../schedule'
 import { Authenticator } from '../service/authenticator'
 import { CacheProxy } from '../service/cache-proxy'
 import { LifeCycle } from '../service/life-cycle'
@@ -82,7 +82,26 @@ export class Platform {
      */
     private _config_data?: ConfigData
 
-    constructor() {
+    /**
+     * 加载配置文件，读文件方式。
+     * @param file_path
+     */
+    constructor(file_path?: string)
+    /**
+     * 加载配置文件，JSON 对象方式。
+     * @param data
+     */
+    constructor(data: ToraConfigSchema)
+    /**
+     * 加载配置文件，函数方式。
+     * @param data
+     */
+    constructor(data: () => ToraConfigSchema)
+    constructor(data?: string | ToraConfigSchema | (() => ToraConfigSchema)) {
+
+        if (data) {
+            this._load_config(data)
+        }
 
         this.started_at = new Date().getTime()
 
@@ -93,9 +112,8 @@ export class Platform {
         this.root_injector.set_provider(ResultWrapper, new ValueProvider('ResultWrapper', null))
         this.root_injector.set_provider(TaskLifeCycle, new ValueProvider('TaskLifeCycle', null))
         this.root_injector.set_provider(TaskLock, new ValueProvider('TaskLock', null))
-        this.root_injector.set_provider(Platform, new ValueProvider('Platform', this))
-        this.root_injector.set_provider(Revolver, new ValueProvider('Revolver', this.revolver))
-        this.root_injector.set_provider(ToraServer, new ValueProvider('ToraServer', this.server))
+
+        // 设置默认的内置工具。
         this.root_injector.set_provider(UUID, new ClassProvider(UUID, this.root_injector))
         this.root_injector.set_provider(Timestamp, new ClassProvider(Timestamp, this.root_injector, true))
     }
@@ -145,56 +163,6 @@ export class Platform {
     }
 
     /**
-     * 加载配置文件，读文件方式。
-     * @param file_path
-     */
-    load_config(file_path?: string): this
-    /**
-     * 加载配置文件，JSON 对象方式。
-     * @param data
-     */
-    load_config(data: ToraConfigSchema): this
-    /**
-     * 加载配置文件，函数方式。
-     * @param data
-     */
-    load_config(data: () => ToraConfigSchema): this
-    load_config(data?: string | ToraConfigSchema | (() => ToraConfigSchema)) {
-        if (!data) {
-            if (!fs.existsSync(path.resolve('config/default.json'))) {
-                console.error('No specified configuration file, and "config/default.json" not exist.')
-                process.exit(1)
-            }
-            this._config_data = new ConfigData(_try_read_json('config/default.json'))
-        } else if (typeof data === 'string') {
-            if (!fs.existsSync(path.resolve(path.resolve(data)))) {
-                console.error(`Specified configuration file "${data}" not exists.`)
-                process.exit(1)
-            }
-            this._config_data = new ConfigData(_try_read_json(data))
-        } else if (typeof data === 'function') {
-            this._config_data = new ConfigData(data())
-        } else {
-            this._config_data = new ConfigData(data)
-        }
-        this.root_injector.set_provider(ConfigData, new ValueProvider('ConfigData', this._config_data))
-        return this
-    }
-
-    /**
-     * 自定义启动信息。
-     * 设计这个接口的目的是，有时候你可能需要知道程序启动时使用了哪些配置。
-     *
-     * @param msg_builder
-     */
-    loading_message(msg_builder: (config: ConfigData) => string[]) {
-        if (this._config_data) {
-            msg_builder(this._config_data as any)?.forEach(info => console.log(info))
-        }
-        return this
-    }
-
-    /**
      * 直接加载一个包含 routers 的 ToraModule。
      *
      * @param root_module
@@ -218,6 +186,71 @@ export class Platform {
                 console.log(`Warning: ${root_module.name} -> ${def?.name} not used.`)
             })
 
+        return this
+    }
+
+    /**
+     * 加载配置文件，读文件方式。
+     * @param file_path
+     */
+    load_config(file_path?: string): this
+    /**
+     * 加载配置文件，JSON 对象方式。
+     * @param data
+     */
+    load_config(data: ToraConfigSchema): this
+    /**
+     * 加载配置文件，函数方式。
+     * @param data
+     */
+    load_config(data: () => ToraConfigSchema): this
+    load_config(data?: string | ToraConfigSchema | (() => ToraConfigSchema)) {
+        return this._load_config(data)
+    }
+
+    /**
+     * 自定义启动信息。
+     * 设计这个接口的目的是，有时候你可能需要知道程序启动时使用了哪些配置。
+     *
+     * @param msg_builder
+     */
+    loading_message(msg_builder: (config: ConfigData) => string | string[]) {
+        if (this._config_data) {
+            const message = msg_builder(this._config_data as any)
+            if (typeof message === 'string') {
+                console.log(message)
+            } else {
+                message?.forEach(info => console.log(info))
+            }
+        }
+        return this
+    }
+
+    /**
+     * 列出全部 API 列表。
+     *
+     * @param formatter 自定义格式处理函数。
+     */
+    show_api_list(formatter?: (desc: Omit<HttpHandlerDescriptor, 'handler'>) => string) {
+        const handler_list = this.server.get_api_list()
+        console.log('\nUsable API list:')
+        for (const desc of handler_list) {
+            console.log(formatter?.(desc) ?? `    ${desc.method.padEnd(7)} ${desc.path}`)
+        }
+        return this
+    }
+
+    /**
+     * 展示任务列表，按执行顺序。
+     *
+     * @param formatter 自定义格式处理函数。
+     */
+    show_task_list(formatter?: (task: TaskDesc) => string) {
+        const task_list = this.revolver.get_task_list()
+        console.log('\nCurrent Task list:')
+        for (const task of task_list) {
+            console.log(formatter?.(task) ?? `    ${task.next_exec_date_string} ${task.name.padEnd(7)} ${task.crontab}`)
+        }
         return this
     }
 
@@ -253,6 +286,28 @@ export class Platform {
         this.root_injector.emit('tora-destroy')
         this.revolver.destroy()
         this.server.destroy()
+        return this
+    }
+
+    private _load_config(data?: string | ToraConfigSchema | (() => ToraConfigSchema)) {
+        if (!data) {
+            if (!fs.existsSync(path.resolve('config/default.json'))) {
+                console.error('No specified configuration file, and "config/default.json" not exist.')
+                process.exit(1)
+            }
+            this._config_data = new ConfigData(_try_read_json('config/default.json'))
+        } else if (typeof data === 'string') {
+            if (!fs.existsSync(path.resolve(path.resolve(data)))) {
+                console.error(`Specified configuration file "${data}" not exists.`)
+                process.exit(1)
+            }
+            this._config_data = new ConfigData(_try_read_json(data))
+        } else if (typeof data === 'function') {
+            this._config_data = new ConfigData(data())
+        } else {
+            this._config_data = new ConfigData(data)
+        }
+        this.root_injector.set_provider(ConfigData, new ValueProvider('ConfigData', this._config_data))
         return this
     }
 

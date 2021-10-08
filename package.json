@@ -36,14 +36,14 @@
     "dependencies": {
         "co-body": "^6.1.0",
         "koa": "^2.13.1",
-        "tslib": "^2.3.1",
-        "reflect-metadata": "^0.1.13"
+        "reflect-metadata": "^0.1.13",
+        "tslib": "^2.3.1"
     },
     "devDependencies": {
+        "@rollup/plugin-json": "^4.1.0",
         "@types/co-body": "^6.1.0",
         "@types/koa": "^2.13.4",
         "@types/node": "^16.9.1",
-        "@rollup/plugin-json": "^4.1.0",
         "builtin-modules": "^3.2.0",
         "rollup": "^2.56.3",
         "rollup-plugin-dts": "^4.0.0",

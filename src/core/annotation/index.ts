@@ -63,7 +63,6 @@ export {
     ReflectComponent,
     RouterFunction,
     ToraFunctionalComponent,
-    ToraMQMeta,
     ToraModuleMeta,
     ToraModuleMetaLike,
     ToraModuleOptions,

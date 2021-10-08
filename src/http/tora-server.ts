@@ -51,9 +51,9 @@ export class ToraServer {
         this._http_handler.on(method, path, handler)
     }
 
-    list(): Omit<HttpHandlerDescriptor, 'handler'>[]
-    list(need_handler: true): HttpHandlerDescriptor[]
-    list(need_handler?: boolean): HttpHandlerDescriptor[] | Omit<HttpHandlerDescriptor, 'handler'>[] {
+    get_api_list(): Omit<HttpHandlerDescriptor, 'handler'>[]
+    get_api_list(need_handler: true): HttpHandlerDescriptor[]
+    get_api_list(need_handler?: boolean): HttpHandlerDescriptor[] | Omit<HttpHandlerDescriptor, 'handler'>[] {
         return this._http_handler.list(need_handler)
     }
 

@@ -74,10 +74,6 @@ export interface ToraServiceMeta extends BaseToraComponentMeta {
     type: 'ToraService'
 }
 
-export interface ToraMQMeta extends BaseToraComponentMeta {
-    type: 'ToraMQ'
-}
-
 export interface ToraModuleMeta extends BaseToraModuleMeta {
     type: 'ToraModule'
 }
@@ -113,7 +109,6 @@ export type ToraFunctionalComponent =
 
 export type ComponentMeta =
     | ToraServiceMeta
-    | ToraMQMeta
     | ToraModuleMetaLike
 
 export type ReflectComponent<K extends ComponentMeta['type'], T extends ComponentMeta = ComponentMeta> = T extends { type: K } ? T : never
