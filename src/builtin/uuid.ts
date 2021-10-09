@@ -86,7 +86,7 @@ export class UUID {
 
     private static _create() {
         let i = 0
-        const b = new Array(16)
+        const b = new Array(10)
         let clock_sequence = UUID.CLOCK_SEQ
         let milli_secs = Date.now()
         let nano_secs = UUID._lastNSecs + 1
