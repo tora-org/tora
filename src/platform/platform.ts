@@ -319,7 +319,6 @@ export class Platform {
         }
         const amqp = this._config_data.get('tora.amqp')
         if (amqp) {
-            console.log('set config', amqp)
             this.mq.set_config(amqp.url, amqp.socket_options)
         }
         this.root_injector.set_provider(ConfigData, new ValueProvider('ConfigData', this._config_data))

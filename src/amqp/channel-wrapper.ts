@@ -21,7 +21,6 @@ export class ChannelWrapper {
     ) {
         this.channel = channel
         channel.on('drain', () => {
-            console.log('on_drain')
             this.channel_drain = true
             while (this.channel && this.channel_drain && !this.channel_publish_queue.isEmpty()) {
                 const args = this.channel_publish_queue.pop()!

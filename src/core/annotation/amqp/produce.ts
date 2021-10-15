@@ -13,7 +13,6 @@ export function Produce<T extends object, K extends KeyOfFilterType<T, Producer<
                 } else {
                     amqp_function.produce = { exchange, routing_key, options: options ?? {} }
                     const producer: Producer<any> = (message: any, produce_options?: ProduceOptions): void => {
-                        console.log('default producer')
                         amqp_function.produce_cache.push([message, produce_options])
                     }
                     Object.defineProperty(prototype, prop, {

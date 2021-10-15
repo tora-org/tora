@@ -104,7 +104,6 @@ export class MessageQueue {
             value: producer
         })
         for (const [msg, options] of desc.produce_cache) {
-            console.log('--------', msg, options)
             producer(msg, options)
         }
     }
