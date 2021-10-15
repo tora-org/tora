@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { TaskContext } from '../builtin'
+import { TaskContext } from '../schedule'
 
 /**
  * 任务的加锁服务接口。

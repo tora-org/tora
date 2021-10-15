@@ -6,7 +6,7 @@
  */
 
 
-import { TaskContext } from '../builtin'
+import { TaskContext } from '../schedule'
 
 /**
  * [[Trigger.Task]] 的生命周期服务。和 [[Tora.ToraRouter]] 的 LifeCycle 接口一样，用于在任务执行的几个特定时间点触发一些操作。

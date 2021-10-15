@@ -7,8 +7,9 @@
 
 import fs from 'fs'
 import path from 'path'
+import { MessageQueue } from '../amqp'
 import { ConfigData, Timestamp, UUID } from '../builtin'
-import { ClassProvider, Constructor, def2Provider, Injector, ProviderDef, ProviderTreeNode, RouterFunction, TokenUtils, ToraFunctionalComponent, TriggerFunction, ValueProvider } from '../core'
+import { ClassProvider, Constructor, def2Provider, Injector, ProviderDef, ProviderTreeNode, TokenUtils, ToraFunctionalComponent, ValueProvider } from '../core'
 import { ApiMethod, ApiPath, HandlerReturnType, HttpHandlerDescriptor, KoaResponseType, LiteContext, ToraServer } from '../http'
 import { Revolver, TaskDesc } from '../schedule'
 import { Authenticator } from '../service/authenticator'
@@ -62,12 +63,17 @@ export class Platform {
     protected root_injector = Injector.create()
     /**
      * @protected
+     * Revolver 实例，用于管理 MessageQueue。
+     */
+    protected readonly mq = new MessageQueue()
+    /**
+     * @protected
      * Revolver 实例，用于管理定时任务。
      */
     protected readonly revolver = new Revolver()
     /**
      * @protected
-     * ToraServerKoa 实例，用于管理 HTTP 连接。
+     * ToraServer 实例，用于管理 HTTP 连接。
      */
     protected readonly server = new ToraServer({ cors: true, body_parser: true })
     /**
@@ -180,8 +186,10 @@ export class Platform {
         sub_injector.get(CacheProxy)?.set_used()
         sub_injector.get(ResultWrapper)?.set_used()
 
-        root_meta.routers?.forEach(router => this._mount_component(router, 'ToraRouter', sub_injector))
-        root_meta.tasks?.forEach(trigger => this._mount_component(trigger, 'ToraTrigger', sub_injector))
+        root_meta.producers?.forEach(m => this._mount_component(m, 'ToraProducer', sub_injector))
+        root_meta.consumers?.forEach(m => this._mount_component(m, 'ToraConsumer', sub_injector))
+        root_meta.routers?.forEach(m => this._mount_component(m, 'ToraRouter', sub_injector))
+        root_meta.tasks?.forEach(m => this._mount_component(m, 'ToraTrigger', sub_injector))
 
         provider_tree?.children.filter(def => !_find_usage(def))
             .forEach(def => {
@@ -276,7 +284,7 @@ export class Platform {
 
         console.log(`tora server start at ${new Date().toISOString()}`)
         console.log(`    listen at port ${port}...`)
-
+        this.mq.start()
         this.server.listen(port, () => {
             const duration = new Date().getTime() - this.started_at
             console.log(`\ntora server started successfully in ${duration / 1000}s.`)
@@ -309,19 +317,39 @@ export class Platform {
         } else {
             this._config_data = new ConfigData(data)
         }
+        const amqp = this._config_data.get('tora.amqp')
+        if (amqp) {
+            console.log('set config', amqp)
+            this.mq.set_config(amqp.url, amqp.socket_options)
+        }
         this.root_injector.set_provider(ConfigData, new ValueProvider('ConfigData', this._config_data))
         return this
     }
 
     private _mount_component(module: Constructor<any>, as: ToraFunctionalComponent['type'], injector: Injector): void {
         const component_meta = TokenUtils.ensure_component(module, as).value
-        const provider_tree = component_meta.provider_collector(injector)
-        const function_list = component_meta.function_collector(injector)
+        let provider_tree: ProviderTreeNode | undefined
 
-        if (component_meta.type === 'ToraRouter') {
-            function_list.forEach(f => this.server.load(f as RouterFunction<any>, injector, component_meta))
-        } else if (component_meta.type === 'ToraTrigger') {
-            function_list.forEach(f => this.revolver.load(f as TriggerFunction<any>, injector, component_meta))
+        switch (component_meta.type) {
+            case 'ToraRouter':
+                provider_tree = component_meta.provider_collector?.(injector)
+                injector.set_provider(module, component_meta.provider ?? new ClassProvider(module, injector))
+                this.server.load(component_meta, injector)
+                break
+            case 'ToraTrigger':
+                provider_tree = component_meta.provider_collector?.(injector)
+                injector.set_provider(module, component_meta.provider ?? new ClassProvider(module, injector))
+                this.revolver.load(component_meta, injector)
+                break
+            case 'ToraConsumer':
+                provider_tree = component_meta.provider_collector?.(injector)
+                injector.set_provider(module, component_meta.provider ?? new ClassProvider(module, injector))
+                this.mq.load(component_meta, injector)
+                break
+            case 'ToraProducer':
+                injector.set_provider(module, component_meta.provider ?? new ClassProvider(module, injector))
+                this.mq.load(component_meta, injector)
+                break
         }
 
         provider_tree?.children.filter(def => !_find_usage(def))

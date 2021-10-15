@@ -5,10 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { LiteContext } from '../http'
 import { CacheProxy } from '../service/cache-proxy'
 import { ToraAuthInfo, ToraSession } from '../types'
-import { InnerFinish, OuterFinish } from './tora-error'
+import { LiteContext } from './__type__'
+import { InnerFinish, OuterFinish } from './error'
 
 /**
  * 请求上下文对象。
@@ -156,7 +156,7 @@ export class SessionContext {
      */
     redirect(url: string, alt?: string): never {
         this._ctx.redirect(url, alt)
-        throw new OuterFinish(this._ctx, '')
+        throw new OuterFinish('')
     }
 
     /**

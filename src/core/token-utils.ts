@@ -5,9 +5,68 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { ClassMeta, ComponentMeta, Constructor, PropertyFunction, PropertyMeta, ReflectComponent, RouterFunction, ToraModuleMetaLike, TriggerFunction } from './annotation'
+import { ConsumerFunction, ClassMeta, ComponentMeta, Constructor, PropertyFunction, PropertyMeta, ReflectComponent, RouterFunction, ToraModuleMetaLike, TriggerFunction } from './annotation'
+import { ProducerFunction } from './annotation/__types__'
 import { Meta, MetaWrapper } from './meta-tool'
 import { DI_TOKEN } from './token'
+
+function check_property(prototype: any, property?: string): [PropertyDescriptor, string] {
+    if (!property) {
+        throw new Error('Function Decorator can not place on class.')
+    }
+    const descriptor = Object.getOwnPropertyDescriptor(prototype, property)
+    if (!descriptor) {
+        throw new Error(`Descriptor of specified property "${property}" is empty.`)
+    }
+    return [descriptor, property]
+}
+
+/**
+ * @private
+ *
+ * @param prototype
+ * @param property
+ */
+export function init_consumer_function<T extends (...args: any) => any>(prototype: any, property?: string): ConsumerFunction<T> {
+    const [descriptor, prop] = check_property(prototype, property)
+    const parameter_injection = TokenUtils.PropertyMeta(prototype, prop).value?.parameter_injection
+    const consumer_function: ConsumerFunction<T> = {
+        type: 'ToraConsumerFunction',
+        prototype,
+        descriptor: descriptor,
+        property: prop,
+        param_types: TokenUtils.get_method_parameter_types(prototype, prop)?.map((t: any, i: number) => parameter_injection?.[i] ?? t) as Parameters<T>,
+        handler: descriptor.value,
+    }
+    TokenUtils.Touched(prototype).ensure_default().do(touched => {
+        touched[prop] = consumer_function
+    })
+    return consumer_function
+}
+
+/**
+ * @private
+ *
+ * @param prototype
+ * @param property
+ */
+export function init_producer_function<T extends (...args: any) => any>(prototype: any, property?: string): ProducerFunction<T> {
+    if (!property) {
+        throw new Error('Function Decorator can not place on class.')
+    }
+    const producer_function: ProducerFunction<T> = {
+        type: 'ToraProducerFunction',
+        prototype,
+        descriptor: {  },
+        property: property,
+        handler: (() => null) as any,
+        produce_cache: []
+    }
+    TokenUtils.Touched(prototype).ensure_default().do(touched => {
+        touched[property] = producer_function
+    })
+    return producer_function
+}
 
 /**
  * @private
@@ -16,28 +75,21 @@ import { DI_TOKEN } from './token'
  * @param property
  */
 export function init_router_function<T extends (...args: any) => any>(prototype: any, property?: string): RouterFunction<T> {
-    if (!property) {
-        // TODO: Complete Error message.
-        throw new Error()
-    }
-    const descriptor = Object.getOwnPropertyDescriptor(prototype, property)
-    if (!descriptor) {
-        // TODO: Complete Error message.
-        throw new Error()
-    }
-    const parameter_injection = TokenUtils.PropertyMeta(prototype, property).value?.parameter_injection
+    const [descriptor, prop] = check_property(prototype, property)
+    const parameter_injection = TokenUtils.PropertyMeta(prototype, prop).value?.parameter_injection
     const router_function: RouterFunction<T> = {
         type: 'ToraRouterFunction',
-        path: property,
+        prototype,
+        path: prop,
         descriptor: descriptor,
         handler: descriptor.value,
-        property: property,
-        param_types: TokenUtils.get_method_parameter_types(prototype, property)?.map((t: any, i: number) => parameter_injection?.[i] ?? t) as Parameters<T>,
+        property: prop,
+        param_types: TokenUtils.get_method_parameter_types(prototype, prop)?.map((t: any, i: number) => parameter_injection?.[i] ?? t) as Parameters<T>,
         auth: false,
         wrap_result: true,
     }
     TokenUtils.Touched(prototype).ensure_default().do(touched => {
-        touched[property] = router_function
+        touched[prop] = router_function
     })
     return router_function
 }
@@ -49,27 +101,20 @@ export function init_router_function<T extends (...args: any) => any>(prototype:
  * @param property
  */
 export function init_trigger_function<T extends (...args: any) => any>(prototype: any, property?: string): TriggerFunction<T> {
-    if (!property) {
-        // TODO: Complete Error message.
-        throw new Error()
-    }
-    const descriptor = Object.getOwnPropertyDescriptor(prototype, property)
-    if (!descriptor) {
-        // TODO: Complete Error message.
-        throw new Error()
-    }
-    const parameter_injection = TokenUtils.PropertyMeta(prototype, property).value?.parameter_injection
+    const [descriptor, prop] = check_property(prototype, property)
+    const parameter_injection = TokenUtils.PropertyMeta(prototype, prop).value?.parameter_injection
     const trigger_function: TriggerFunction<T> = {
         type: 'ToraTriggerFunction',
+        prototype,
         descriptor,
         handler: descriptor.value,
-        property,
-        param_types: TokenUtils.get_method_parameter_types(prototype, property)?.map((t: any, i: number) => parameter_injection?.[i] ?? t) as Parameters<T>,
+        property: prop,
+        param_types: TokenUtils.get_method_parameter_types(prototype, prop)?.map((t: any, i: number) => parameter_injection?.[i] ?? t) as Parameters<T>,
         crontab: '',
         name: 'unset'
     }
     TokenUtils.Touched(prototype).ensure_default().do(touched => {
-        touched[property] = trigger_function
+        touched[prop] = trigger_function
     })
     return trigger_function
 }
@@ -117,6 +162,8 @@ export namespace TokenUtils {
      */
     export const RouterFunction = MetaWrapper<RouterFunction<any>>(DI_TOKEN.property_function, 'property_only', (proto, prop) => init_router_function(proto, prop))
     export const TriggerFunction = MetaWrapper<TriggerFunction<any>>(DI_TOKEN.property_function, 'property_only', (proto, prop) => init_trigger_function(proto, prop))
+    export const ConsumerFunction = MetaWrapper<ConsumerFunction<any>>(DI_TOKEN.property_function, 'property_only', (proto, prop) => init_consumer_function(proto, prop))
+    export const ProducerFunction = MetaWrapper<ProducerFunction<any>>(DI_TOKEN.property_function, 'property_only', (proto, prop) => init_producer_function(proto, prop))
 
     /**
      * 参数类型。

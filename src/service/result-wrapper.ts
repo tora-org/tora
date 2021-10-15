@@ -5,8 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { SessionContext } from '../builtin'
-import { KoaResponseType } from '../http'
+import { KoaResponseType, SessionContext } from '../http'
 
 /**
  * 请求处理结果包装服务。

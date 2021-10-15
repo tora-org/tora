@@ -7,7 +7,7 @@
 
 import { Server } from 'http'
 import Koa from 'koa'
-import { Injector, RouterFunction, ToraRouterMeta } from '../core'
+import { Injector, ToraRouterMeta } from '../core'
 import { ApiMethod, ApiPath, HandlerReturnType, HttpHandlerDescriptor, KoaResponseType, LiteContext } from './__type__'
 import { BodyParser } from './body-parser'
 import { Handler } from './handler'
@@ -43,8 +43,10 @@ export class ToraServer {
         this._koa.use(async (ctx: LiteContext, next) => this._http_handler.handle(ctx, next))
     }
 
-    load(router_function: RouterFunction<any>, injector: Injector, meta: ToraRouterMeta): void {
-        this._http_handler.load(router_function, injector, meta)
+    load(meta: ToraRouterMeta, injector: Injector): void {
+        meta.function_collector(injector)
+            .filter((f) => f.type === 'ToraRouterFunction')
+            .forEach(f => this._http_handler.load(f, injector, meta))
     }
 
     on<T, R extends KoaResponseType>(method: ApiMethod, path: ApiPath, handler: (params: T, ctx: LiteContext) => HandlerReturnType<R>): void {

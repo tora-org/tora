@@ -49,13 +49,13 @@ export namespace AnnotationTools {
      * @return decorator 新的装饰器。
      */
     export function create_method_decorator<T>(
-        processor: <VALUE_TYPE extends Function, CLASS extends object>(prototype: CLASS, prop: string, descriptor: TypedPropertyDescriptor<VALUE_TYPE>, meta: any, options?: T) => void
+        processor: <VALUE_TYPE extends (...args: any[]) => any, CLASS extends object>(prototype: CLASS, prop: string, descriptor: TypedPropertyDescriptor<VALUE_TYPE>, meta: any, options?: T) => void
     ) {
         return function(options?: T): DecoratorInstanceMethod {
             return (prototype, prop, descriptor) => {
                 TokenUtils.CustomData(prototype).ensure_default({})
                     .do(meta => {
-                        processor(prototype, prop, descriptor, meta, options)
+                        processor(prototype, prop, descriptor as any, meta, options)
                     })
             }
         }

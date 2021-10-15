@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { SessionContext } from '../builtin'
+import { SessionContext } from '../http'
 
 /**
  * 请求处理生命周期接口，通过实现抽象类，在请求处理的开始，结束和异常时做相应操作。

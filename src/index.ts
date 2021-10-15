@@ -17,6 +17,7 @@ export {
 export {
     TokenUtils,
     AbstractConstructor,
+    BasePropertyFunction,
     ClassMeta,
     ClassProviderDef,
     ComponentMeta,
@@ -81,6 +82,7 @@ export {
     ClassProvider,
     FactoryProvider,
     Injector,
+    Deque,
 } from './core'
 
 export { Authenticator } from './service/authenticator'
@@ -91,21 +93,28 @@ export { TaskLifeCycle } from './service/task-life-cycle'
 export { TaskLock } from './service/task-lock'
 
 export {
+    Ack,
+    ChannelWrapper,
+    Dead,
+    Letter,
+    MessageQueue,
+    PURE_LETTER,
+    Requeue,
+    MessageObject,
+    MessageFields,
+    MessageProperties,
+    ack_message,
+    kill_message,
+    requeue_message,
+} from './amqp'
+export {
     Jtl,
-    ApiParams,
     ConfigData,
     CurrentTimestamp,
-    InnerFinish,
     Judgement,
     JudgementUtil,
-    OuterFinish,
-    PURE_PARAMS,
-    ReasonableError,
     Reference,
-    SessionContext,
-    TaskContext,
     Timestamp,
-    ToraError,
     UUID,
     JudgementMatcher,
     Path,
@@ -114,7 +123,6 @@ export {
 } from './builtin'
 
 export {
-    ToraServer,
     throw_reasonable,
     reasonable,
     response,
@@ -127,6 +135,14 @@ export {
     HandlerReturnType,
     KoaResponseType,
     LiteContext,
+    ApiParams,
+    HttpError,
+    InnerFinish,
+    OuterFinish,
+    PURE_PARAMS,
+    ReasonableError,
+    SessionContext,
+    ToraServer,
 } from './http'
 
 export {
@@ -137,6 +153,7 @@ export {
     Dora,
     Revolver,
     Schedule,
+    TaskContext,
     FieldType,
     InnerOptions,
     ScheduleOptions,

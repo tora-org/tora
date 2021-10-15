@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { TaskContext } from '../builtin'
 import { Injector, ToraTriggerMeta, TriggerFunction } from '../core'
 import { get_providers } from '../core/collector'
 import { TaskLifeCycle } from '../service/task-life-cycle'
@@ -13,6 +12,7 @@ import { TaskLock } from '../service/task-lock'
 import { TaskDesc } from './__type__'
 import { Bullet } from './bullet'
 import { Dora } from './dora'
+import { TaskContext } from './task-context'
 
 function on_error_or_throw(hooks: TaskLifeCycle | undefined, err: any, context: TaskContext) {
     if (hooks) {
@@ -152,11 +152,16 @@ export class Revolver {
         return list
     }
 
-    load(trigger_function: TriggerFunction<any>, injector: Injector, _: ToraTriggerMeta): void {
-        if (!trigger_function.meta?.disabled) {
-            const task_handler = this.make_trigger(injector, trigger_function)
-            this._fill(task_handler, trigger_function)
-        }
+    load(meta: ToraTriggerMeta, injector: Injector): void {
+        meta.function_collector(injector)
+            .filter((f) => f.type === 'ToraTriggerFunction')
+            .forEach(trigger_function => {
+                if (!trigger_function.meta?.disabled) {
+                    const task_handler = this.make_trigger(injector, trigger_function)
+                    this._fill(task_handler, trigger_function)
+                }
+            })
+
     }
 
     destroy() {

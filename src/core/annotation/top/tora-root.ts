@@ -26,6 +26,8 @@ export function ToraRoot(options?: ToraRootOptions): DecoratorClass {
             name: constructor.name,
             routers: options?.routers,
             tasks: options?.tasks,
+            consumers: options?.consumers,
+            producers: options?.producers,
             provider_collector: make_provider_collector(constructor, options),
         })
     }

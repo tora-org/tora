@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { make_provider_collector, make_router_collector } from '../../collector'
+import { make_collector, make_provider_collector } from '../../collector'
 import { IGunslinger } from '../../gunslinger'
 import { TokenUtils } from '../../token-utils'
 import { Constructor, DecoratorClass, ToraRouterOptions } from '../__types__'
@@ -26,7 +26,7 @@ export function ToraRouter(path: `/${string}`, options?: ToraRouterOptions): Dec
             name: constructor.name,
             router_path: path,
             router_options: options,
-            function_collector: make_router_collector(constructor, options),
+            function_collector: make_collector('ToraRouter', 'ToraRouterFunction', constructor),
             provider_collector: make_provider_collector(constructor, options),
             path_replacement: {},
         })

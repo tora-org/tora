@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Judgement, JudgementMatcher, Path, PathValue } from './judgement'
-import { ReasonableError } from './tora-error'
+import { Judgement, JudgementMatcher, Path, PathValue } from '../builtin'
+import { ReasonableError } from './error'
 
 export const PURE_PARAMS = 'PURE_PARAMS'
 

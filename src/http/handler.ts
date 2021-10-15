@@ -6,7 +6,6 @@
  */
 
 import { Request } from 'koa'
-import { ApiParams, InnerFinish, OuterFinish, PURE_PARAMS, SessionContext, ToraError } from '../builtin'
 import { Injector, RouterFunction, ToraRouterMeta } from '../core'
 import { get_providers } from '../core/collector'
 import { Authenticator } from '../service/authenticator'
@@ -14,7 +13,9 @@ import { CacheProxy } from '../service/cache-proxy'
 import { LifeCycle } from '../service/life-cycle'
 import { ResultWrapper } from '../service/result-wrapper'
 import { ApiMethod, ApiPath, HandlerReturnType, HttpHandler, HttpHandlerDescriptor, HttpHandlerKey, KoaResponseType, LiteContext } from './__type__'
-import { reasonable } from './error'
+import { ApiParams, PURE_PARAMS } from './api-params'
+import { HttpError, InnerFinish, OuterFinish, reasonable } from './error'
+import { SessionContext } from './session-context'
 
 function finish_process(koa_context: LiteContext, response_body: KoaResponseType) {
     koa_context.response.body = response_body
@@ -28,26 +29,12 @@ function do_wrap(result_wrapper: ResultWrapper | undefined, data: any, context: 
     return res === undefined ? data : res
 }
 
-function do_wrap_error(result_wrapper: ResultWrapper | undefined, err: ToraError<any>, context: SessionContext) {
+function do_wrap_error(result_wrapper: ResultWrapper | undefined, err: HttpError<any>, context: SessionContext) {
     if (!result_wrapper) {
         return { error: err.err_data }
     }
     const res = result_wrapper?.wrap_error(err, context)
     return res === undefined ? { error: err.err_data } : res
-}
-
-async function run_handler(handler_wrapper: () => any) {
-    try {
-        return await handler_wrapper?.()
-    } catch (reason) {
-        if (reason instanceof InnerFinish) {
-            return await reason.body
-        } else if (reason instanceof OuterFinish) {
-            return reason
-        } else {
-            return new ToraError(reason)
-        }
-    }
 }
 
 /**
@@ -120,13 +107,13 @@ export class Handler {
 
             if (desc.auth) {
                 if (!authenticator) {
-                    const err = new ToraError(new Error('no provider for <Authenticator>.'))
+                    const err = new HttpError(new Error('no provider for <Authenticator>.'))
                     await hooks?.on_error(context, err)
                     const err_result = desc.wrap_result ? do_wrap_error(result_wrapper, err, context) : { error: err.err_data }
                     return finish_process(koa_context, err_result)
                 }
                 if (auth_info === undefined) {
-                    const err = new ToraError(reasonable(401, 'Unauthorized.'))
+                    const err = new HttpError(reasonable(401, 'Unauthorized.'))
                     await hooks?.on_error(context, err)
                     const err_result = desc.wrap_result ? do_wrap_error(result_wrapper, err, context) : { error: err.err_data }
                     return finish_process(koa_context, err_result)
@@ -147,16 +134,27 @@ export class Handler {
                 }
             })
 
-            const handler_result: any = await run_handler(() => desc.handler(...param_list))
+            let handler_result: any
 
-            if (handler_result instanceof ToraError) {
+            try {
+                handler_result = await desc.handler(...param_list)
+            } catch (reason) {
+                if (reason instanceof InnerFinish) {
+                    handler_result = await reason.body
+                } else if (reason instanceof OuterFinish) {
+                    handler_result = reason
+                } else {
+                    handler_result = new HttpError(reason)
+                }
+            }
+
+            if (handler_result instanceof HttpError) {
                 await hooks?.on_error(context, handler_result)
                 const err_response = desc.wrap_result ? do_wrap_error(result_wrapper, handler_result, context) : { error: handler_result.err_data }
                 finish_process(koa_context, err_response)
             } else if (handler_result instanceof OuterFinish) {
                 await hooks?.on_finish(context)
-                const normal_res = desc.wrap_result ? do_wrap(result_wrapper, handler_result, context) : handler_result.body
-                finish_process(koa_context, normal_res)
+                finish_process(koa_context, await handler_result.body)
             } else {
                 await hooks?.on_finish(context)
                 const normal_res = desc.wrap_result ? do_wrap(result_wrapper, handler_result, context) : handler_result

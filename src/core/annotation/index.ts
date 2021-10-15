@@ -42,6 +42,25 @@ export {
 } from './trigger'
 
 export {
+    Assertion,
+    Binding,
+    ExchangeAssertion,
+    ExchangeAssertionOptions,
+    ExchangeBinding,
+    QueueAssertion,
+    QueueAssertionOptions,
+    QueueBinding,
+    AssertExchange,
+    AssertQueue,
+    BindExchange,
+    BindQueue,
+    Consume,
+    Produce,
+    ToraProducer,
+} from './amqp'
+
+export {
+    ConsumerFunction,
     AbstractConstructor,
     BasePropertyFunction,
     ClassMeta,
@@ -60,8 +79,12 @@ export {
     PropertyFunction,
     PropertyMeta,
     ProviderTreeNode,
+    PureJSONArray,
+    PureJSONObject,
     ReflectComponent,
     RouterFunction,
+    ToraProducerMeta,
+    ToraProducerOptions,
     ToraFunctionalComponent,
     ToraModuleMeta,
     ToraModuleMetaLike,

@@ -5,6 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+export { ApiParams, PURE_PARAMS } from './api-params'
+export { SessionContext } from './session-context'
+
 export {
     ApiMethod,
     ApiPath,
@@ -21,6 +24,10 @@ export {
     response,
     throw_reasonable,
     crash,
+    InnerFinish,
+    OuterFinish,
+    HttpError,
+    ReasonableError,
 } from './error'
 
 export { ToraServer } from './tora-server'

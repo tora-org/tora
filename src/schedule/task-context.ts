@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Dora } from '../schedule'
+import { Dora } from './dora'
 
 /**
  * 任务执行上下文。

@@ -88,3 +88,5 @@ export {
 } from './gunslinger'
 
 export { TokenUtils } from './token-utils'
+
+export { Deque } from './deque'
