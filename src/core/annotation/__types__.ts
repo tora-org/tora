@@ -53,6 +53,7 @@ interface BaseToraComponentMeta {
 export interface ImportsAndProviders {
     imports?: Array<Constructor<any>>
     providers?: (ProviderDef<any> | Constructor<any>)[]
+    producers?: Constructor<any>[]
 }
 
 export interface ToraModuleOptions extends ImportsAndProviders {
@@ -62,7 +63,6 @@ export interface ToraModuleOptions extends ImportsAndProviders {
 export interface ToraRootOptions extends ImportsAndProviders {
     routers?: Constructor<any>[]
     tasks?: Constructor<any>[]
-    producers?: Constructor<any>[]
     consumers?: Constructor<any>[]
 }
 

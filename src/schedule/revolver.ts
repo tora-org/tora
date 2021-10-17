@@ -5,13 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { Dora } from '../builtin'
 import { Injector, ToraTriggerMeta, TriggerFunction } from '../core'
 import { get_providers } from '../core/collector'
 import { TaskLifeCycle } from '../service/task-life-cycle'
 import { TaskLock } from '../service/task-lock'
 import { TaskDesc } from './__type__'
 import { Bullet } from './bullet'
-import { Dora } from './dora'
 import { TaskContext } from './task-context'
 
 function on_error_or_throw(hooks: TaskLifeCycle | undefined, err: any, context: TaskContext) {

@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { Dora } from '../builtin'
 import { TriggerFunction } from '../core'
-import { Dora } from './dora'
 import { Schedule } from './schedule'
 
 export class Bullet {

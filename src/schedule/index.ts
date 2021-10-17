@@ -12,7 +12,6 @@ export {
     TaskDesc,
 } from './__type__'
 
-export { Dora } from './dora'
 export { Schedule } from './schedule'
 export { Revolver } from './revolver'
 export { TaskContext } from './task-context'

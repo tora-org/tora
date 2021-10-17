@@ -49,7 +49,7 @@ export class MessageQueue {
                     for (const assertion of meta.producer_options?.assertions ?? []) {
                         if (assertion.type === 'exchange') {
                             await channel.assertExchange(assertion.exchange, assertion.exchange_type, assertion.options)
-                        } else {
+                        }else {
                             await channel.assertQueue(assertion.queue, assertion.options)
                         }
                     }

@@ -116,6 +116,7 @@ export {
     Reference,
     Timestamp,
     UUID,
+    Dora,
     JudgementMatcher,
     Path,
     PathValue,
@@ -150,7 +151,6 @@ export {
 } from './helper'
 
 export {
-    Dora,
     Revolver,
     Schedule,
     TaskContext,

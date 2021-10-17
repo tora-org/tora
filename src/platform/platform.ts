@@ -9,7 +9,7 @@ import fs from 'fs'
 import path from 'path'
 import { MessageQueue } from '../amqp'
 import { ConfigData, Timestamp, UUID } from '../builtin'
-import { ClassProvider, Constructor, def2Provider, Injector, ProviderDef, ProviderTreeNode, TokenUtils, ToraFunctionalComponent, ValueProvider } from '../core'
+import { ClassProvider, Constructor, def2Provider, Injector, ProviderDef, ProviderTreeNode, TokenUtils, ToraModuleMetaLike, ValueProvider } from '../core'
 import { ApiMethod, ApiPath, HandlerReturnType, HttpHandlerDescriptor, KoaResponseType, LiteContext, ToraServer } from '../http'
 import { Revolver, TaskDesc } from '../schedule'
 import { Authenticator } from '../service/authenticator'
@@ -122,6 +122,11 @@ export class Platform {
         // 设置默认的内置工具。
         this.root_injector.set_provider(UUID, new ClassProvider(UUID, this.root_injector))
         this.root_injector.set_provider(Timestamp, new ClassProvider(Timestamp, this.root_injector, true))
+
+        // 设置内部注入
+        this.root_injector.set_provider(Revolver, new ValueProvider('Revolver', this.revolver))
+        this.root_injector.set_provider(ToraServer, new ValueProvider('ToraServer', this.server))
+        this.root_injector.set_provider(MessageQueue, new ValueProvider('MessageQueue', this.mq))
     }
 
     /**
@@ -173,28 +178,42 @@ export class Platform {
     /**
      * 直接加载一个包含 routers 的 ToraModule。
      *
-     * @param root_module
+     * @param module
      */
-    bootstrap(root_module: Constructor<any>) {
+    bootstrap(module: Constructor<any>) {
 
-        const root_meta = TokenUtils.ensure_component(root_module, 'ToraRoot', meta => meta && `"bootstrap" can only accept "ToraRoot", not ${meta.type}.`).value
+        const meta = TokenUtils.ComponentMeta(module.prototype).value
+        if (!meta) {
+            throw new Error(`Unknown module "${module.name}".`)
+        }
+
         const sub_injector = Injector.create(this.root_injector)
-        const provider_tree = root_meta.provider_collector?.(sub_injector)
-
         sub_injector.get(Authenticator)?.set_used()
         sub_injector.get(LifeCycle)?.set_used()
         sub_injector.get(CacheProxy)?.set_used()
         sub_injector.get(ResultWrapper)?.set_used()
 
-        root_meta.producers?.forEach(m => this._mount_component(m, 'ToraProducer', sub_injector))
-        root_meta.consumers?.forEach(m => this._mount_component(m, 'ToraConsumer', sub_injector))
-        root_meta.routers?.forEach(m => this._mount_component(m, 'ToraRouter', sub_injector))
-        root_meta.tasks?.forEach(m => this._mount_component(m, 'ToraTrigger', sub_injector))
+        switch (meta.type) {
+            case 'ToraRoot':
+                const provider_tree = meta.provider_collector?.(sub_injector)
 
-        provider_tree?.children.filter(def => !_find_usage(def))
-            .forEach(def => {
-                console.log(`Warning: ${root_module.name} -> ${def?.name} not used.`)
-            })
+                meta.consumers?.forEach(m => this._mount_component(m, 'ToraConsumer', sub_injector))
+                meta.routers?.forEach(m => this._mount_component(m, 'ToraRouter', sub_injector))
+                meta.tasks?.forEach(m => this._mount_component(m, 'ToraTrigger', sub_injector))
+
+                provider_tree?.children.filter(def => !_find_usage(def))
+                    .forEach(def => {
+                        console.log(`Warning: ${module.name} -> ${def?.name} not used.`)
+                    })
+                break
+            case 'ToraRouter':
+            case 'ToraTrigger':
+            case 'ToraConsumer':
+                this._mount_component(module, meta.type, sub_injector)
+                break
+            default:
+                throw Error('not allowed.')
+        }
 
         return this
     }
@@ -325,29 +344,22 @@ export class Platform {
         return this
     }
 
-    private _mount_component(module: Constructor<any>, as: ToraFunctionalComponent['type'], injector: Injector): void {
+    private _mount_component(module: Constructor<any>, as: ToraModuleMetaLike['type'], injector: Injector): void {
         const component_meta = TokenUtils.ensure_component(module, as).value
-        let provider_tree: ProviderTreeNode | undefined
+        const provider_tree = component_meta.provider_collector?.(injector)
+        if (!injector.has(module)) {
+            injector.set_provider(module, component_meta.provider ?? new ClassProvider(module, injector))
+        }
 
         switch (component_meta.type) {
             case 'ToraRouter':
-                provider_tree = component_meta.provider_collector?.(injector)
-                injector.set_provider(module, component_meta.provider ?? new ClassProvider(module, injector))
-                this.server.load(component_meta, injector)
+                injector.get(ToraServer)?.create().load(component_meta, injector)
                 break
             case 'ToraTrigger':
-                provider_tree = component_meta.provider_collector?.(injector)
-                injector.set_provider(module, component_meta.provider ?? new ClassProvider(module, injector))
-                this.revolver.load(component_meta, injector)
+                injector.get(Revolver)?.create().load(component_meta, injector)
                 break
             case 'ToraConsumer':
-                provider_tree = component_meta.provider_collector?.(injector)
-                injector.set_provider(module, component_meta.provider ?? new ClassProvider(module, injector))
-                this.mq.load(component_meta, injector)
-                break
-            case 'ToraProducer':
-                injector.set_provider(module, component_meta.provider ?? new ClassProvider(module, injector))
-                this.mq.load(component_meta, injector)
+                injector.get(MessageQueue)?.create().load(component_meta, injector)
                 break
         }
 

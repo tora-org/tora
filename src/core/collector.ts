@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) Plank Root.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+import { MessageQueue } from '../amqp'
 import {
     ComponentMeta,
     Constructor,
@@ -59,7 +67,6 @@ export function make_collector(type: ComponentMeta['type'] | 'ToraModuleLike' | 
     }
 }
 
-
 /**
  * @private
  *
@@ -74,6 +81,12 @@ export function make_provider_collector(constructor: Constructor<any>, options?:
             const module_meta = TokenUtils.ensure_component(md, 'ToraModuleLike').value
             return module_meta.provider_collector(injector)
         }) ?? []
+
+        options?.producers?.forEach(m => {
+            const component_meta = TokenUtils.ensure_component(m, 'ToraProducer').value
+            injector.set_provider(m, component_meta.provider ?? new ClassProvider(m, injector))
+            injector.get(MessageQueue)?.create().load(component_meta, injector)
+        })
 
         const providers: (Provider<any> | undefined)[] = [
             ...def2Provider([...options?.providers ?? []] as (ProviderDef<any> | Constructor<any>)[], injector) ?? []

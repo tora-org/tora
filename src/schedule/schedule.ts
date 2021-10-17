@@ -5,11 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { Dora } from '../builtin'
 import { FieldType, InnerOptions, ScheduleOptions } from './__type__'
 import { parse_field } from './cron/cron-item-parser'
 import { CronMonth } from './cron/cron-month'
 import { ParsedFields } from './cron/parsed-fields'
-import { Dora } from './dora'
 
 /**
  * @category Schedule
