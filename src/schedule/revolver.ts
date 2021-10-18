@@ -6,8 +6,7 @@
  */
 
 import { Dora } from '../builtin'
-import { Injector, ToraTriggerMeta, TriggerFunction } from '../core'
-import { get_providers } from '../core/collector'
+import { get_providers, Injector, ToraTriggerMeta, TriggerFunction } from '../core'
 import { TaskLifeCycle } from '../service/task-life-cycle'
 import { TaskLock } from '../service/task-lock'
 import { TaskDesc } from './__type__'
@@ -153,7 +152,7 @@ export class Revolver {
     }
 
     load(meta: ToraTriggerMeta, injector: Injector): void {
-        meta.function_collector(injector)
+        meta.function_collector()
             .filter((f) => f.type === 'ToraTriggerFunction')
             .forEach(trigger_function => {
                 if (!trigger_function.meta?.disabled) {
@@ -161,7 +160,6 @@ export class Revolver {
                     this._fill(task_handler, trigger_function)
                 }
             })
-
     }
 
     destroy() {

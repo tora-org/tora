@@ -6,8 +6,7 @@
  */
 
 import { Request } from 'koa'
-import { Injector, RouterFunction, ToraRouterMeta } from '../core'
-import { get_providers } from '../core/collector'
+import { get_providers, Injector, RouterFunction, ToraRouterMeta } from '../core'
 import { Authenticator } from '../service/authenticator'
 import { CacheProxy } from '../service/cache-proxy'
 import { LifeCycle } from '../service/life-cycle'

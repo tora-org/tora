@@ -5,8 +5,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { ConsumerFunction, ClassMeta, ComponentMeta, Constructor, PropertyFunction, PropertyMeta, ReflectComponent, RouterFunction, ToraModuleMetaLike, TriggerFunction } from './annotation'
-import { ProducerFunction } from './annotation/__types__'
+import {
+    ClassMeta,
+    ComponentMeta,
+    Constructor,
+    ConsumerFunction,
+    ProducerFunction,
+    PropertyFunction,
+    PropertyMeta,
+    ReflectComponent,
+    RouterFunction,
+    ToraModuleMetaLike,
+    TriggerFunction,
+} from './annotation'
+import { Deque } from './deque'
 import { Meta, MetaWrapper } from './meta-tool'
 import { DI_TOKEN } from './token'
 
@@ -60,7 +72,7 @@ export function init_producer_function<T extends (...args: any) => any>(prototyp
         descriptor: {  },
         property: property,
         handler: (() => null) as any,
-        produce_cache: []
+        produce_cache: new Deque()
     }
     TokenUtils.Touched(prototype).ensure_default().do(touched => {
         touched[property] = producer_function

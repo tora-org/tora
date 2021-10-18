@@ -5,16 +5,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Channel } from 'amqplib'
-import { Options } from 'amqplib/properties'
+import { Channel, Options } from 'amqplib'
 import { Deque } from '../core'
 
 export class ChannelWrapper {
 
-    private channel_drain?: boolean = true
-    private channel_publish_queue: Deque<[exchange: string, routingKey: string, content: Buffer, options?: Options.Publish]> = new Deque()
     public channel_error?: any
     public channel: Channel | undefined
+    private channel_drain?: boolean = true
+    private channel_publish_queue: Deque<[exchange: string, routingKey: string, content: Buffer, options?: Options.Publish]> = new Deque()
 
     constructor(
         channel: Channel

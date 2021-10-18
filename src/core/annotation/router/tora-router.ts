@@ -5,10 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { make_collector, make_provider_collector } from '../../collector'
+import { load_component, make_provider_collector, set_touched } from '../../collector'
 import { IGunslinger } from '../../gunslinger'
 import { TokenUtils } from '../../token-utils'
-import { Constructor, DecoratorClass, ToraRouterOptions } from '../__types__'
+import { Constructor, DecoratorClass, RouterFunction, ToraRouterOptions } from '../__types__'
 
 /**
  * 把一个类标记为 Tora.ToraRouter，并配置元数据。
@@ -26,8 +26,13 @@ export function ToraRouter(path: `/${string}`, options?: ToraRouterOptions): Dec
             name: constructor.name,
             router_path: path,
             router_options: options,
-            function_collector: make_collector('ToraRouter', 'ToraRouterFunction', constructor),
             provider_collector: make_provider_collector(constructor, options),
+            on_load: (meta, injector) => load_component(constructor, injector, meta, 'œœ-ToraRouter'),
+            function_collector: () => {
+                const touched = set_touched(constructor).value
+                return Object.values(touched)
+                    .filter((item): item is RouterFunction<any> => item.type === 'ToraRouterFunction')
+            },
             path_replacement: {},
         })
 

@@ -6,15 +6,15 @@
  */
 
 import { MessageFields, MessageProperties } from './__types__'
-import { PureJSONObject } from '../core/annotation'
+import { PureJSONObject } from '../core'
 
 export const PURE_LETTER = 'PURE_LETTER'
 
 export class Letter<T extends PureJSONObject> {
     constructor(
         public readonly content: T,
-        public readonly fields: MessageFields,
-        public readonly properties: MessageProperties,
+        public readonly fields: Readonly<MessageFields>,
+        public readonly properties: Readonly<MessageProperties>,
     ) {
     }
 }

@@ -5,14 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { connect, Connection, Options } from 'amqplib'
-import { ConsumeMessage } from 'amqplib/properties'
-
-import { Injector } from '../core'
-import { ConsumerFunction, ToraProducerMeta } from '../core/annotation'
-import { ProducerFunction, ToraConsumerMeta } from '../core/annotation/__types__'
-import { ProduceOptions } from '../core/annotation/amqp/__types__'
-import { get_providers } from '../core/collector'
+import { connect, Connection, ConsumeMessage, Options } from 'amqplib'
+import { ConsumerFunction, get_providers, Injector, ProduceOptions, ProducerFunction, ToraConsumerMeta, ToraProducerMeta } from '../core'
 import { ChannelWrapper } from './channel-wrapper'
 import { Ack, Dead, Requeue } from './error'
 import { Letter, PURE_LETTER } from './letter'
@@ -23,6 +17,8 @@ export class MessageQueue {
     public readonly load_cache: Array<[meta: ToraConsumerMeta | ToraProducerMeta, injector: Injector]> = []
     public url?: string | Options.Connect
     public socket_options?: any
+    private interval_num?: NodeJS.Timeout
+    private loading = false
 
     set_config(url: string | Options.Connect, socket_options?: any) {
         this.url = url
@@ -43,45 +39,59 @@ export class MessageQueue {
         }
         connect(this.url, this.socket_options).then(async conn => {
             this.connection = conn
-            for (const [meta, injector] of this.load_cache) {
-                const channel = await conn.createChannel()
-                if (meta.type === 'ToraProducer') {
-                    for (const assertion of meta.producer_options?.assertions ?? []) {
-                        if (assertion.type === 'exchange') {
-                            await channel.assertExchange(assertion.exchange, assertion.exchange_type, assertion.options)
-                        }else {
-                            await channel.assertQueue(assertion.queue, assertion.options)
-                        }
+            if (!this.interval_num) {
+                this.interval_num = setInterval(async () => {
+                    if (this.loading || !this.connection || !this.load_cache.length) {
+                        return
                     }
-                    for (const binding of meta.producer_options?.bindings ?? []) {
-                        if (binding.type === 'exchange_to_exchange') {
-                            await channel.bindExchange(binding.destination, binding.source, binding.routing_key)
-                        } else {
-                            await channel.bindQueue(binding.queue, binding.exchange, binding.routing_key)
-                        }
+                    this.loading = true
+                    while (this.load_cache.length) {
+                        const [meta, injector] = this.load_cache.pop()!
+                        await this._load(conn, meta, injector)
                     }
-                    const function_list = meta.function_collector(injector)
-                        .filter((func) => func.type === 'ToraProducerFunction')
-                    for (const func of function_list) {
-                        if (!func.meta?.disabled) {
-                            await this.put_producer(conn, func)
-                        }
-                    }
-                } else {
-                    const function_list = meta.function_collector(injector)
-                        .filter((func) => func.type === 'ToraConsumerFunction')
-                    for (const func of function_list) {
-                        if (!func.meta?.disabled) {
-                            await this.put_consumer(conn, injector, func, [Letter, PURE_LETTER])
-                        }
-                    }
-                }
-                await channel.close()
+                    this.loading = false
+                }, 100)
             }
         }).catch(err => {
             console.log(err)
             process.exit(255)
         })
+    }
+
+    private async _load(conn: Connection, meta: ToraProducerMeta | ToraConsumerMeta, injector: Injector) {
+        const channel = await conn.createChannel()
+        if (meta.type === 'ToraProducer') {
+            for (const assertion of meta.producer_options?.assertions ?? []) {
+                if (assertion.type === 'exchange') {
+                    await channel.assertExchange(assertion.exchange, assertion.exchange_type, assertion.options)
+                } else {
+                    await channel.assertQueue(assertion.queue, assertion.options)
+                }
+            }
+            for (const binding of meta.producer_options?.bindings ?? []) {
+                if (binding.type === 'exchange_to_exchange') {
+                    await channel.bindExchange(binding.destination, binding.source, binding.routing_key)
+                } else {
+                    await channel.bindQueue(binding.queue, binding.exchange, binding.routing_key)
+                }
+            }
+            const function_list = meta.function_collector()
+                .filter((func) => func.type === 'ToraProducerFunction')
+            for (const func of function_list) {
+                if (!func.meta?.disabled) {
+                    await this.put_producer(conn, func)
+                }
+            }
+        } else {
+            const function_list = meta.function_collector()
+                .filter((func) => func.type === 'ToraConsumerFunction')
+            for (const func of function_list) {
+                if (!func.meta?.disabled) {
+                    await this.put_consumer(conn, injector, func, [Letter, PURE_LETTER])
+                }
+            }
+        }
+        await channel.close()
     }
 
     private async put_producer(conn: Connection, desc: ProducerFunction<any>) {
@@ -103,7 +113,8 @@ export class MessageQueue {
             configurable: true,
             value: producer
         })
-        for (const [msg, options] of desc.produce_cache) {
+        while (desc.produce_cache.length) {
+            const [msg, options] = desc.produce_cache.shift()!
             producer(msg, options)
         }
     }

@@ -44,7 +44,7 @@ export class ToraServer {
     }
 
     load(meta: ToraRouterMeta, injector: Injector): void {
-        meta.function_collector(injector)
+        meta.function_collector()
             .filter((f) => f.type === 'ToraRouterFunction')
             .forEach(f => this._http_handler.load(f, injector, meta))
     }

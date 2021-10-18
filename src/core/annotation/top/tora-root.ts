@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { make_provider_collector } from '../../collector'
+import { _find_usage, make_provider_collector } from '../../collector'
 import { TokenUtils } from '../../token-utils'
 import { DecoratorClass, ToraRootOptions } from '../__types__'
 
@@ -29,6 +29,21 @@ export function ToraRoot(options?: ToraRootOptions): DecoratorClass {
             consumers: options?.consumers,
             producers: options?.producers,
             provider_collector: make_provider_collector(constructor, options),
+            on_load: (meta, injector) => {
+                const provider_tree = meta.provider_collector?.(injector)
+
+                meta.consumers?.map(m => TokenUtils.ensure_component(m, 'ToraConsumer').value)
+                    .forEach(meta => meta.on_load(meta, injector))
+                meta.routers?.map(m => TokenUtils.ensure_component(m, 'ToraRouter').value)
+                    .forEach(meta => meta.on_load(meta, injector))
+                meta.tasks?.map(m => TokenUtils.ensure_component(m, 'ToraTrigger').value)
+                    .forEach(meta => meta.on_load(meta, injector))
+
+                provider_tree?.children.filter(def => !_find_usage(def))
+                    .forEach(def => {
+                        console.log(`Warning: ${meta.name} -> ${def?.name} not used.`)
+                    })
+            }
         })
     }
 }

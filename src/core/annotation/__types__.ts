@@ -8,12 +8,12 @@
 import { ChannelWrapper } from '../../amqp'
 import { Schedule, ScheduleOptions } from '../../schedule'
 import { KeyOfFilterType } from '../../types'
+import { Deque } from '../deque'
 import { Injector } from '../injector'
 import { Meta } from '../meta-tool'
 import { Provider, ProviderDef } from '../provider'
 import { TokenUtils } from '../token-utils'
-import { Assertion, Binding } from './amqp'
-import { ConsumeOptions, ProduceOptions } from './amqp/__types__'
+import { Assertion, Binding, ConsumeOptions, ProduceOptions } from './amqp'
 import ComponentMeta = TokenUtils.ComponentMeta
 
 export type PureJSONArray = Array<PureJSON>
@@ -113,25 +113,29 @@ export interface ToraRouterMeta extends BaseToraModuleMeta {
     router_path: `/${string}`
     router_options?: ToraRouterOptions
     path_replacement: Record<string, string>
-    function_collector: (injector: Injector) => RouterFunction<any>[]
+    function_collector: () => RouterFunction<any>[]
+    on_load: (meta: ToraRouterMeta, injector: Injector) => void
 }
 
 export interface ToraTriggerMeta extends BaseToraModuleMeta {
     type: 'ToraTrigger'
     trigger_options?: ToraTriggerOptions
-    function_collector: (injector: Injector) => TriggerFunction<any>[]
+    function_collector: () => TriggerFunction<any>[]
+    on_load: (meta: ToraTriggerMeta, injector: Injector) => void
 }
 
 export interface ToraProducerMeta extends BaseToraComponentMeta {
     type: 'ToraProducer'
     producer_options?: ToraProducerOptions
-    function_collector: (injector: Injector) => ProducerFunction<any>[]
+    function_collector: () => ProducerFunction<any>[]
+    on_load: (meta: ToraProducerMeta, injector: Injector) => void
 }
 
 export interface ToraConsumerMeta extends BaseToraModuleMeta {
     type: 'ToraConsumer'
     producer_options?: ToraConsumerOptions
-    function_collector: (injector: Injector) => ConsumerFunction<any>[]
+    function_collector: () => ConsumerFunction<any>[]
+    on_load: (meta: ToraConsumerMeta, injector: Injector) => void
 }
 
 export interface ToraRootMeta extends BaseToraModuleMeta {
@@ -140,6 +144,7 @@ export interface ToraRootMeta extends BaseToraModuleMeta {
     tasks?: Constructor<any>[]
     consumers?: Constructor<any>[]
     producers?: Constructor<any>[]
+    on_load: (meta: ToraRootMeta, injector: Injector) => void
 }
 
 export type ToraModuleMetaLike =
@@ -218,7 +223,7 @@ export interface ConsumerFunction<T extends (...args: any) => any> extends BaseP
 export interface ProducerFunction<T extends (...args: any) => any> extends BasePropertyFunction<T> {
     type: 'ToraProducerFunction'
     produce?: { exchange: string, routing_key: string, options: ProduceOptions }
-    produce_cache: [message: any, produce_options?: ProduceOptions][]
+    produce_cache: Deque<[message: any, produce_options?: ProduceOptions]>
     channel_wrapper?: ChannelWrapper
     channel_error?: any
 }

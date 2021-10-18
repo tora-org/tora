@@ -8,5 +8,23 @@
 export { Consume } from './consume'
 export { Produce } from './produce'
 export { ToraProducer } from './tora-producer'
-export { AssertExchange, AssertQueue, BindExchange, BindQueue } from './__lib__'
-export { ExchangeAssertionOptions, Assertion, QueueAssertionOptions, QueueAssertion, ExchangeAssertion, ExchangeBinding, QueueBinding, Binding } from './__types__'
+export { ToraConsumer } from './tora-consumer'
+export {
+    AssertExchange,
+    AssertQueue,
+    BindExchange,
+    BindQueue,
+} from './__lib__'
+export {
+    Assertion,
+    Binding,
+    ConsumeOptions,
+    ExchangeAssertion,
+    ExchangeAssertionOptions,
+    ExchangeBinding,
+    ProduceOptions,
+    Producer,
+    QueueAssertion,
+    QueueAssertionOptions,
+    QueueBinding,
+} from './__types__'

@@ -5,23 +5,23 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { MessageQueue } from '../amqp'
-import {
-    ComponentMeta,
-    Constructor,
-    ConsumerFunction,
-    ImportsAndProviders,
-    PropertyFunction,
-    ProviderTreeNode,
-    RouterFunction,
-    ToraProducerOptions, ToraRouterOptions,
-    ToraTriggerOptions,
-    TriggerFunction
-} from './annotation'
-import { ProducerFunction, ToraConsumerOptions } from './annotation/__types__'
+import { Constructor, ImportsAndProviders, PropertyFunction, ProviderTreeNode, ToraConsumerMeta, ToraProducerMeta, ToraRouterMeta, ToraTriggerMeta } from './annotation'
 import { Injector } from './injector'
 import { ClassProvider, def2Provider, Provider, ProviderDef } from './provider'
 import { TokenUtils } from './token-utils'
+
+/**
+ * @private
+ *
+ * 遍历依赖加载树，查找没有被使用的 Tora.ToraModule。
+ *
+ * @param tree_node
+ * @param indent
+ */
+export function _find_usage(tree_node: ProviderTreeNode | undefined, indent: number = 0): boolean {
+    return Boolean(tree_node?.providers?.find(p => p?.used)
+        || tree_node?.children?.find(t => _find_usage(t, indent + 1)))
+}
 
 export function get_providers(desc: PropertyFunction<any>, injector: Injector, except_list?: any[]): Provider<any>[] {
     return desc.param_types?.map((token: any, i: number) => {
@@ -40,41 +40,39 @@ export function get_providers(desc: PropertyFunction<any>, injector: Injector, e
     }) ?? []
 }
 
-export function mark_touched(constructor: Constructor<any>, instance: any) {
-    return (touched: Record<string, PropertyFunction<any>>) => Object.values(touched).forEach(item => {
-        item.meta = TokenUtils.PropertyMeta(constructor.prototype, item.property).value
-        item.pos = `${constructor.name}.${item.property}`
-        item.handler = item.handler.bind(instance)
-    })
-}
+export function load_component(constructor: Constructor<any>, injector: Injector, meta: ToraRouterMeta, loader: 'œœ-ToraRouter'): void
+export function load_component(constructor: Constructor<any>, injector: Injector, meta: ToraTriggerMeta, loader: 'œœ-ToraTrigger'): void
+export function load_component(constructor: Constructor<any>, injector: Injector, meta: ToraConsumerMeta, loader: 'œœ-ToraConsumer'): void
+export function load_component(constructor: Constructor<any>, injector: Injector, meta: ToraProducerMeta, loader: 'œœ-ToraProducer'): void
+export function load_component(constructor: Constructor<any>, injector: Injector, meta: any, loader: string) {
+    const provider_tree: ProviderTreeNode = meta.provider_collector?.(injector)
 
-export function make_collector(type: 'ToraRouter', func_type: 'ToraRouterFunction', constructor: Constructor<any>, options?: ToraRouterOptions): (injector: Injector) => RouterFunction<any>[]
-export function make_collector(type: 'ToraTrigger', func_type: 'ToraTriggerFunction', constructor: Constructor<any>, options?: ToraTriggerOptions): (injector: Injector) => TriggerFunction<any>[]
-export function make_collector(type: 'ToraProducer', func_type: 'ToraProducerFunction', constructor: Constructor<any>, options?: ToraProducerOptions): (injector: Injector) => ProducerFunction<any>[]
-export function make_collector(type: 'ToraConsumer', func_type: 'ToraConsumerFunction', constructor: Constructor<any>, options?: ToraConsumerOptions): (injector: Injector) => ConsumerFunction<any>[]
-export function make_collector(type: ComponentMeta['type'] | 'ToraModuleLike' | 'ToraComponent', func_type: string, constructor: Constructor<any>) {
-    return (injector: Injector): PropertyFunction<any>[] => {
-        const meta = TokenUtils.ensure_component(constructor, type as any).value
-
-        meta.provider = meta.provider ?? injector.get(constructor) ?? new ClassProvider(constructor, injector)
-        const instance = meta.provider.create()
-        TokenUtils.Instance(constructor).set(instance)
-
-        return TokenUtils.Touched(constructor.prototype)
-            .ensure_default()
-            .do(mark_touched(constructor, instance))
-            .convert(touched => Object.values(touched).filter((item): item is PropertyFunction<any> => item.type === func_type))
+    if (!injector.has(constructor)) {
+        injector.set_provider(constructor, new ClassProvider(constructor, injector))
     }
+    meta.provider = injector.get(constructor)!
+    TokenUtils.Instance(constructor).set(meta.provider.create())
+
+    const token = injector.get<any>(loader)?.create()
+    if (token) {
+        injector.get<any>(token)?.create().load(meta, injector)
+    }
+    provider_tree?.children.filter(def => !_find_usage(def))
+        .forEach(def => {
+            console.log(`Warning: ${constructor.name} -> ${def?.name} not used.`)
+        })
 }
 
-/**
- * @private
- *
- * 加载模块及其子模块，注册 Provider。
- *
- * @param constructor
- * @param options
- */
+export function set_touched(constructor: Constructor<any>) {
+    return TokenUtils.Touched(constructor.prototype)
+        .ensure_default()
+        .do((touched: Record<string, PropertyFunction<any>>) => Object.values(touched).forEach(item => {
+            item.meta = TokenUtils.PropertyMeta(constructor.prototype, item.property).value
+            item.pos = `${constructor.name}.${item.property}`
+            item.handler = item.handler.bind(TokenUtils.Instance(constructor).value)
+        }))
+}
+
 export function make_provider_collector(constructor: Constructor<any>, options?: ImportsAndProviders): (injector: Injector) => ProviderTreeNode {
     return function(injector: Injector) {
         const children = options?.imports?.map(md => {
@@ -83,9 +81,8 @@ export function make_provider_collector(constructor: Constructor<any>, options?:
         }) ?? []
 
         options?.producers?.forEach(m => {
-            const component_meta = TokenUtils.ensure_component(m, 'ToraProducer').value
-            injector.set_provider(m, component_meta.provider ?? new ClassProvider(m, injector))
-            injector.get(MessageQueue)?.create().load(component_meta, injector)
+            const meta = TokenUtils.ensure_component(m, 'ToraProducer').value
+            meta.on_load(meta, injector)
         })
 
         const providers: (Provider<any> | undefined)[] = [

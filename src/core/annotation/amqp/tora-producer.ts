@@ -5,9 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { make_collector } from '../../collector'
+import { load_component, set_touched } from '../../collector'
 import { TokenUtils } from '../../token-utils'
-import { DecoratorClass, ToraProducerOptions } from '../__types__'
+import { DecoratorClass, ProducerFunction, ToraProducerOptions } from '../__types__'
 
 export function ToraProducer(options?: ToraProducerOptions): DecoratorClass {
     return constructor => {
@@ -21,7 +21,12 @@ export function ToraProducer(options?: ToraProducerOptions): DecoratorClass {
             type: 'ToraProducer',
             name: constructor.name,
             producer_options: options,
-            function_collector: make_collector('ToraProducer', 'ToraProducerFunction', constructor),
+            on_load: (meta, injector) => load_component(constructor, injector, meta, 'œœ-ToraProducer'),
+            function_collector: () => {
+                const touched = set_touched(constructor).value
+                return Object.values(touched)
+                    .filter((item): item is ProducerFunction<any> => item.type === 'ToraProducerFunction')
+            },
         })
     }
 }
