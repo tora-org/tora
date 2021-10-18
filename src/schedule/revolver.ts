@@ -156,7 +156,7 @@ export class Revolver {
             .filter((f) => f.type === 'ToraTriggerFunction')
             .forEach(trigger_function => {
                 if (!trigger_function.meta?.disabled) {
-                    const task_handler = this.make_trigger(injector, trigger_function)
+                    const task_handler = this.make_trigger(injector, trigger_function, [TaskContext])
                     this._fill(task_handler, trigger_function)
                 }
             })
@@ -324,6 +324,8 @@ export class Revolver {
             const param_list = provider_list.map((provider: any) => {
                 if (provider === undefined) {
                     return undefined
+                } else if (provider === TaskContext) {
+                    return context
                 } else {
                     return provider.create()
                 }
