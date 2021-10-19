@@ -22,7 +22,7 @@ export interface PureJSONObject {
     [prop: string]: PureJSON
 }
 
-export type PureJSON = null | boolean | number | string | PureJSONObject | PureJSONArray
+export type PureJSON = undefined | null | boolean | number | string | PureJSONObject | PureJSONArray
 
 export type Constructor<T extends object> = new(...args: any[]) => T
 export type AbstractConstructor<T extends object> = abstract new(...args: any[]) => T

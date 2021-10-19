@@ -90,5 +90,4 @@ export interface ConsumeOptions {
     arguments?: any
 }
 
-
-export type Producer<T extends PureJSONObject> = (message: T, options?: ProduceOptions) => void
+export type Producer<T> = (message: Record<keyof T, T[keyof T]> extends PureJSONObject ? T : never, options?: ProduceOptions) => void
