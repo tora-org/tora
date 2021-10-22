@@ -5,6 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import { Authenticator } from '../service/authenticator'
+import { CacheProxy } from '../service/cache-proxy'
+import { LifeCycle } from '../service/life-cycle'
+import { ResultWrapper } from '../service/result-wrapper'
 import { Constructor, ImportsAndProviders, PropertyFunction, ProviderTreeNode, ToraConsumerMeta, ToraProducerMeta, ToraRouterMeta, ToraTriggerMeta } from './annotation'
 import { Injector } from './injector'
 import { ClassProvider, def2Provider, Provider, ProviderDef } from './provider'
@@ -46,6 +50,13 @@ export function load_component(constructor: Constructor<any>, injector: Injector
 export function load_component(constructor: Constructor<any>, injector: Injector, meta: ToraProducerMeta, loader: 'œœ-ToraProducer'): void
 export function load_component(constructor: Constructor<any>, injector: Injector, meta: any, loader: string) {
     const provider_tree: ProviderTreeNode = meta.provider_collector?.(injector)
+
+    if (loader === 'œœ-ToraRouter') {
+        injector.get(Authenticator)?.set_used()
+        injector.get(LifeCycle)?.set_used()
+        injector.get(CacheProxy)?.set_used()
+        injector.get(ResultWrapper)?.set_used()
+    }
 
     if (!injector.has(constructor)) {
         injector.set_provider(constructor, new ClassProvider(constructor, injector))

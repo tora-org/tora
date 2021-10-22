@@ -180,10 +180,6 @@ export class Platform {
         }
 
         const sub_injector = Injector.create(this.root_injector)
-        sub_injector.get(Authenticator)?.set_used()
-        sub_injector.get(LifeCycle)?.set_used()
-        sub_injector.get(CacheProxy)?.set_used()
-        sub_injector.get(ResultWrapper)?.set_used()
 
         switch (meta.type) {
             case 'ToraRoot':
