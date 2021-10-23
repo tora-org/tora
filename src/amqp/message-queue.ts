@@ -6,6 +6,7 @@
  */
 
 import { connect, Connection, ConsumeMessage, Options } from 'amqplib'
+import EventEmitter from 'events'
 import { ConsumerFunction, get_providers, Injector, ProduceOptions, ProducerFunction, ToraConsumerMeta, ToraProducerMeta } from '../core'
 import { ChannelWrapper } from './channel-wrapper'
 import { Ack, Dead, Requeue } from './error'
@@ -15,6 +16,7 @@ export class MessageQueue {
 
     public connection?: Connection
     public readonly load_cache: Array<[meta: ToraConsumerMeta | ToraProducerMeta, injector: Injector]> = []
+    public readonly emitter = new EventEmitter()
     public url?: string | Options.Connect
     public socket_options?: any
     private interval_num?: NodeJS.Timeout
@@ -37,8 +39,15 @@ export class MessageQueue {
         if (!this.url) {
             return
         }
-        connect(this.url, this.socket_options).then(async conn => {
+        const url = this.url
+        connect(url, this.socket_options).then(async conn => {
             this.connection = conn
+            conn.on('error', () => {
+                connect(url, this.socket_options).then(conn => {
+                    this.connection = conn
+                    this.emitter.emit('reconnected')
+                })
+            })
             if (!this.interval_num) {
                 this.interval_num = setInterval(async () => {
                     if (this.loading || !this.connection || !this.load_cache.length) {
@@ -79,7 +88,7 @@ export class MessageQueue {
                 .filter((func) => func.type === 'ToraProducerFunction')
             for (const func of function_list) {
                 if (!func.meta?.disabled) {
-                    await this.put_producer(conn, func)
+                    await this.put_producer(func)
                 }
             }
         } else {
@@ -87,23 +96,20 @@ export class MessageQueue {
                 .filter((func) => func.type === 'ToraConsumerFunction')
             for (const func of function_list) {
                 if (!func.meta?.disabled) {
-                    await this.put_consumer(conn, injector, func, [Letter, PURE_LETTER])
+                    await this.put_consumer(injector, func, [Letter, PURE_LETTER])
                 }
             }
         }
         await channel.close()
     }
 
-    private async put_producer(conn: Connection, desc: ProducerFunction<any>) {
+    private async put_producer(desc: ProducerFunction<any>) {
         const produce = desc.produce
         if (!produce) {
             throw new Error('produce is empty')
         }
-        const channel_wrapper = new ChannelWrapper(await conn.createChannel())
+        const channel_wrapper = new ChannelWrapper(this)
         const producer = (message: any, options?: ProduceOptions): void => {
-            if (!channel_wrapper?.channel) {
-                throw new Error(channel_wrapper.channel_error?.message ?? 'channel closed.')
-            }
             const o = options ? { ...produce.options, ...options } : produce.options
             channel_wrapper?.publish(produce.exchange, produce.routing_key, Buffer.from(JSON.stringify(message)), o)
         }
@@ -119,13 +125,13 @@ export class MessageQueue {
         }
     }
 
-    private async put_consumer(conn: Connection, injector: Injector, desc: ConsumerFunction<any>, except_list?: any[]): Promise<void> {
+    private async put_consumer(injector: Injector, desc: ConsumerFunction<any>, except_list?: any[]): Promise<void> {
 
         const consume = desc.consume
         if (!consume) {
             throw new Error('consume is empty')
         }
-        const channel_wrapper = new ChannelWrapper(await conn.createChannel())
+        const channel_wrapper = new ChannelWrapper(this)
         const provider_list = get_providers(desc, injector, except_list)
 
         const on_message = async function(msg: ConsumeMessage | null): Promise<void> {
@@ -147,20 +153,20 @@ export class MessageQueue {
 
             try {
                 await desc.handler(...param_list)
-                channel_wrapper?.channel?.ack(msg)
+                channel_wrapper.channel?.ack(msg)
             } catch (reason) {
                 if (reason instanceof Ack) {
-                    channel_wrapper?.channel?.ack(msg)
+                    channel_wrapper.channel?.ack(msg)
                 } else if (reason instanceof Requeue) {
-                    channel_wrapper?.channel?.reject(msg)
+                    channel_wrapper.channel?.reject(msg)
                 } else if (reason instanceof Dead) {
-                    channel_wrapper?.channel?.reject(msg, false)
+                    channel_wrapper.channel?.reject(msg, false)
                 } else {
-                    channel_wrapper?.channel?.reject(msg)
+                    channel_wrapper.channel?.reject(msg)
                 }
             }
         }
 
-        channel_wrapper?.channel?.consume(consume.queue, msg => on_message(msg).catch(e => console.log('catch', e)), consume.options)
+        channel_wrapper.consume(consume.queue, msg => on_message(msg).catch(e => console.log('catch', e)), consume.options)
     }
 }
