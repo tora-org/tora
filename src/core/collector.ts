@@ -49,29 +49,31 @@ export function load_component(constructor: Constructor<any>, injector: Injector
 export function load_component(constructor: Constructor<any>, injector: Injector, meta: ToraConsumerMeta, loader: 'œœ-ToraConsumer'): void
 export function load_component(constructor: Constructor<any>, injector: Injector, meta: ToraProducerMeta, loader: 'œœ-ToraProducer'): void
 export function load_component(constructor: Constructor<any>, injector: Injector, meta: any, loader: string) {
-    const provider_tree: ProviderTreeNode = meta.provider_collector?.(injector)
-
-    if (loader === 'œœ-ToraRouter') {
-        injector.get(Authenticator)?.set_used()
-        injector.get(LifeCycle)?.set_used()
-        injector.get(CacheProxy)?.set_used()
-        injector.get(ResultWrapper)?.set_used()
-    }
 
     if (!injector.has(constructor)) {
-        injector.set_provider(constructor, new ClassProvider(constructor, injector))
-    }
-    meta.provider = injector.get(constructor)!
-    TokenUtils.Instance(constructor).set(meta.provider.create())
+        const provider_tree: ProviderTreeNode = meta.provider_collector?.(injector)
 
-    const token = injector.get<any>(loader)?.create()
-    if (token) {
-        injector.get<any>(token)?.create().load(meta, injector)
+        if (loader === 'œœ-ToraRouter') {
+            injector.get(Authenticator)?.set_used()
+            injector.get(LifeCycle)?.set_used()
+            injector.get(CacheProxy)?.set_used()
+            injector.get(ResultWrapper)?.set_used()
+        }
+
+        injector.set_provider(constructor, new ClassProvider(constructor, injector))
+        meta.provider = injector.get(constructor)!
+        TokenUtils.Instance(constructor).set(meta.provider.create())
+
+        const token = injector.get<any>(loader)?.create()
+        if (token) {
+            injector.get<any>(token)?.create().load(meta, injector)
+        }
+
+        provider_tree?.children.filter(def => !_find_usage(def))
+            .forEach(def => {
+                console.log(`Warning: ${constructor.name} -> ${def?.name} not used.`)
+            })
     }
-    provider_tree?.children.filter(def => !_find_usage(def))
-        .forEach(def => {
-            console.log(`Warning: ${constructor.name} -> ${def?.name} not used.`)
-        })
 }
 
 export function set_touched(constructor: Constructor<any>) {

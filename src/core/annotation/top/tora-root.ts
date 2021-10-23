@@ -6,6 +6,7 @@
  */
 
 import { _find_usage, make_provider_collector } from '../../collector'
+import { ClassProvider } from '../../provider'
 import { TokenUtils } from '../../token-utils'
 import { DecoratorClass, ToraRootOptions } from '../__types__'
 
@@ -30,19 +31,26 @@ export function ToraRoot(options?: ToraRootOptions): DecoratorClass {
             producers: options?.producers,
             provider_collector: make_provider_collector(constructor, options),
             on_load: (meta, injector) => {
-                const provider_tree = meta.provider_collector?.(injector)
 
-                meta.consumers?.map(m => TokenUtils.ensure_component(m, 'ToraConsumer').value)
-                    .forEach(meta => meta.on_load(meta, injector))
-                meta.routers?.map(m => TokenUtils.ensure_component(m, 'ToraRouter').value)
-                    .forEach(meta => meta.on_load(meta, injector))
-                meta.tasks?.map(m => TokenUtils.ensure_component(m, 'ToraTrigger').value)
-                    .forEach(meta => meta.on_load(meta, injector))
+                if (!injector.has(constructor)) {
+                    const provider_tree = meta.provider_collector?.(injector)
 
-                provider_tree?.children.filter(def => !_find_usage(def))
-                    .forEach(def => {
-                        console.log(`Warning: ${meta.name} -> ${def?.name} not used.`)
-                    })
+                    injector.set_provider(constructor, new ClassProvider(constructor, injector))
+                    meta.provider = injector.get(constructor)!
+                    TokenUtils.Instance(constructor).set(meta.provider.create())
+
+                    meta.consumers?.map(m => TokenUtils.ensure_component(m, 'ToraConsumer').value)
+                        .forEach(meta => meta.on_load(meta, injector))
+                    meta.routers?.map(m => TokenUtils.ensure_component(m, 'ToraRouter').value)
+                        .forEach(meta => meta.on_load(meta, injector))
+                    meta.tasks?.map(m => TokenUtils.ensure_component(m, 'ToraTrigger').value)
+                        .forEach(meta => meta.on_load(meta, injector))
+
+                    provider_tree?.children.filter(def => !_find_usage(def))
+                        .forEach(def => {
+                            console.log(`Warning: ${meta.name} -> ${def?.name} not used.`)
+                        })
+                }
             }
         })
     }
