@@ -109,9 +109,9 @@ export class MessageQueue {
             throw new Error('produce is empty')
         }
         const channel_wrapper = new ChannelWrapper(this)
-        const producer = (message: any, options?: ProduceOptions): void => {
+        const producer = (message: any, options?: ProduceOptions): Promise<void> => {
             const o = options ? { ...produce.options, ...options } : produce.options
-            channel_wrapper?.publish(produce.exchange, produce.routing_key, Buffer.from(JSON.stringify(message)), o)
+            return channel_wrapper.publish(produce.exchange, produce.routing_key, Buffer.from(JSON.stringify(message)), o)
         }
         Object.defineProperty(desc.prototype, desc.property, {
             writable: true,
@@ -120,8 +120,9 @@ export class MessageQueue {
             value: producer
         })
         while (desc.produce_cache.length) {
-            const [msg, options] = desc.produce_cache.shift()!
-            producer(msg, options)
+            const [msg, options, resolve, reject] = desc.produce_cache.shift()!
+            const o = options ? { ...produce.options, ...options } : produce.options
+            channel_wrapper.pure_publish(produce.exchange, produce.routing_key, Buffer.from(JSON.stringify(msg)), o, resolve, reject)
         }
     }
 

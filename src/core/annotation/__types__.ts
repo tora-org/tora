@@ -223,7 +223,7 @@ export interface ConsumerFunction<T extends (...args: any) => any> extends BaseP
 export interface ProducerFunction<T extends (...args: any) => any> extends BasePropertyFunction<T> {
     type: 'ToraProducerFunction'
     produce?: { exchange: string, routing_key: string, options: ProduceOptions }
-    produce_cache: Deque<[message: any, produce_options?: ProduceOptions]>
+    produce_cache: Deque<[message: any, produce_options: ProduceOptions | undefined, resolve: (data: any) => void, reject: (err: any) => void]>
     channel_wrapper?: ChannelWrapper
     channel_error?: any
 }

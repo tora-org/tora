@@ -5,17 +5,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Channel, Connection, ConsumeMessage, Options } from 'amqplib'
+import { ConfirmChannel, Connection, ConsumeMessage, Options } from 'amqplib'
+import { Replies } from 'amqplib/properties'
 import EventEmitter from 'events'
 import { Deque } from '../core'
 
 type ConsumeArguments = [queue: string, on_message: (msg: ConsumeMessage | null) => void, options?: Options.Consume]
-type PublishArguments = [exchange: string, routingKey: string, content: Buffer, options?: Options.Publish]
+type PublishArguments = [exchange: string, routingKey: string, content: Buffer, options: Options.Publish, callback: (err: any, ok: Replies.Empty) => void]
 
 export class ChannelWrapper {
 
     public channel_error?: any
-    public channel: Channel | undefined
+    public channel: ConfirmChannel | undefined
     private channel_drain?: boolean = true
     private channel_publish_queue: Deque<PublishArguments> = new Deque()
     private consumers: Map<ConsumeArguments, string | null> = new Map()
@@ -29,7 +30,7 @@ export class ChannelWrapper {
 
     recreate_channel() {
         this.consumers.forEach((_, key) => this.consumers.set(key, null))
-        this.wrapper.connection?.createChannel().then(channel => {
+        this.wrapper.connection?.createConfirmChannel().then(channel => {
             if (!channel) {
                 return
             }
@@ -59,11 +60,18 @@ export class ChannelWrapper {
 
     }
 
-    publish(exchange: string, routing_key: string, content: Buffer, options?: Options.Publish): void {
+    publish(exchange: string, routing_key: string, content: Buffer, options?: Options.Publish): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            options = options ?? {}
+            this.pure_publish(exchange, routing_key, content, options, resolve, reject)
+        })
+    }
+
+    pure_publish(exchange: string, routing_key: string, content: Buffer, options: Options.Publish, resolve: (data?: any) => void, reject: (err: any) => void): void {
         if (!this.channel || !this.channel_drain) {
-            this.channel_publish_queue.push([exchange, routing_key, content, options])
+            this.channel_publish_queue.push([exchange, routing_key, content, options, err => err === null ? resolve() : reject(err)])
         } else {
-            this.channel_drain = this.channel.publish(exchange, routing_key, content, options)
+            this.channel_drain = this.channel.publish(exchange, routing_key, content, options, err => err === null ? resolve() : reject(err))
         }
     }
 

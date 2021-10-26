@@ -19,8 +19,10 @@ export function Produce<T extends object, K extends KeyOfFilterType<T, Producer<
                     throw new Error('Duplicated decorator "Produce".')
                 } else {
                     amqp_function.produce = { exchange, routing_key, options: options ?? {} }
-                    const producer: Producer<any> = (message: any, produce_options?: ProduceOptions): void => {
-                        amqp_function.produce_cache.push([message, produce_options])
+                    const producer: Producer<any> = (message: any, produce_options?: ProduceOptions): Promise<void> => {
+                        return new Promise((resolve, reject) => {
+                            amqp_function.produce_cache.push([message, produce_options, resolve, reject])
+                        })
                     }
                     Object.defineProperty(prototype, prop, {
                         writable: true,
