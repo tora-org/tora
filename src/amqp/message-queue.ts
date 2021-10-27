@@ -15,7 +15,8 @@ import { Letter, PURE_LETTER } from './letter'
 export class MessageQueue {
 
     public connection?: Connection
-    public readonly load_cache: Array<[meta: ToraConsumerMeta | ToraProducerMeta, injector: Injector]> = []
+    public readonly consumer_cache: Array<[meta: ToraConsumerMeta, injector: Injector]> = []
+    public readonly producer_cache: Array<[meta: ToraProducerMeta, injector: Injector]> = []
     public readonly emitter = new EventEmitter()
     public url?: string | Options.Connect
     public socket_options?: any
@@ -32,7 +33,11 @@ export class MessageQueue {
     }
 
     load(meta: ToraProducerMeta | ToraConsumerMeta, injector: Injector) {
-        this.load_cache.push([meta, injector])
+        if (meta.type === 'ToraConsumer') {
+            this.consumer_cache.push([meta, injector])
+        } else {
+            this.producer_cache.push([meta, injector])
+        }
     }
 
     start() {
@@ -50,12 +55,16 @@ export class MessageQueue {
             })
             if (!this.interval_num) {
                 this.interval_num = setInterval(async () => {
-                    if (this.loading || !this.connection || !this.load_cache.length) {
+                    if (this.loading || !this.connection || !this.consumer_cache.length) {
                         return
                     }
                     this.loading = true
-                    while (this.load_cache.length) {
-                        const [meta, injector] = this.load_cache.pop()!
+                    while (this.producer_cache.length) {
+                        const [meta, injector] = this.producer_cache.pop()!
+                        await this._load(conn, meta, injector)
+                    }
+                    while (this.consumer_cache.length) {
+                        const [meta, injector] = this.consumer_cache.pop()!
                         await this._load(conn, meta, injector)
                     }
                     this.loading = false
