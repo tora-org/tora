@@ -55,7 +55,10 @@ export class MessageQueue {
             })
             if (!this.interval_num) {
                 this.interval_num = setInterval(async () => {
-                    if (this.loading || !this.connection || !this.consumer_cache.length) {
+                    if (this.loading || !this.connection) {
+                        return
+                    }
+                    if (!this.producer_cache.length && !this.consumer_cache.length) {
                         return
                     }
                     this.loading = true
