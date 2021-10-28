@@ -298,6 +298,7 @@ export class Platform {
         this.root_injector.emit('tora-destroy')
         this.revolver.destroy()
         this.server.destroy()
+        this.mq.destroy()
         return this
     }
 

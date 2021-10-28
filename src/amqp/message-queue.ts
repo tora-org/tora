@@ -22,6 +22,7 @@ export class MessageQueue {
     public socket_options?: any
     private interval_num?: NodeJS.Timeout
     private loading = false
+    private destroyed = false
 
     set_config(url: string | Options.Connect, socket_options?: any) {
         this.url = url
@@ -29,6 +30,7 @@ export class MessageQueue {
     }
 
     destroy() {
+        this.destroyed = true
         this.connection?.close()
     }
 
@@ -48,10 +50,12 @@ export class MessageQueue {
         connect(url, this.socket_options).then(async conn => {
             this.connection = conn
             conn.on('error', () => {
-                connect(url, this.socket_options).then(conn => {
-                    this.connection = conn
-                    this.emitter.emit('reconnected')
-                })
+                if (!this.destroyed) {
+                    connect(url, this.socket_options).then(conn => {
+                        this.connection = conn
+                        this.emitter.emit('reconnected')
+                    })
+                }
             })
             if (!this.interval_num) {
                 this.interval_num = setInterval(async () => {
