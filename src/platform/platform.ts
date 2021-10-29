@@ -10,6 +10,7 @@ import path from 'path'
 import { MessageQueue } from '../amqp'
 import { ConfigData, Timestamp, UUID } from '../builtin'
 import { ClassProvider, Constructor, def2Provider, Injector, ProviderDef, TokenUtils, ValueProvider } from '../core'
+import { Stranger } from '../core/stranger'
 import { ApiMethod, ApiPath, HandlerReturnType, HttpHandlerDescriptor, KoaResponseType, LiteContext, ToraServer } from '../http'
 import { Revolver, TaskDesc } from '../schedule'
 import { Authenticator } from '../service/authenticator'
@@ -99,6 +100,7 @@ export class Platform {
         this.started_at = new Date().getTime()
 
         // 设置默认的内置 Provider，如果没有另外设置 Provider 时，查找结果为 null，而不会查找到 NullInjector。
+        this.root_injector.set_provider(Stranger, new ValueProvider('Stranger', new Stranger()))
         this.root_injector.set_provider(Authenticator, new ValueProvider('Authenticator', null))
         this.root_injector.set_provider(CacheProxy, new ValueProvider('CacheProxy', null))
         this.root_injector.set_provider(LifeCycle, new ValueProvider('LifeCycle', null))
@@ -294,12 +296,14 @@ export class Platform {
         return this
     }
 
-    destroy() {
+    async destroy(): Promise<void> {
         this.root_injector.emit('tora-destroy')
-        this.revolver.destroy()
-        this.server.destroy()
-        this.mq.destroy()
-        return this
+        await this.root_injector.get(Stranger)?.create()?.wait_all_quit()
+        await Promise.all([
+            this.revolver.destroy(),
+            this.server.destroy(),
+            this.mq.destroy(),
+        ])
     }
 
     private _load_config(data?: string | ToraConfigSchema | (() => ToraConfigSchema)) {

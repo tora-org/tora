@@ -7,6 +7,7 @@
 
 import { Constructor } from '../annotation'
 import { Injector } from '../injector'
+import { Stranger } from '../stranger'
 import { TokenUtils } from '../token-utils'
 import { Provider } from './__type__'
 
@@ -74,7 +75,13 @@ export class ClassProvider<M extends object> implements Provider<M> {
             .do(meta => {
                 if (meta?.on_destroy) {
                     const destroy_method = meta.on_destroy.value.bind(instance)
-                    this.injector.on('tora-destroy', () => destroy_method())
+                    const stranger = this.injector.get(Stranger)?.create()
+                    const announcer = new Promise<void>(resolve => {
+                        this.injector.on('tora-destroy', () => {
+                            Promise.resolve(destroy_method()).then(() => resolve())
+                        })
+                    })
+                    stranger?.mark(announcer)
                 }
             })
 

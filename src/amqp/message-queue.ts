@@ -15,23 +15,33 @@ import { Letter, PURE_LETTER } from './letter'
 export class MessageQueue {
 
     public connection?: Connection
-    public readonly consumer_cache: Array<[meta: ToraConsumerMeta, injector: Injector]> = []
-    public readonly producer_cache: Array<[meta: ToraProducerMeta, injector: Injector]> = []
     public readonly emitter = new EventEmitter()
+    public readonly channel_collector = new Set<ChannelWrapper>()
     public url?: string | Options.Connect
     public socket_options?: any
+
+    private readonly consumer_cache: Array<[meta: ToraConsumerMeta, injector: Injector]> = []
+    private readonly producer_cache: Array<[meta: ToraProducerMeta, injector: Injector]> = []
     private interval_num?: NodeJS.Timeout
     private loading = false
     private destroyed = false
+
+    constructor() {
+        this.emitter.setMaxListeners(1000)
+    }
 
     set_config(url: string | Options.Connect, socket_options?: any) {
         this.url = url
         this.socket_options = socket_options
     }
 
-    destroy() {
+    async destroy() {
         this.destroyed = true
-        this.connection?.close()
+        await Promise.all(
+            Array.from(this.channel_collector).map(ch => ch.channel?.waitForConfirms())
+        )
+        await this.connection?.close()
+        return
     }
 
     load(meta: ToraProducerMeta | ToraConsumerMeta, injector: Injector) {

@@ -22,15 +22,16 @@ export class ChannelWrapper {
     private consumers: Map<ConsumeArguments, string | null> = new Map()
 
     constructor(
-        private wrapper: { connection?: Connection, emitter: EventEmitter }
+        private parent: { connection?: Connection, emitter: EventEmitter, channel_collector: Set<ChannelWrapper> }
     ) {
-        wrapper.emitter.on('reconnected', () => this.recreate_channel())
+        parent.channel_collector.add(this)
+        parent.emitter.on('reconnected', () => this.recreate_channel())
         this.recreate_channel()
     }
 
     recreate_channel() {
         this.consumers.forEach((_, key) => this.consumers.set(key, null))
-        this.wrapper.connection?.createConfirmChannel().then(channel => {
+        this.parent.connection?.createConfirmChannel().then(channel => {
             if (!channel) {
                 return
             }

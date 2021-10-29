@@ -162,8 +162,9 @@ export class Revolver {
             })
     }
 
-    destroy() {
+    async destroy() {
         clearInterval(this._interval)
+        return
     }
 
     /**
