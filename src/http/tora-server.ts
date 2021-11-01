@@ -79,8 +79,12 @@ export class ToraServer {
     }
 
     async destroy(): Promise<void> {
-        this._server?.close()
-        return
+        return new Promise((resolve, reject) => {
+            if (!this._server) {
+                return resolve()
+            }
+            this._server.close(err => err ? reject(err) : resolve())
+        })
     }
 
     private body_parser: Koa.Middleware<any> = async (ctx: Koa.Context, next: Koa.Next) => {
