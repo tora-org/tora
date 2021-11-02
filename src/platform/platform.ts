@@ -289,7 +289,7 @@ export class Platform {
         console.log(`tora server start at ${new Date().toISOString()}`)
         console.log(`    listen at port ${port}...`)
         this.mq.start()
-        this.server.listen(port, () => {
+        this.server.listen(port, this._config_data?.get('tora.server_options') ?? {}, () => {
             const duration = new Date().getTime() - this.started_at
             console.log(`\ntora server started successfully in ${duration / 1000}s.`)
         })
@@ -299,11 +299,9 @@ export class Platform {
     async destroy(): Promise<void> {
         this.root_injector.emit('tora-destroy')
         await this.root_injector.get(Stranger)?.create()?.wait_all_quit()
-        await Promise.all([
-            this.revolver.destroy(),
-            this.server.destroy(),
-            this.mq.destroy(),
-        ])
+        await this.revolver.destroy()
+        await this.server.destroy()
+        await this.mq.destroy()
     }
 
     private _load_config(data?: string | ToraConfigSchema | (() => ToraConfigSchema)) {

@@ -73,6 +73,9 @@ export interface AMQPConnect {
 export interface ToraConfigSchema {
     tora?: {
         port?: number
+        server_options?: {
+            keepalive_timeout?: number
+        }
         amqp?: {
             url: string | AMQPConnect
             socket_options?: unknown
