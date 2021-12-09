@@ -15,7 +15,7 @@ export class SampleUserService {
             id: this.uuid.create(),
             phone: phone,
             name: name,
-            created_at: new Date().getTime()
+            created_at: Date.now()
         })
     }
 }

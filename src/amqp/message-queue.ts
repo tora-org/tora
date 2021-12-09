@@ -18,6 +18,7 @@ export class MessageQueue {
     public readonly emitter = new EventEmitter()
     public readonly channel_collector = new Set<ChannelWrapper>()
     public url?: string | Options.Connect
+    public prefetch?: number
     public socket_options?: any
 
     private readonly consumer_cache: Array<[meta: ToraConsumerMeta, injector: Injector]> = []
@@ -30,8 +31,9 @@ export class MessageQueue {
         this.emitter.setMaxListeners(1000)
     }
 
-    set_config(url: string | Options.Connect, socket_options?: any) {
+    set_config(url: string | Options.Connect, prefetch?: number, socket_options?: any) {
         this.url = url
+        this.prefetch = prefetch
         this.socket_options = socket_options
     }
 

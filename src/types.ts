@@ -78,6 +78,7 @@ export interface ToraConfigSchema {
         }
         amqp?: {
             url: string | AMQPConnect
+            prefetch?: number
             socket_options?: unknown
         }
     }

@@ -88,6 +88,7 @@ export interface ConsumeOptions {
     exclusive?: boolean
     priority?: number
     arguments?: any
+    prefetch?: number
 }
 
 export type Producer<T> = (message: Record<keyof T, T[keyof T]> extends PureJSONObject ? T : never, options?: ProduceOptions) => Promise<void>

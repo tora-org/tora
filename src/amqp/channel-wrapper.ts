@@ -8,9 +8,9 @@
 import { ConfirmChannel, Connection, ConsumeMessage, Options } from 'amqplib'
 import { Replies } from 'amqplib/properties'
 import EventEmitter from 'events'
-import { Deque } from '../core'
+import { ConsumeOptions, Deque } from '../core'
 
-type ConsumeArguments = [queue: string, on_message: (msg: ConsumeMessage | null) => void, options?: Options.Consume]
+type ConsumeArguments = [queue: string, on_message: (msg: ConsumeMessage | null) => void, options: ConsumeOptions]
 type PublishArguments = [exchange: string, routingKey: string, content: Buffer, options: Options.Publish, callback: (err: any, ok: Replies.Empty) => void]
 
 export class ChannelWrapper {
@@ -22,7 +22,7 @@ export class ChannelWrapper {
     private consumers: Map<ConsumeArguments, string | null> = new Map()
 
     constructor(
-        private parent: { connection?: Connection, emitter: EventEmitter, channel_collector: Set<ChannelWrapper> }
+        private parent: { connection?: Connection, emitter: EventEmitter, channel_collector: Set<ChannelWrapper>, prefetch?: number }
     ) {
         parent.channel_collector.add(this)
         parent.emitter.on('reconnected', () => this.recreate_channel())
@@ -53,7 +53,10 @@ export class ChannelWrapper {
                 if (this.consumers.get(args)) {
                     continue
                 }
-                channel.consume(...args).then(res => {
+                const { prefetch, ...other_options } = args[2]
+                channel.prefetch(prefetch ?? this.parent.prefetch ?? 20).then()
+                const consume_args: ConsumeArguments = [args[0], args[1], other_options]
+                channel.consume(...consume_args).then(res => {
                     this.consumers.set(args, res.consumerTag)
                 })
             }
@@ -76,8 +79,8 @@ export class ChannelWrapper {
         }
     }
 
-    consume(queue: string, on_message: (msg: ConsumeMessage | null) => void, options?: Options.Consume): void {
-        const args: ConsumeArguments = [queue, on_message, options]
+    consume(queue: string, on_message: (msg: ConsumeMessage | null) => void, options?: ConsumeOptions): void {
+        const args: ConsumeArguments = [queue, on_message, options ?? {}]
         this.consumers.set(args, null)
         if (this.channel) {
             this.channel.consume(...args).then(res => this.consumers.set(args, res.consumerTag))

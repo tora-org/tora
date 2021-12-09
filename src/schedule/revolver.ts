@@ -40,7 +40,7 @@ export class Revolver {
 
     constructor() {
         this._interval = setInterval(() => {
-            this._shoot(new Date().getTime())
+            this._shoot(Date.now())
         }, 100)
     }
 
@@ -202,7 +202,7 @@ export class Revolver {
      */
     private renew(bullet: Bullet) {
         delete this._suspended_task[bullet.id]
-        const now = new Date().getTime()
+        const now = Date.now()
         while (bullet.execution.valueOf() < now) {
             bullet.execution = bullet.crontab.next()
         }

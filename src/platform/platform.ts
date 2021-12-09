@@ -97,7 +97,7 @@ export class Platform {
             this._load_config(data)
         }
 
-        this.started_at = new Date().getTime()
+        this.started_at = Date.now()
 
         // 设置默认的内置 Provider，如果没有另外设置 Provider 时，查找结果为 null，而不会查找到 NullInjector。
         this.root_injector.set_provider(Stranger, new ValueProvider('Stranger', new Stranger()))
@@ -290,7 +290,7 @@ export class Platform {
         console.log(`    listen at port ${port}...`)
         this.mq.start()
         this.server.listen(port, this._config_data?.get('tora.server_options') ?? {}, () => {
-            const duration = new Date().getTime() - this.started_at
+            const duration = Date.now() - this.started_at
             console.log(`\ntora server started successfully in ${duration / 1000}s.`)
         })
         return this
@@ -324,7 +324,7 @@ export class Platform {
         }
         const amqp = this._config_data.get('tora.amqp')
         if (amqp) {
-            this.mq.set_config(amqp.url, amqp.socket_options)
+            this.mq.set_config(amqp.url, amqp.prefetch, amqp.socket_options)
         }
         this.root_injector.set_provider(ConfigData, new ValueProvider('ConfigData', this._config_data))
         return this

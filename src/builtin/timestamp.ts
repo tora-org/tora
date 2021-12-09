@@ -18,7 +18,7 @@ import { ToraService } from '../core'
 @ToraService()
 export class Timestamp extends Number {
 
-    private _timestamp = new Date().getTime()
+    private _timestamp = Date.now()
 
     valueOf() {
         return this._timestamp
