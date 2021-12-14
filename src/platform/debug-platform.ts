@@ -8,7 +8,6 @@
 import { AbstractConstructor, Injector, ValueProvider } from '../core'
 import { ToraServer } from '../http'
 import { Revolver } from '../schedule'
-import { ClassMethod } from '../types'
 import { Platform } from './platform'
 
 export class DebugPlatform extends Platform {
@@ -19,6 +18,7 @@ export class DebugPlatform extends Platform {
         this.root_injector.set_provider(Revolver, new ValueProvider('Revolver', this.revolver))
         this.root_injector.set_provider(ToraServer, new ValueProvider('ToraServer', this.server))
     }
+
     /**
      * 暴露 root_injector，允许直接调用服务，一般用于测试
      */
@@ -36,12 +36,12 @@ export class DebugPlatform extends Platform {
     /**
      * 向外暴露指定 ToraService 的一个 method，一般用于测试
      */
-    expose_service_method<T extends object, P extends ClassMethod<T>>(target: AbstractConstructor<T>, prop: P): { (...args: Parameters<T[P]>): ReturnType<T[P]> } {
+    expose_service_method<T extends object, P extends keyof T>(target: AbstractConstructor<T>, prop: P): T[P] extends (...args: any) => any ? { (...args: Parameters<T[P]>): ReturnType<T[P]> } : never {
         const executor = this.root_injector.get(target)?.create()
         if (!executor) {
             return undefined as any
         }
-        const method = executor[prop] as Function
+        const method = executor[prop] as any
         if (typeof method !== 'function') {
             return undefined as any
         }

@@ -75,7 +75,7 @@ export class Dora {
             hourCycle: 'h23',
             timeZone: this.$z,
             timeZoneName: 'short'
-        }).formatToParts(this.$d).forEach(item => {
+        } as any).formatToParts(this.$d).forEach(item => {
             switch (item.type) {
                 case 'year':
                     this.$y = +item.value
