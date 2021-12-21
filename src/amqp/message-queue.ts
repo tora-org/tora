@@ -54,6 +54,24 @@ export class MessageQueue {
         }
     }
 
+    reconnect(url: string | Options.Connect, count: number = 0) {
+        connect(url, this.socket_options).then(conn => {
+            this.connection = conn
+            conn.on('close', () => {
+                if (!this.destroyed) {
+                    this.reconnect(url)
+                }
+            })
+            this.emitter.emit('reconnected')
+        }).catch(err => {
+            if (count > 48) {
+                console.log(err)
+                process.exit(255)
+            }
+            setTimeout(() => this.reconnect(url, count + 1), 2500)
+        })
+    }
+
     start() {
         if (!this.url) {
             return
@@ -61,12 +79,9 @@ export class MessageQueue {
         const url = this.url
         connect(url, this.socket_options).then(async conn => {
             this.connection = conn
-            conn.on('error', () => {
+            conn.on('close', () => {
                 if (!this.destroyed) {
-                    connect(url, this.socket_options).then(conn => {
-                        this.connection = conn
-                        this.emitter.emit('reconnected')
-                    })
+                    this.reconnect(url)
                 }
             })
             if (!this.interval_num) {
