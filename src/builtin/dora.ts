@@ -48,16 +48,16 @@ export class Dora {
         ZZ: dora => formatUTCOffset(dora, 'ZZ'),
     }
 
-    private readonly $d: Date
-    private $y!: number
-    private $M!: number
-    private $D!: number
-    private $W!: number
-    private $H!: number
-    private $m!: number
-    private $s!: number
-    private $ms!: number
-    private readonly $utcOffset!: number
+    public readonly $d: Date
+    public $y!: number
+    public $M!: number
+    public $D!: number
+    public $W!: number
+    public $H!: number
+    public $m!: number
+    public $s!: number
+    public $ms!: number
+    public readonly $utcOffset!: number
     private readonly $z!: string
 
     constructor(ts: number, timezone?: string) {
@@ -183,10 +183,16 @@ export class Dora {
 
     add(int: number, unit: DateTimeUnit): Dora {
         switch (unit) {
-            case 'year':
-                return new Dora(new Date(this.$d).setUTCFullYear(this.$d.getUTCFullYear() + int), this.$z)
-            case 'month':
-                return new Dora(new Date(this.$d).setUTCMonth(this.$d.getUTCMonth() + int), this.$z)
+            case 'year':{
+                const date = this.date()
+                const nd = new Date(this.date(5).valueOf())
+                return new Dora(nd.setUTCFullYear(nd.getUTCFullYear() + int), this.$z).date(date)
+            }
+            case 'month':{
+                const date = this.date()
+                const nd = new Date(this.date(5).valueOf())
+                return new Dora(nd.setUTCMonth(nd.getUTCMonth() + int), this.$z).date(date)
+            }
             case 'day':
                 return new Dora(new Date(this.$d).setUTCDate(this.$d.getUTCDate() + int), this.$z)
             case 'date':
