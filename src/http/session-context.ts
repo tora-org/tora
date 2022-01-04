@@ -182,7 +182,7 @@ export class SessionContext {
      *
      * @param key
      */
-    async get_cache(key: string) {
+    async get_cache<T = any>(key: string): Promise<T | undefined> {
         if (!this.cache_key) {
             this.cache_key = key
         }
