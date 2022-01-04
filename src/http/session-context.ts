@@ -182,11 +182,20 @@ export class SessionContext {
      *
      * @param key
      */
-    async return_if_cache(key: string) {
+    async get_cache(key: string) {
         if (!this.cache_key) {
             this.cache_key = key
         }
-        const cache = key && await this._cache?.get(key, this.cache_prefix, this.cache_expires)
+        return key && await this._cache?.get(key, this.cache_prefix, this.cache_expires)
+    }
+
+    /**
+     * 查询缓存，如果缓存存在则直接响应结果。参考 [[CacheProxy.get]]。
+     *
+     * @param key
+     */
+    async return_if_cache(key: string) {
+        const cache = this.get_cache(key)
         if (cache) {
             this.finish(cache)
         }
