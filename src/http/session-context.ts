@@ -195,7 +195,7 @@ export class SessionContext {
      * @param key
      */
     async return_if_cache(key: string) {
-        const cache = this.get_cache(key)
+        const cache = await this.get_cache(key)
         if (cache) {
             this.finish(cache)
         }
