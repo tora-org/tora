@@ -78,7 +78,7 @@ export class Handler {
     load(router_function: RouterFunction<any>, injector: Injector, meta: ToraRouterMeta): void {
         if (!router_function.meta?.disabled) {
             const router_handler = this.make_router(injector, router_function, [ApiParams, SessionContext, PURE_PARAMS])
-            const full_path = [meta.router_path.replace(/(\/\s*$)/g, ''), router_function.path.replace(/(^\/|\/$)/g, '')].filter(p => p).join('/')
+            const full_path = [meta.router_path.replace(/^(.+)(\/\s*)$/g, '$1'), router_function.path.replace(/(^\/|\/$)/g, '')].filter(p => p).join('/')
 
             router_function.GET && this.on('GET', full_path, router_handler)
             router_function.POST && this.on('POST', full_path, router_handler)
